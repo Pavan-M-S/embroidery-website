@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from 'lucide-react';
 import { useShopping } from '../../context/ShoppingContext';
+import { sendCraftChat } from '../../utils/aiService';
 
 interface ChatMessage {
   role: 'user' | 'model';
@@ -52,27 +53,13 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Build conversation history for the server
+      // Build conversation history
       const history = messages.map((m) => ({
         role: m.role,
         text: m.text,
       }));
 
-      const res = await fetch('/api/gemini/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: textToSend.trim(),
-          history,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Server returned status ${res.status}`);
-      }
-
-      const data = await res.json();
-      const reply = data.reply || 'Thank you for your question! For custom embroidery inquiries, feel free to share your fabric type and preferred motifs with our home craft workshop.';
+      const reply = await sendCraftChat(textToSend.trim(), history);
 
       setMessages((prev) => [
         ...prev,
@@ -83,20 +70,12 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
         },
       ]);
     } catch (err) {
-      console.warn('Gemini chat error, using graceful craft response:', err);
-      // Graceful domain-authentic fallback
-      let fallback = 'For Indian embroidery on silk and festive garments, we recommend testing stitch tension with soft cotton backing. Zari and metallic threads look striking on raw silk and tussar, while bullion knots and lazy daisy stitches are gentlest on children’s garments.';
-      if (textToSend.toLowerCase().includes('price') || textToSend.toLowerCase().includes('cost')) {
-        fallback = 'At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.';
-      } else if (textToSend.toLowerCase().includes('wash') || textToSend.toLowerCase().includes('care')) {
-        fallback = 'Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!';
-      }
-
+      console.warn('Craft consultation error:', err);
       setMessages((prev) => [
         ...prev,
         {
           role: 'model',
-          text: fallback,
+          text: 'Namaste! We are happy to help with embroidery suggestions. Please feel free to mention your fabric type, motif idea, or color preferences!',
           timestamp: Date.now(),
         },
       ]);

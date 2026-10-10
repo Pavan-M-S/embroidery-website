@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Send, Sparkles, CheckCircle2, AlertCircle, Info, Phone, MessageSquare, Loader2 } from 'lucide-react';
 import { BUSINESS_CONFIG } from '../data/designsData';
 import { CustomDesignFormData } from '../types';
+import { analyzeCustomIdea } from '../utils/aiService';
 
 export const CustomDesignPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -74,42 +75,17 @@ export const CustomDesignPage: React.FC = () => {
     setAiSuggestions(null);
 
     try {
-      const res = await fetch('/api/gemini/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          idea: formData.designIdea,
-          garmentType: formData.garmentType,
-          colors: formData.preferredColors,
-        }),
-      });
-
-      if (!res.ok) throw new Error('Analysis failed');
-
-      const data = await res.json();
+      const data = await analyzeCustomIdea(
+        formData.designIdea,
+        formData.garmentType,
+        formData.preferredColors
+      );
       setAiSuggestions(data);
-    } catch {
-      // Graceful domain fallback if API route is offline
-      setTimeout(() => {
-        setAiSuggestions({
-          recommendedStitches: [
-            'Resham Satin Fill (for petal bodies)',
-            'Fine Zari Couching (for outline glint)',
-            'French Knots or Bullion Stems (for textured stamens)',
-          ],
-          suggestedColorPalette: [
-            'Deep Rose (#E11D48) with Antique Gold Zari (#D4AF37)',
-            'Warm Coral (#FB923C) and Emerald Leaf Green (#059669)',
-          ],
-          feasibilityNote:
-            'This motif concept balances well on the neckline/sleeves. We recommend mounting on lightweight cotton fusible stabilizer so the fabric drapes comfortably without puckering.',
-        });
-        setIsAnalyzing(false);
-      }, 700);
-      return;
+    } catch (err) {
+      console.warn('AI analysis error:', err);
+    } finally {
+      setIsAnalyzing(false);
     }
-
-    setIsAnalyzing(false);
   };
 
   return (

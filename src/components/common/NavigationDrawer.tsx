@@ -25,6 +25,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onCl
     { to: '/membership', label: 'Membership', desc: 'Repeat-customer craft benefits & loyalty concept' },
     { to: '/free-resources', label: 'Free Resources', desc: 'Garment prep guidance, checklists & care audio' },
     { to: '/track-order', label: 'Track Order', desc: 'Check current progress with your Quote ID' },
+    { to: '/saved-designs', label: 'My Saved Designs', desc: 'Review your bookmarked embroidery motifs' },
     { to: '/account', label: 'Account', desc: 'Customer sign-in & registration portal (demo)' },
     { to: '/contact', label: 'Contact', desc: 'Reach our home workshop, inquiries & locations' },
   ];

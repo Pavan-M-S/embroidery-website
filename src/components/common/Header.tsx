@@ -91,7 +91,7 @@ export const Header: React.FC = () => {
 
             {/* Favourites Button */}
             <Link
-              to="/designs?filter=favourites"
+              to="/saved-designs"
               aria-label={`View saved favourites (${favouriteCount} saved)`}
               className="relative p-2 sm:p-2.5 text-slate-600 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-300 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors focus-visible:outline-rose-500"
             >

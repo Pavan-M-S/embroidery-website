@@ -82,6 +82,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/saved-designs" className="hover:text-rose-600 dark:hover:text-rose-300 transition-colors">
+                  My Saved Designs
+                </Link>
+              </li>
+              <li>
                 <Link to="/account" className="hover:text-rose-600 dark:hover:text-rose-300 transition-colors">
                   Account Portal (Demo)
                 </Link>

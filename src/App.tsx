@@ -23,6 +23,7 @@ import { FreeResourcesPage } from './pages/FreeResourcesPage';
 import { AccountPage } from './pages/AccountPage';
 import { ContactPage } from './pages/ContactPage';
 import { TrackOrderPage } from './pages/TrackOrderPage';
+import { SavedDesignsPage } from './pages/SavedDesignsPage';
 
 /**
  * ScrollToTop helper on route change
@@ -59,6 +60,7 @@ export default function App() {
                 <Route path="/membership" element={<MembershipPage />} />
                 <Route path="/free-resources" element={<FreeResourcesPage />} />
                 <Route path="/track-order" element={<TrackOrderPage />} />
+                <Route path="/saved-designs" element={<SavedDesignsPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="*" element={<HomePage />} />

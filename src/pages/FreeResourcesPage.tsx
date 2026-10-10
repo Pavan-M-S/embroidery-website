@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Download, FileText, CheckSquare, Sparkles, Volume2, Loader2, ShieldCheck, HelpCircle } from 'lucide-react';
+import { playTextToSpeech } from '../utils/aiService';
 
 export const FreeResourcesPage: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -54,10 +55,15 @@ Spandana Embroidery Atelier
     URL.revokeObjectURL(url);
   };
 
-  // Text-To-Speech audio narration feature (Gemini TTS / Browser Speech Synthesis fallback)
+  const stopAudioRef = useRef<(() => void) | null>(null);
+
+  // Text-To-Speech audio narration feature (Universal across all environments & URLs)
   const handlePlayAudioGuide = async () => {
     if (isPlayingAudio) {
-      window.speechSynthesis.cancel();
+      if (stopAudioRef.current) {
+        stopAudioRef.current();
+        stopAudioRef.current = null;
+      }
       setIsPlayingAudio(false);
       return;
     }
@@ -69,46 +75,21 @@ Spandana Embroidery Atelier
       'Welcome to Spandana Embroidery Care Guidelines. To maintain the brilliance of hand-stitched garments, always dry clean items with zari and silk resham threads. When pressing, always iron on the reverse side with a soft towel underneath, so your bullion knots and delicate petals remain three-dimensional and vibrant.';
 
     try {
-      // First attempt server-side Gemini TTS proxy
-      const res = await fetch('/api/gemini/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: speechText }),
-      });
-
-      if (res.ok) {
-        const blob = await res.blob();
-        const audioUrl = URL.createObjectURL(blob);
-        const audio = new Audio(audioUrl);
-        audio.onended = () => setIsPlayingAudio(false);
-        audio.onerror = () => {
-          fallbackBrowserTTS(speechText);
-        };
-        await audio.play();
-        return;
-      } else {
-        fallbackBrowserTTS(speechText);
-      }
+      const cancel = await playTextToSpeech(
+        speechText,
+        () => {
+          setIsPlayingAudio(false);
+          stopAudioRef.current = null;
+        },
+        (err) => {
+          setAudioError(err);
+          setIsPlayingAudio(false);
+          stopAudioRef.current = null;
+        }
+      );
+      stopAudioRef.current = cancel;
     } catch {
-      fallbackBrowserTTS(speechText);
-    }
-  };
-
-  const fallbackBrowserTTS = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = 1.05;
-      utterance.onend = () => setIsPlayingAudio(false);
-      utterance.onerror = () => {
-        setIsPlayingAudio(false);
-        setAudioError('Audio playback unavailable in this browser environment.');
-      };
-      window.speechSynthesis.speak(utterance);
-    } else {
       setIsPlayingAudio(false);
-      setAudioError('Speech synthesis is not supported on this browser.');
     }
   };
 

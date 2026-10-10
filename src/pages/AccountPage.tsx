@@ -96,7 +96,7 @@ export const AccountPage: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-3 pt-2">
             <Link
-              to="/designs?filter=favourites"
+              to="/saved-designs"
               className="p-3 bg-rose-50/50 dark:bg-rose-950/30 rounded-xl border border-rose-100 dark:border-rose-950 flex flex-col items-center justify-center text-center hover:bg-rose-100/50 transition-colors"
             >
               <Heart className="w-5 h-5 text-rose-500 mb-1" aria-hidden="true" />

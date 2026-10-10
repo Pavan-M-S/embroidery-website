@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
 
@@ -10,9 +11,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
+
+// Enable CORS for all origins, methods, and headers so the API works in any URL/localhost
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 // Initialize Google GenAI client
 const apiKey = process.env.GEMINI_API_KEY || '';
@@ -38,12 +50,11 @@ app.post('/api/gemini/chat', async (req, res) => {
   if (!apiKey) {
     return res.json({
       reply:
-        'Namaste! Welcome to Spandana Embroidery. Handcrafted embroidery on raw silk, cotton, and festive garments thrives with thoughtful motif placement. For custom inquiries, please share your garment type and preferred colors with our home workshop!',
+        'Namaste! Welcome to Spandana Embroidery. We specialize in handcrafted Indian needlework on raw silk, cotton, and festive garments. For custom inquiries, please share your garment type and preferred colors with our home workshop!',
     });
   }
 
   try {
-    // Format conversation history for Gemini contents
     const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
 
     if (Array.isArray(history)) {
@@ -205,10 +216,22 @@ async function startServer() {
       appType: 'spa',
     });
     app.use(vite.middlewares);
+
+    // Fallback to transform index.html for client-side routing on any URL in dev
+    app.use('*', async (req, res, next) => {
+      const url = req.originalUrl;
+      try {
+        let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        template = await vite.transformIndexHtml(url, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        next(e);
+      }
+    });
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Spandana Embroidery server running on http://localhost:${PORT}`);
+    console.log(`Spandana Embroidery server running on port ${PORT}`);
   });
 }
 
