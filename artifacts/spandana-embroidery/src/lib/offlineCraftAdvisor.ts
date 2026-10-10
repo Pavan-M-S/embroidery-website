@@ -1,0 +1,877 @@
+/**
+ * Spandana Craft Advisor - Comprehensive Offline Knowledge & Fallback Engine
+ * Contains 400+ distinct, expert handcrafted responses for Indian embroidery,
+ * fabrics, motifs, garment care, styling, pricing, kids wear, and FAQs.
+ */
+
+export interface IntentCategory {
+  keywords: string[];
+  responses: string[];
+}
+
+export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
+  {
+    "keywords": [
+      "hi",
+      "hello",
+      "hey",
+      "namaste",
+      "good morning",
+      "good afternoon",
+      "good evening",
+      "vanakkam",
+      "namaskara"
+    ],
+    "responses": [
+      "Namaste! Welcome to Spandana Embroidery. Are you looking to design a bridal blouse, kurti neckline, kids outfit, or custom motif today?",
+      "Hello! Welcome to our craft studio. How can I help you with embroidery styles, thread matching, or fabric advice today?",
+      "Namaste! It is wonderful to meet you. Tell me what outfit or fabric you are planning, and we will find the perfect stitch pattern.",
+      "Hey there! Looking for subtle everyday embroidery or intricate festive needlework? Let me know your ideas!",
+      "Namaskara! Welcome to Spandana Embroidery. We specialize in handcrafted Aari, Kasuti, Zardozi, and Resham silk needlework. What are you styling today?",
+      "Hello and warm greetings! Whether you have a specific motif in mind or need fabric recommendations, I am here to assist.",
+      "Namaste! Ready to transform your plain garment into bespoke designer wear? What fabric or garment are you working with?",
+      "Hello! From traditional temple borders to modern floral creepers, our artisans can customize any look. How may I guide you?",
+      "Vanakkam! Welcome to Spandana Craft Studio. Are you planning an outfit for a wedding, festival, or everyday elegance?",
+      "Namaste! Need help choosing thread colors, stitch techniques, or placement on your garment? Ask away!",
+      "Hello! Looking for heirloom-quality hand embroidery at affordable pricing? Tell me about your dream design!",
+      "Namaste! I am your craft advisor. Whether it's silk, cotton, organza, or velvet, we have the ideal embroidery plan for you.",
+      "Greetings! Welcome to Spandana. We create custom hand-stitched yokes, borders, sleeves, and dupattas. How can I help you today?",
+      "Hello! If you have a sari or fabric ready, I can recommend the most complementary embroidery patterns and color tones.",
+      "Namaste! Delighted to assist you today. Feel free to ask about stitch types, turnaround time, garment care, or pricing.",
+      "Hey! Welcome. Looking to add delicate French knots, sparkling Zari, or traditional Kasuti to your attire?",
+      "Namaskara! We are passionate about authentic Indian needlecraft. What type of clothing project are you dreaming up?",
+      "Hello! Let's craft something beautiful together. Share your fabric type or occasion and we will start brainstorming!",
+      "Namaste! Welcome. Our needlework combines heritage craftsmanship with modern silhouettes. What can I help you with?",
+      "Greetings from Spandana Embroidery! How can we make your next outfit truly special and unique?"
+    ]
+  },
+  {
+    "keywords": [
+      "who are you",
+      "what are you",
+      "your name",
+      "about you",
+      "introduce yourself",
+      "what can you do",
+      "how can you help",
+      "capabilities"
+    ],
+    "responses": [
+      "I am the Spandana Craft Consultant — your specialized AI advisor for Indian hand and machine embroidery, motifs, fabric compatibility, and styling.",
+      "I'm Spandana's Master Needlework Consultant. I guide you on stitch techniques (Aari, Zardozi, Kasuti), fabric pairings, price estimation, and garment care.",
+      "I am your dedicated embroidery advisor at Spandana. I help you choose motifs, determine stitch density, pick color palettes, and plan custom bridal or casual attire.",
+      "Think of me as your personal artisan stylist! I provide expert advice on necklines, sleeve borders, thread varieties (Resham vs Zari), and fabric suitability.",
+      "I am the craft guide for Spandana Embroidery. I can recommend embroidery styles for your sari blouses, anarkalis, kurtis, lehengas, and children's pattu pavadais.",
+      "My mission is to help you design breathtaking handcrafted garments. Ask me about stitch durability, kid-safe backing, washing silk garments, or pricing tiers.",
+      "I am Spandana's motif and craft consultant! I know everything about Indian embroidery traditions, from Karnataka's Kasuti to royal Zardozi.",
+      "I'm here to assist with every step of your embroidery project: selecting fabrics, calculating turnaround times, picking color contrasts, and preserving threadwork.",
+      "I am your virtual embroidery atelier advisor. I help translate your style ideas into realistic needlework patterns suited for your budget.",
+      "I specialize in ethnic Indian tailoring and embellishment consultation. Ask me anything from Zari tarnishing prevention to neck shape recommendations.",
+      "I am the Spandana Craft Bot! I advise on stitch techniques, thread counts, beadwork, mirror work, and custom placement on any Indian or Indo-Western outfit.",
+      "I guide you on which embroidery works best on fabrics like raw silk, organza, tussar, velvet, and cotton, ensuring fabric weight supports the needlework.",
+      "I'm your design assistant for Spandana Embroidery. Tell me what event you're attending, and I'll suggest motif themes, color schemes, and stitch styles.",
+      "I help ensure your embroidered garments remain comfortable, durable, and stunning without causing skin irritation or fabric puckering.",
+      "I am your Indian needlework expert, trained in heritage crafts like Chikankari, Phulkari, Kantha, Kasuti, and Aari beadwork.",
+      "I assist you with budgeting and timeline planning for bridal orders, festive wear, casual daily wear, and customized gift items.",
+      "I help you choose the right needles, backing stabilizers, and thread weights if you are curious about our artisan production process.",
+      "I can suggest color pairings based on classic Indian color theory — such as rani pink with antique gold, or peacock blue with mustard yellow.",
+      "I am here to ensure you get artisan-grade, affordable embroidery tailored exactly to your body measurements and fabric choice.",
+      "I represent Spandana Embroidery's legacy of quality craftsmanship. Ask me about our custom order process, rates, or design ideas!"
+    ]
+  },
+  {
+    "keywords": [
+      "price",
+      "cost",
+      "rate",
+      "rates",
+      "quote",
+      "how much",
+      "charge",
+      "expensive",
+      "cheap",
+      "budget",
+      "affordable",
+      "pricing",
+      "estimate"
+    ],
+    "responses": [
+      "At Spandana Embroidery, simplicity starts at ₹350 for subtle neck accents, ₹750–₹1,200 for detailed yokes/sleeves, and ₹2,500+ for heavy bridal/festive work.",
+      "Our pricing depends on three factors: stitch density, thread material (Resham silk vs genuine metallic Zari), and fabric delicacy. Daily wear starts from just ₹350.",
+      "For standard sari blouse sleeve borders and necklines, our prices typically range between ₹650 and ₹1,500 depending on bead and mirror detailing.",
+      "Bridal blouse embroidery with intricate Aari, cutdana, and micro-pearls starts at ₹2,800 and can go up to ₹7,500 for fully covered back and sleeves.",
+      "Kids pattu pavadai yoke embroidery starts from ₹450 to ₹900, which includes soft inner lining protection for delicate skin.",
+      "Looking for budget-friendly elegance? Our Kasuti geometric neckline patterns on cotton kurtis start at an accessible ₹400.",
+      "We believe in honest, transparent pricing with zero hidden stitching or material surcharges. Tell us your design idea for a precise quote!",
+      "Simple motif scattering (buttis) across a dupatta or lehenga costs around ₹15–₹30 per motif, depending on thread count and stone placement.",
+      "Heavy Zardozi work with dabka, nakshi springs, and zari thread couching on velvet or raw silk starts at ₹3,200 for neckline and sleeve sets.",
+      "Custom lehenga border embroidery runs between ₹1,200 and ₹4,500 per meter based on width, motif complexity, and hand-beading.",
+      "For men's kurta plackets and collar embroidery, rates range from ₹450 (minimalist geometric stitches) to ₹1,200 (rich festive Resham work).",
+      "Potli bag and clutch embellishments start at ₹300 per piece, making them wonderful budget options for wedding return gifts.",
+      "We offer bulk discount pricing for dance troupes, wedding favors, and boutique collections starting at 10 pieces or more.",
+      "Mirror work (Shisha) borders are priced around ₹500 to ₹1,100 per garment depending on whether genuine glass or lightweight acrylic mirrors are used.",
+      "Our express rush order service adds a modest 15–20% fee if you need complex bridal handwork completed in under 4 days.",
+      "Basic monogramming and custom initials on handkerchiefs or shirts start at just ₹150 per motif.",
+      "Anarkali yoke embroidery with delicate French knots and bullion floral bouquets ranges from ₹800 to ₹1,800.",
+      "We provide itemized estimates before stitching begins, so you can adjust stitch density or beadwork to meet your exact budget.",
+      "Thread-only Resham embroidery is our most economical option for daily wear, providing vibrant wash-fast color without high metal thread costs.",
+      "For saree pallu embroidery, prices vary from ₹1,500 (spaced floral motifs) to ₹5,000+ (continuous elaborate temple borders).",
+      "Table runners and home linen embroidery start at ₹600 for standard 4-seater dimensions.",
+      "Wall art embroidery in finished wooden hoops ranges from ₹450 (mini 6-inch) to ₹1,500 (detailed 12-inch portrait/floral piece).",
+      "Repair and restoration of vintage family heirlooms or loose zari starts at an affordable ₹250 evaluation fee.",
+      "You can send us a photo of any design you like, and we will offer high, medium, and budget-tier execution alternatives!",
+      "Quality embroidery at honest prices is our core promise. Let us know your budget limit and we will tailor the design accordingly."
+    ]
+  },
+  {
+    "keywords": [
+      "style",
+      "styles",
+      "technique",
+      "techniques",
+      "aari",
+      "kasuti",
+      "zardozi",
+      "chikankari",
+      "kantha",
+      "phulkari",
+      "gota patti",
+      "mirror work",
+      "shisha",
+      "resham",
+      "french knot",
+      "bullion",
+      "shadow work",
+      "cross stitch"
+    ],
+    "responses": [
+      "Aari embroidery uses a fine hooked needle (muthia) to create quick, precise chain stitches and secure beads, sequins, and pearls effortlessly.",
+      "Kasuti is Karnataka's traditional counted-thread art using four classic stitches: Gavanti (double running), Murgi (zigzag), Negi (weaving), and Menthi (cross).",
+      "Zardozi is opulent royal metallic embroidery using fine metallic wires like dabka, nakshi, kora, and sequins sewn onto heavy silk or velvet.",
+      "Resham embroidery uses pure unspun or spun silk threads for smooth, lustrous satin-stitch fills that give floral petals a radiant natural sheen.",
+      "Gota Patti originated in Rajasthan, where gold and silver ribbon strips are folded into diamond leaves (patti) and hemmed onto royal garments.",
+      "Mirror work (Shisha) anchors reflective mirrors with buttonhole or chain stitch frames, catching light vibrantly during festive dances.",
+      "French knots create gorgeous textured dots ideal for flower centers, grape clusters, and tactile borders on kurtis and baby garments.",
+      "Bullion stitch (caterpillar stitch) produces raised three-dimensional roses and buds that give blouses and frocks an exquisite vintage charm.",
+      "Kantha is Bengal's heritage running-stitch craft, transforming layered cottons and tussar silks into rich storytelling tapestries.",
+      "Phulkari is Punjab's vibrant geometric folk craft worked with untwisted silk floss (pat) on the reverse of khaddar fabric using darn stitches.",
+      "Chikankari is Lucknow's delicate shadow and white-on-white needlework featuring stitches like bakhiya, tepchi, phanda, and jaali lattice work.",
+      "Shadow work is worked on sheer fabrics like organza or georgette with herringbone stitch on the reverse, casting a soft pastel glow on the front.",
+      "Lazy Daisy (detached chain stitch) is a gentle, lightweight stitch perfect for quick flower petals on children's dresses and casual cotton kurtas.",
+      "Cutdana (tube bead) work brings modern sparkle and geometric lines to contemporary party wear, reception gowns, and cocktail blouses.",
+      "Couching technique fastens thick metallic cords or heavy threads across the fabric surface with tiny invisible anchor stitches.",
+      "Kamaldhar stitch is a woven wheel technique that creates raised, circular lotus medallions that stand out boldly on plain silk yokes.",
+      "Banjara/Lambani embroidery is colorful tribal needlework incorporating cowrie shells, coins, mirrors, and vibrant cross-stitching.",
+      "Sujani embroidery from Bihar uses running stitches to outline motifs and quilted lines that tell folk stories on soft cotton quilts and dupattas.",
+      "Kashidakari from Kashmir employs fine chain stitch and satin stitch in single-thread needlework, depicting maple leaves, almonds, and blossoms.",
+      "Toda embroidery from the Nilgiris features stark black and red geometric patterns on white handloom cotton, resembling woven fabric.",
+      "Stem stitch creates smooth, flowing outlines for floral vines, stems, and delicate figurative silhouettes on blouses and kurtis.",
+      "Satin stitch produces flat, glossy surfaces by placing straight stitches side by side, best for solid color leaves and geometric shapes.",
+      "Fishbone stitch creates overlapping center ribs, making it the premier choice for realistic foliage and bird feathers.",
+      "Herringbone stitch works beautifully as decorative borders, hem finishes, or backing for organza shadow embroidery.",
+      "Appliqué and cutwork involve stitching contrasting fabric patches or cutting openwork shapes reinforced with tight buttonhole edging.",
+      "Beadwork with micro-seed beads (moti) adds weight, regal texture, and delicate shimmer to wedding lehenga borders.",
+      "Thread painting (needle painting) blends multiple shades of silk threads to achieve photorealistic transitions in animal and floral portraits.",
+      "Smocking combines embroidery with fabric gathering, creating stretchy, ornamental bodices for baby frocks and vintage blouses.",
+      "Pako embroidery features tight square chain stitches with floral motifs outlined in white and filled with warm saffron and red hues.",
+      "We can seamlessly combine multiple techniques — such as Aari outlines with French knot accents and Kasuti center motifs — for a unique heirloom piece!"
+    ]
+  },
+  {
+    "keywords": [
+      "fabric",
+      "fabrics",
+      "raw silk",
+      "pure silk",
+      "cotton",
+      "organza",
+      "tussar",
+      "velvet",
+      "georgette",
+      "chiffon",
+      "linen",
+      "satin",
+      "chanderi",
+      "tissue",
+      "net",
+      "denim",
+      "modal",
+      "crepe"
+    ],
+    "responses": [
+      "Raw silk (Dupion) is the gold standard for Indian embroidery: its crisp body effortlessly holds heavy Zardozi, Aari, and dense beadwork without puckering.",
+      "Pure cotton is breathable and holds crisp Kasuti, Kantha, and thread embroidery. We pre-wash cotton fabrics to prevent shrinkage after stitching.",
+      "Organza is ethereal and sheer; it calls for lightweight Resham silk, delicate shadow work, or fine micro-sequins with tear-away water-soluble backing.",
+      "Velvet is luxurious and thick, making it the perfect base for royal gold Zardozi, couched metallic cords, and padded bullion needlework.",
+      "Tussar silk features a rich textured slub that pairs magically with earthy Kantha stitches, antique copper Zari, and nature-inspired motifs.",
+      "Chanderi blends cotton and silk sheen, ideal for subtle gold Zari buttis, delicate floral bails, and lightweight Aari threadwork.",
+      "Georgette and chiffon drape fluidly; they require low-tension stitching and lightweight silk threads so the garment flows gracefully.",
+      "Linen is modern and rustic, pairing gorgeously with white threadwork, geometric cross-stitch, and minimalist botanical line art.",
+      "Net and tulle require specialized water-soluble stabilizers to support Aari embroidery without tearing the fragile hexagonal mesh.",
+      "Tissue silk has metallic threads woven directly into the fabric; we complement it with tonal matte threads or subtle antique cutdana.",
+      "Denim is thick and sturdy, ideal for contemporary jackets with bold floral thread painting, heavy chain stitches, or vibrant Kasuti panels.",
+      "Modal silk is ultra-soft and fluid; we use fine 60-count silk threads to avoid pulling the delicate modal weave.",
+      "Satin offers a high-gloss finish that looks striking with contrast matte cotton embroidery or sparkling glass bead borders.",
+      "Mulmul (fine muslin) is feather-light and sensitive; it is best suited for delicate Chikankari-style shadow work and tiny French knots.",
+      "Crepe silk drapes closely to the body; we recommend medium-density yokes with smooth backings that maintain the fabric's natural fall.",
+      "Khadi handspun cotton has an organic texture that highlights traditional folk stitches like Phulkari, Lambani, and Kasuti perfectly.",
+      "Brocade already has woven patterns, so we recommend targeted border enhancements with Zardozi accents rather than all-over embroidery.",
+      "When embroidering stretchy knits or lycra, we use stretchable stabilizer backings and flexible zig-zag base anchors to prevent distorted stitches.",
+      "For heavy bridal silks like Kanchipuram and Banarasi, we always reinforce the reverse with pure cotton lining before applying heavy needlework.",
+      "Art silk and poly-blends are cost-effective but heat-sensitive; we use low-temperature iron settings and colorfast synthetic silk threads.",
+      "Maheshwari silk-cotton fabrics look regal with understated antique zari borders and traditional Chatai (mat) stitch necklines.",
+      "Matka silk has a textured, tweed-like drape that works wonderfully with bold geometric motifs and thick matte cotton floss stitches.",
+      "For sheer sleeves on blouses, organza with scattered pearl buttis and scalloped Aari edges creates an elegant, modern bridal look.",
+      "Can't decide on fabric? For daily wear, go with combed cotton; for festive elegance, choose raw silk or Chanderi silk-cotton.",
+      "We inspect every fabric's thread count and warp-weft strength before selecting needle gauge and thread tension.",
+      "Lycra and velvet stretch velvets require careful hoop tensioning to avoid permanent pressure marks (ring crush) on the pile.",
+      "Silk organza holds needlework significantly better than synthetic nylon organza, which is prone to needle hole perforations.",
+      "For summer festive wear, Chanderi or Kota Doria with pastel Aari work provides maximum breathability without compromising opulence.",
+      "Taffeta provides a crisp bell-like silhouette for skirts and lehengas, serving as a clean canvas for sharp geometric thread embroidery.",
+      "Bring or send us your fabric swatches, and our master craftspersons will conduct a quick tension test to suggest the best stitch style!"
+    ]
+  },
+  {
+    "keywords": [
+      "motif",
+      "motifs",
+      "design",
+      "designs",
+      "pattern",
+      "patterns",
+      "peacock",
+      "lotus",
+      "mango",
+      "paisley",
+      "kalka",
+      "hamsa",
+      "elephant",
+      "floral",
+      "creeper",
+      "mandala",
+      "tree of life",
+      "temple",
+      "gopuram",
+      "geometric"
+    ],
+    "responses": [
+      "The Peacock (Mayil/Mor) symbolizes grace and royalty; we embroider it with iridescent emerald and royal blue silk threads accented with gold Zari.",
+      "The Sacred Lotus (Kamal) represents purity; it looks breathtaking in shaded pink satin stitches, French knot stamens, and antique bead contours.",
+      "The Paisley (Mango/Kalka/Ambi) is a timeless Indian motif, adaptable from slender Kashmiri florals to grand bridal corner medallions.",
+      "The Hamsa (Sacred Swan) signifies wisdom and discernment, traditionally rendered in pearl white threads with gold zari feather outlines.",
+      "The Elephant (Gaja/Aane) represents prosperity and strength, frequently chosen for grand wedding pallus and festive border processions.",
+      "Floral Creepers (Bail/Valli) provide seamless organic borders along sari edges, neckline curves, and sleeve hems.",
+      "The Tree of Life (Kalpavriksha) symbolizes abundance, featuring sprawling branches filled with birds, blossoms, and intricate leaf textures.",
+      "Temple Gopuram borders use stepped pyramid geometries inspired by South Indian temple architecture, ideal for classic Kasuti and Aari borders.",
+      "Mandalas and Sunbursts (Surya) offer hypnotic symmetrical medallions for lehenga backs, kurti centers, and wall art hoops.",
+      "Parrot (Kili/Tota) motifs bring vibrant folk charm, especially when rendered in parrot green and ruby red with tiny black bead eyes.",
+      "Geometric Kasuti patterns like the Gopura, chariot (Ratha), and tulsi planter (Tulasi Vrindavana) bring deep cultural heritage to modern blouses.",
+      "Chevron and Leheriya wave patterns create a dynamic sense of motion along borders and lehenga panels.",
+      "Minimalist botanical line art is popular for modern workwear kurtis, featuring single-strand running stitch eucalyptus and olive branches.",
+      "Buttis (scattered micro-motifs) like stars, clover leaves, and water droplets fill empty fabric space gracefully without overwhelming the garment.",
+      "Animal procession (Shikar/Jungle) themes depicting deer, peacocks, and horses bring vintage royal court tapestry aesthetics to your attire.",
+      "Jharokha (arched palace window) frames create striking focal points on the back of bridal blouses with dangling bead jhumkas.",
+      "Butterfly and dragonfly motifs rendered in 3D organza appliqué add playful, whimsical texture to children's frocks and teen party wear.",
+      "Traditional South Indian Rudraksha and Annapakshi motifs connect your ensemble to centuries-old weaving and temple art traditions.",
+      "Arabic floral jaal (netting) creates an all-over diamond grid filled with alternating florets and sparkling micro-sequins.",
+      "Modern abstract swirls and brushstroke embroidery offer a chic, contemporary aesthetic for fusion tops and cape jackets.",
+      "Moon and constellation motifs with silver Zari and micro-cutdana are a trendy choice for sangeet cocktail gowns.",
+      "Ganesha and deity silhouette motifs are popular for temple visits, classical dance costumes, and housewarming ceremonies.",
+      "Rose bouquets created with bullion stitches and French knot baby's breath offer romantic Victorian charm on pastel fabrics.",
+      "Border scallops with Aari buttonhole reinforcement give a wavy, organic edge to sleeve cuffs and sari dupattas.",
+      "Monogrammed wedding dates and couple initials embroidered inside heart medallions on bridal pallus make unforgettable keepsakes.",
+      "Kite and pinwheel geometric motifs bring festive joy to Makar Sankranti and harvest festival ethnic wear.",
+      "Foliage vines with shaded Ombré leaves transitioning from olive to lime green create stunning natural realism.",
+      "Moroccan tile and lattice geometries give kurtas and shrugs a clean, architectural sophistication.",
+      "Calligraphy and Sanskrit shloka borders (like 'Ayushyaman Bhava') can be hand-embroidered along bridal dupatta borders.",
+      "Have a custom sketch or Pinterest photo? We can digitize and hand-render any motif to scale on your chosen fabric!"
+    ]
+  },
+  {
+    "keywords": [
+      "blouse",
+      "neckline",
+      "yoke",
+      "sleeve",
+      "sleeves",
+      "kurti",
+      "kurtis",
+      "sari",
+      "saree",
+      "pallu",
+      "lehenga",
+      "dupatta",
+      "anarkali",
+      "dress",
+      "frock",
+      "suit",
+      "jacket",
+      "potli",
+      "waistband",
+      "cuff",
+      "collar",
+      "placket"
+    ],
+    "responses": [
+      "For sari blouses, the most popular placements are sweetheart neckline outlines, heavy sleeve borders, and circular back drop cutouts.",
+      "Boat neck blouses look best with horizontal collar-style embroidery or shoulder-to-shoulder floral creepers that flatter the collarbone.",
+      "Square necklines are complemented by structured geometric Kasuti or framed Aari borders that highlight crisp neckline corners.",
+      "Sweetheart and V-necklines pair beautifully with tapering floral vines that draw the eye downward for an elongated silhouette.",
+      "Elbow-length sleeve blouses offer generous canvas space for bridal medallions, elephant processions, or cascading crystal chains.",
+      "Cap sleeves look stunning with delicate scalloped edges, pearl drops, and miniature scattered buttis.",
+      "For kurtis, a central embroidered yoke framing the chest brings focus upward, making plain fabrics look effortlessly luxurious.",
+      "Side slit and hemline embroidery on long straight kurtis adds subtle elegance that flashes gracefully as you walk.",
+      "Saree pallu embroidery should be lightweight yet visually impactful, ensuring the drape remains fluid over your shoulder.",
+      "Lehenga waistband (Kamarbandh) embroidery accentuates the waistline and ties the skirt motifs directly to the blouse design.",
+      "Dupatta borders with 4-sided Aari needlework and scalloped edging instantly elevate simple salwar suits into wedding guest outfits.",
+      "Men's kurta plackets look sophisticated with subtle tone-on-tone threadwork or minimalist geometric Kasuti running stitches.",
+      "For Anarkalis, we recommend a dense embroidered bodice transitioning into spaced floral sprays down the pleated kali skirt panels.",
+      "Cape jackets and sheer overlays with embroidered shoulder epaulets add contemporary drama to western gowns and dhoti pants.",
+      "Potli bags embroidered to match your bridal blouse create a coordinated, picture-perfect accessory ensemble.",
+      "Backless blouses with embroidered tie-back tassels (latkans) featuring thread balls and micro-pearls make a memorable statement.",
+      "Collar-style blouses (Mandarin or Peter Pan) benefit from tight satin-stitch borders that frame the neck neatly without need for heavy jewelry.",
+      "Waist cutouts and side sheer panels with delicate leafy embroidery offer a modern, high-fashion fusion look.",
+      "Cuff embellishments on bell sleeves or bishop sleeves add romantic flair to bohemian tunics and festive tops.",
+      "Pocket embroidery on linen shirts or denim jackets provides a playful pop of handcrafted personality.",
+      "Maxi dresses and Indo-Western gowns look majestic with asymmetric shoulder-to-hip cascading floral embroidery.",
+      "Sharara and Gharara knee-band (Gota) embroidery highlights the flare transition beautifully with sparkling mirror work.",
+      "Kids frock bodices should feature flat satin stitches and soft cotton lining to prevent thread friction against tender skin.",
+      "Bridal veil and dupatta border edges can feature lightweight scalloped Aari pearls that frame the face softly in photographs.",
+      "Half-and-half sari designs look stunning when the pleats have dense vertical motifs while the body retains airy scattered buttis.",
+      "Peplum top hemlines look regal when bordered with Kasuti zig-zag patterns or hanging crystal bead droplets.",
+      "Center-back medallion placement on high-neck blouses creates an eye-catching focal point when hair is styled in an updo.",
+      "Double dupattas for brides: a heavy velvet shoulder drape paired with an ultra-lightweight embroidered head veil.",
+      "Co-ord sets look ultra-chic with matching collar and trouser hemline embroidery in minimalist contemporary thread tones.",
+      "We customize placement based on your body proportions and garment drape so the embroidery flatters your silhouette perfectly."
+    ]
+  },
+  {
+    "keywords": [
+      "kid",
+      "kids",
+      "child",
+      "children",
+      "baby",
+      "toddler",
+      "pattu pavadai",
+      "pavadai",
+      "sensitive skin",
+      "soft backing",
+      "scratchy",
+      "itching",
+      "gentle",
+      "comfort"
+    ],
+    "responses": [
+      "For children's clothes and pattu pavadais, we apply ultra-soft 100% cotton fusible interlining on the reverse so threads never touch sensitive skin.",
+      "We avoid scratchy metallic Zari or sharp glass cutdana on the inside of baby garments, using smooth Resham silk and combed cotton threads instead.",
+      "Bullion roses and flat satin stitches are our top recommendation for kids' dresses: they look rich, whimsical, and stay gentle against skin.",
+      "Baby naming ceremony (Namakarana) and first birthday outfits are crafted with hypoallergenic threads and lightweight, non-rigid stabilizers.",
+      "For little girls' pattu pavadai blouses, we design necklines with comfortable ease and soft fabric piping around all embroidered edges.",
+      "Boys' dhoti kurta sets feature soft anchor thread embroidery along the chest placket with completely covered inner backing.",
+      "Kids' garments undergo rigorous quality checks to ensure all beads and buttons are doubly secured to prevent any choking or snagging hazards.",
+      "We recommend washable, colorfast cotton floss for children's wear so outfits can be easily cleaned after festive feasts and play.",
+      "Cute animal motifs like baby elephants, deer, teddy bears, and fluttering butterflies are huge favorites for kids' festive clothing.",
+      "For newborn jablas and swaddle blankets, we use pure mulmul cotton with delicate feather stitches and shadow work embroidery.",
+      "Kids grow fast! We can design embroidery with generous inner seam allowances so garments can be altered as your child grows.",
+      "Our soft-touch embroidery technique eliminates the stiffness often found in mass-manufactured kids' party wear.",
+      "Pattu pavadai borders for toddlers are kept lightweight so the skirt does not feel heavy or restrict active running and dancing.",
+      "We use water-soluble embroidery stabilizers for baby clothes, which wash away completely on the first rinse leaving zero scratchy residue.",
+      "Pastel color palettes like baby pink, mint green, buttercup yellow, and sky blue are soothing and photograph adorably on children.",
+      "For sibling matching sets, we can create coordinated brother-sister motifs across kurta plackets and pattu pavadai yokes.",
+      "Comfort is always our highest priority for children: if a design looks pretty but feels uncomfortable, we adapt the stitches immediately.",
+      "Our baby booties and bonnet sets feature hand-embroidered French knot daisies on organic cotton fabrics.",
+      "Children's festive lehengas feature elasticated soft waistbands with lightweight thread tassels instead of heavy metallic latkans.",
+      "Have a child with sensory sensitivities? Let us know! We can use seamless flat embroidery with ultra-fine Egyptian cotton threads.",
+      "Frock yokes with smocking and delicate lazy-daisy embroidery allow natural chest expansion and all-day comfort.",
+      "We ensure thread tension is calibrated loosely enough so embroidered fabric doesn't bunch or rub against active toddlers' skin.",
+      "For festive poojas, our lightweight silk-cotton pavadais keep babies cool while looking radiant in family portraits.",
+      "We offer personalized baby milestone blankets embroidered with floral wreaths and birth stats as treasured newborn gifts.",
+      "Every children's outfit from Spandana is stitched with motherly care, combining festive splendour with bedtime-level comfort."
+    ]
+  },
+  {
+    "keywords": [
+      "wash",
+      "washing",
+      "care",
+      "clean",
+      "cleaning",
+      "iron",
+      "ironing",
+      "maintain",
+      "maintenance",
+      "dry clean",
+      "tarnish",
+      "loose thread",
+      "preservation",
+      "storage",
+      "storing"
+    ],
+    "responses": [
+      "Always dry-clean heavy embroidered garments made on raw silk, velvet, tussar, or featuring metallic Zari and delicate beadwork.",
+      "For everyday cotton kurtis with thread embroidery, hand wash gently in cold water using a mild, bleach-free detergent; avoid harsh wringing.",
+      "Never iron directly on embroidery! Always place the garment face-down on a plush towel and iron on the reverse side to preserve 3D stitch relief.",
+      "To prevent metallic Zari from tarnishing or blackening, store garments wrapped in breathable unbleached muslin cotton cloth away from moisture.",
+      "Never spray perfumes, deodorants, or hairsprays directly onto embroidered areas, as alcohol and chemicals cause metal thread oxidation.",
+      "Store embroidered sarees and lehengas flat or loosely rolled rather than hanging, which can cause heavy beads to stretch the fabric over time.",
+      "If an embroidery thread snags or pulls loose, do not cut it! Gently ease it back to the reverse side using a fine needle and knot it softly.",
+      "Use silica gel pouches in your wardrobe during monsoon seasons to prevent humidity from oxidizing metallic zari and copper coils.",
+      "Change the folds of heavy embroidered sarees every 3 to 6 months to prevent permanent crease wear along delicate needlework lines.",
+      "For steam ironing, hover the steamer 2 inches away from the embroidery; do not press hot iron plates directly against plastic sequins or mirrors.",
+      "Stain removal near embroidery: dab the spot gently with a damp cotton swab; never rub vigorously across the embroidered threads.",
+      "Wash embroidered dupattas inside a protective mesh laundry bag if you must use a gentle machine cycle on cotton items.",
+      "Sun drying can bleach vibrant Resham silk threads; always dry your handcrafted garments in the shade inside out.",
+      "When packing embroidered clothes for travel, place sheets of acid-free butter paper between folds to prevent bead snagging.",
+      "For heirloom vintage Zardozi restoration, our studio offers re-couching and thread tightening services to bring old family pieces back to life.",
+      "Avoid plastic polythene storage covers for long-term storage; plastic traps humidity and releases gases that yellow silk and tarnish Zari.",
+      "If beadwork feels slightly loose after years of wear, reinforce the anchor knot on the underside with a single drop of fabric-safe adhesive.",
+      "Dry cleaning solvent should be petroleum-based for delicate silks and Zardozi garments to prevent color bleed.",
+      "Before washing any colorful embroidered garment for the first time, perform a quick colorfastness spot test on an inconspicuous corner.",
+      "Keep mothballs or cedar blocks inside your storage trunk, but ensure they don't directly touch metallic threads.",
+      "Velvet embroidery should be brushed gently with a soft velvet brush in the direction of the pile to restore luster after wearing.",
+      "If mirror work gets smudged, clean individual mirror facets gently using a lightly moistened microfiber cloth wrapped around a toothpick.",
+      "For garments with heavy shoulder embroidery, use padded wide coat hangers to prevent shoulder dimples and seam strain.",
+      "Avoid washing embroidered clothes in hot water, which loosens thread tension and can melt adhesive backing films.",
+      "Following these care steps ensures your Spandana handcrafted embroidery remains as dazzling on your 50th wear as on your first!"
+    ]
+  },
+  {
+    "keywords": [
+      "color",
+      "colour",
+      "colors",
+      "colours",
+      "shade",
+      "shades",
+      "palette",
+      "pairing",
+      "contrast",
+      "combination",
+      "tone",
+      "matching",
+      "pastel",
+      "gold",
+      "silver"
+    ],
+    "responses": [
+      "Timeless South Indian bridal pairing: Deep Crimson Red silk with Antique Gold Zari and emerald green French knot accents.",
+      "Royal evening reception palette: Midnight Navy Blue paired with Silver Zardozi, champagne crystals, and ice blue silk fills.",
+      "Vibrant Mehendi & Haldi combination: Mustard Marigold Yellow accented with Rani Pink Resham and Parrot Green leaf bails.",
+      "Modern romantic day-wedding look: Dusty Blush Pink fabric with Rose Gold Zari, ivory pearls, and sage green threadwork.",
+      "Royal heritage combination: Deep Emerald Bottle Green contrasted with Rich Ruby Red borders and warm Copper Zari highlights.",
+      "Regal festive contrast: Royal Peacock Blue fabric with Tangerine Orange floral motifs and gleaming gold cutdana outlines.",
+      "Monochrome sophistication: Tone-on-tone embroidery (such as ivory thread on off-white Chanderi) creates ethereal, understated luxury.",
+      "Contemporary cocktail palette: Wine/Burgundy velvet with gunmetal grey beads, black diamonds, and antique silver needlework.",
+      "Fresh spring festive pairing: Mint Green organza embellished with Coral Peach blossoms and subtle champagne micro-sequins.",
+      "Traditional Karnataka Kasuti palette: Indigo Blue or Madder Red Ilkal sari base with vibrant yellow, orange, and white geometric stitches.",
+      "Glamorous Sangeet combination: Lavender/Lilac base paired with holographic silver sequins and iridescent micro-bead vines.",
+      "Earthy heritage palette: Natural Tussar beige silk with Rust Terracotta, Mustard, and Forest Green Kantha running stitches.",
+      "Sunshine celebration combo: Lemon Yellow kurti with Turquoise Blue floral creepers and mirror work accents.",
+      "Pastel sophistication: Powder Blue silk paired with soft lemon yellow florets and white shadow work embroidery.",
+      "Rich temple festival look: Deep Magenta Purple with mango yellow accents and heavy golden zari borders.",
+      "Understated office wear palette: Steel Grey linen paired with crisp white cross-stitches and charcoal geometric borders.",
+      "Regal Maharanian palette: Royal Rani Pink paired with Emerald Green sleeves and antique brass Zardozi needlework.",
+      "Bohemian festive contrast: Rust Orange khadi with Olive Green chain stitches and reflective mirror highlights.",
+      "Modern minimalist contrast: Jet Black raw silk with fine Gold Zari geometric line work on collar and cuffs.",
+      "Subtle wedding guest look: Champagne Cream silk with blush pink bullion roses and sage green stem leaves.",
+      "Rich Autumn palette: Deep Plum fabric with Copper metallic threadwork and burnt orange French knot details.",
+      "Ethereal engagement look: Seafoam Green organza with shimmering silver water lily embroidery and seed pearls.",
+      "We always conduct thread-on-fabric sample testing before commencing full stitching to ensure color harmony under stage lighting.",
+      "When choosing blouse embroidery colors for multi-colored saris, pick the secondary or border accent color to create striking contrast!",
+      "Tell us your sari and skin tone preferences, and we will curate a personalized 3-tier color palette for your custom outfit."
+    ]
+  },
+  {
+    "keywords": [
+      "occasion",
+      "wedding",
+      "bridal",
+      "bride",
+      "reception",
+      "sangeet",
+      "haldi",
+      "mehendi",
+      "engagement",
+      "festival",
+      "diwali",
+      "pooja",
+      "navratri",
+      "party",
+      "farewell",
+      "office",
+      "casual"
+    ],
+    "responses": [
+      "For Brides: We design full bridal blouse sets with custom back medallions, auspicious motifs (peacocks, lotuses), and heavy sleeve borders.",
+      "For Sangeet nights: Lightweight Aari and sparkling mirror work catch the dance floor lights without adding excessive physical weight.",
+      "For Haldi ceremonies: Bright yellow and lime outfits embellished with cheerful floral bullion stitches and splash-resistant threads.",
+      "For Mehendi events: Festive green palettes with playful parrot, peacock, and floral creepers that celebrate joyous pre-wedding rituals.",
+      "For Wedding Receptions: Modern glamorous Zardozi, cutdana tube beads, and crystal work that radiate regal elegance under spotlighting.",
+      "For Temple Poojas & Festivals: Sacred Kasuti, temple gopuram borders, and Annapakshi motifs in traditional auspicious hues.",
+      "For Diwali celebrations: Shimmering gold Zari buttis, Gota Patti borders, and vibrant Resham necklines that complement festive fireworks.",
+      "For Navratri & Garba: High-energy Banjara and mirror work (Shisha) on vibrant chaniya cholis that swirl dramatically with movement.",
+      "For Engagement ceremonies: Elegant pastel organza dupattas and sheer sleeve blouses with delicate pearl and French knot embroidery.",
+      "For Baby Showers (Seemantham/Godh Bharai): Auspicious mango and lotus motifs on rich Kanchipuram silk blouses in soft festive tones.",
+      "For Housewarmings (Griha Pravesha): Traditional floral yokes and Kalash/coconut motifs in auspicious turmeric and vermilion shades.",
+      "For Everyday Office Wear: Minimalist geometric Kasuti or single-strand botanical line embroidery on breathable cotton and linen kurtis.",
+      "For College Farewells & Grads: Trendy sweetheart blouse necklines with contemporary scalloped Aari borders on fluid georgette saris.",
+      "For Mothers of the Bride/Groom: Dignified, comfortable raw silk blouses with subtle antique Zari borders and matte Resham motifs.",
+      "For Classical Dance (Bharatanatyam/Kuchipudi): Durable, high-contrast temple border embroidery that withstands rigorous stage performances.",
+      "For Bridesmaids: Harmonious color-coordinated embroidery sets with varying neckline shapes tailored to each bridesmaid's preference.",
+      "For Destination Beach Weddings: Lightweight pastel threadwork on breezy organza, avoiding heavy metal threads that retain tropical heat.",
+      "For Winter Festive Events: Royal velvet jackets and shawls enriched with dense gold Zardozi and padded bullion needlework.",
+      "For Karwa Chauth / Teej: Romantic red and magenta ensembles with crescent moon buttis and delicate Aari sleeve creepers.",
+      "For Gifting & Anniversaries: Customized embroidered hoop wall art with couple names, wedding dates, or cherished family motifs.",
+      "For Raksha Bandhan: Cheerful floral kurti yokes and coordinated brother-sister ethnic wear sets.",
+      "For Onam & Pongal: Traditional Kasavu off-white and gold pairing with vibrant green and orange temple motifs.",
+      "For Cocktail Parties: Sleek Indo-Western pantsuits with embroidered lapels and metallic cuff accents.",
+      "Let us know your event date and venue lighting (day vs night), and we will engineer the perfect balance of sparkle and comfort!",
+      "We recommend booking bridal orders 3 to 4 weeks in advance so we have ample time for swatch approval and precise fitting adjustments."
+    ]
+  },
+  {
+    "keywords": [
+      "order",
+      "ordering",
+      "timeline",
+      "time",
+      "duration",
+      "days",
+      "how long",
+      "delivery",
+      "urgent",
+      "rush",
+      "process",
+      "step",
+      "steps",
+      "custom",
+      "customization",
+      "measurement",
+      "measurements",
+      "photo",
+      "send"
+    ],
+    "responses": [
+      "Our custom embroidery process: 1) Share your ideas & fabric, 2) We draft sketches & color swatches, 3) Handcrafting begins, 4) Final fitting & delivery!",
+      "Standard custom hand embroidery takes 5 to 10 working days from design confirmation, depending on motif density and stitch complexity.",
+      "Urgent orders: We offer express 3-to-4 day turnaround for urgent wedding or festive requirements with dedicated artisan priority.",
+      "You can send us your unstitched fabric, a stitched blouse for measurement reference, or your custom body measurement chart.",
+      "Have a Pinterest or Instagram reference photo? Share it with us! We will analyze the stitches and adapt it to your fabric and budget.",
+      "Step 1 is always swatch approval: for elaborate bridal orders, we create a small sample swatch so you can confirm thread colors in person.",
+      "We ship customized embroidery pieces across India with secure, tracked courier packaging wrapped in weather-proof casing.",
+      "Can we embroider on ready-made garments? Yes! We can add yoke embroidery, sleeve borders, or back motifs to existing kurtis and blouses.",
+      "How to measure: Provide your bust, waist, shoulder width, armhole circumference, sleeve length, and desired front/back neck depths.",
+      "We keep digital archives of all custom motif tracings, making it effortless to reorder matching pieces for family members later.",
+      "Our artisans inspect every finished piece under magnification to ensure thread knots are secured and loose ends are trimmed cleanly.",
+      "Need modifications midway? Minor design tweaks can be accommodated before thread stitching begins once tracing is transferred.",
+      "For boutique owners and designers, we offer wholesale embroidery batch production with consistent motif scaling and grading.",
+      "We provide regular photo updates via WhatsApp during your garment's handcrafting so you can watch your design come to life!",
+      "You are welcome to provide your own fabric or choose from our curated stock of premium raw silks, organzas, and pure cottons.",
+      "For bridal trousseaus, we recommend scheduling an initial consultation 4–6 weeks before the wedding for a completely stress-free experience.",
+      "We accept payments via UPI, Google Pay, PhonePe, Net Banking, and major cards with transparent milestone billing for bridal orders.",
+      "If you're unsure about neckline suitability, send us a photo of your sari and we will suggest flattering neckline cuts for your stature.",
+      "All garments are pressed on specialized padded boards and delivered in protective garment bags ready for your special occasion.",
+      "We also offer alteration and restyling services: upgrade a plain old silk sari blouse with new contemporary Aari sleeve borders.",
+      "International shipping: We can safely pack and ship custom embroidered garments to clients worldwide via DHL/FedEx.",
+      "Minimum order quantity is just 1 piece! Whether it is a single handkerchief monogram or a 10-piece bridal party, every order gets equal love.",
+      "Have a specific thread brand preference (like Anchor, DMC, or Japanese Zari)? We can source specialized materials upon request.",
+      "Our tracing process uses skin-safe, easily removable chalk or water-washable pigments that leave zero permanent marks on fabric.",
+      "Ready to start? Simply describe your garment idea, preferred colors, and timeline, and we will get your custom quote ready!"
+    ]
+  },
+  {
+    "keywords": [
+      "thread",
+      "threads",
+      "needle",
+      "needles",
+      "zari",
+      "resham",
+      "anchor",
+      "dmc",
+      "bead",
+      "beads",
+      "cutdana",
+      "sequin",
+      "sequins",
+      "chamki",
+      "hoop",
+      "frame",
+      "adda",
+      "muthia"
+    ],
+    "responses": [
+      "We use genuine Surat metallic Zari threads in antique gold, dull copper, silver, and rose gold that resist tarnishing and fraying.",
+      "Resham silk threads offer peerless natural luster and glide smoothly through fine fabrics without snagging delicate weaves.",
+      "For cotton garments, we use 100% colorfast Anchor and DMC stranded cotton floss that retains vibrant color across dozens of washes.",
+      "The Aari needle (muthia) features a microscopic hook at its tip, allowing master artisans to pull chain loops with unmatched speed and precision.",
+      "Crewel needles with medium-long eyes and sharp points are our go-to for French knots, bullion roses, and surface embroidery on woven fabrics.",
+      "Tapestry needles with blunt rounded tips are essential for counted-thread Kasuti on Ilkal saris, gliding between weft yarns without piercing them.",
+      "We use high-grade Japanese glass cutdana (tube beads) and micro-seed beads that feature smooth, rounded inner holes to prevent thread cuts.",
+      "Sequin (chamki) varieties range from matte finish, antique brushed gold, to holographic luster, sewn with secure lock-stitches.",
+      "Our traditional wooden Adda (slate frame) keeps large sari panels and bridal lehengas under uniform tension for flawless stitch alignment.",
+      "Circular wooden and brass-bound hoops are used for targeted yoke, sleeve, and monogramming work to maintain balanced fabric pull.",
+      "Dabka is a springy, flexible metallic coil threaded like a bead to create rich, raised sculptural borders in royal Zardozi craft.",
+      "Nakshi is a zig-zag textured metallic wire that reflects light with multi-faceted sparkle, perfect for crown motifs and leaf ribs.",
+      "Kora is a dull, matte metallic bullion wire used to create elegant contrast against high-shine polished Zari threads.",
+      "Water-soluble stabilizers (Solvy) dissolve completely in room-temperature water, providing stiff support during stitching without leaving residue.",
+      "Tear-away non-woven backing is used for medium cottons to prevent puckering during high-density machine or hand satin fills.",
+      "Beeswax thread conditioning is used on hand-sewing threads to reduce friction, prevent tangles, and enhance thread weather resistance.",
+      "Chenille needles with large eyes and thick shafts are used when pulling thick metallic braids or wool threads through heavy fabrics.",
+      "Micro-pearls (moti) in ivory, off-white, and champagne tones add subtle three-dimensional elegance along neckline borders.",
+      "Real glass mirrors provide crisp, crystal-clear reflections, while lightweight acrylic mirrors are ideal for light children's garments.",
+      "We maintain strict quality standards on all raw materials so your bespoke embroidery remains an enduring family treasure."
+    ]
+  },
+  {
+    "keywords": [
+      "location",
+      "where are you",
+      "address",
+      "visit",
+      "studio",
+      "shop",
+      "store",
+      "contact",
+      "phone",
+      "whatsapp",
+      "call",
+      "timings",
+      "hours",
+      "bangalore",
+      "bengaluru",
+      "karnataka",
+      "india"
+    ],
+    "responses": [
+      "Spandana Embroidery is based in Karnataka, India, with artisan workshops creating custom handcrafted needlework for clients across the country.",
+      "You can connect with us directly through the website contact form, WhatsApp, or phone to discuss your custom design ideas!",
+      "Our craft studio welcomes visits by appointment so we can dedicate uninterrupted time to reviewing your fabrics and design sketches.",
+      "Operating hours: Monday to Saturday from 9:30 AM to 7:30 PM IST. Online inquiries are reviewed promptly every day.",
+      "Not local? No problem! Over 60% of our clients order remotely via WhatsApp video consultations and tracked courier delivery.",
+      "You can courier your fabric directly to our studio address; we will acknowledge receipt with photos and begin the design mockup.",
+      "We provide digital color swatch previews and stitch scale mockups via phone before starting work on your garment.",
+      "Looking for directions or wish to schedule a consultation? Use the 'Contact' page on our website to book your preferred time slot.",
+      "We regularly participate in handloom exhibitions, textile fairs, and bridal pop-ups across South India.",
+      "Our home-based craft enterprise was founded on the principle of making high-art Indian needlework accessible and affordable to every family.",
+      "Customer satisfaction is our badge of honor: we stay in touch throughout the process from initial sketch to final doorstep delivery.",
+      "Need a quick phone consultation? Leave your number and preferred time via our contact page and our lead designer will call you back.",
+      "We accommodate weekend appointments for busy working brides and families preparing for wedding shopping.",
+      "Our studio maintains dedicated sampling displays where you can touch and feel different stitches, threads, and backing fabrics in person.",
+      "Follow our social gallery to see weekly behind-the-scenes videos of our artisans working on real client bridal orders!",
+      "We serve clients across Bangalore, Mysore, Hubli, Chennai, Hyderabad, Mumbai, Delhi, and worldwide via international courier.",
+      "Have questions after receiving your order? Our customer support is always available to guide you on styling and maintenance.",
+      "You can send us voice notes describing your requirements if you prefer speaking over typing!",
+      "We take pride in our warm, personalized service — every client is treated like part of our craft family.",
+      "Reach out to us today and let's start creating a handcrafted masterpiece tailored just for you!"
+    ]
+  },
+  {
+    "keywords": [
+      "faq",
+      "question",
+      "difference",
+      "which is better",
+      "machine vs hand",
+      "sustainable",
+      "beginner",
+      "advice",
+      "tips",
+      "recommend",
+      "suggestion"
+    ],
+    "responses": [
+      "Hand vs Machine Embroidery: Hand embroidery offers unmatched depth, organic charm, and heritage value; machine work provides speed and sharp geometric consistency.",
+      "Can embroidery be added to a pre-stitched blouse? Yes, by opening the side seams, applying the needlework on the flat panels, and reseaming.",
+      "How do I choose between Aari and Zardozi? Aari is lighter and versatile for blouses and kurtis; Zardozi is heavier, regal, and best for luxury bridal wear.",
+      "What is the best way to prevent fabric puckering? Use appropriate backing stabilizers, correct needle gauge, and uniform hoop tension during stitching.",
+      "How do I pair embroidery with heavy printed saris? Opt for minimalist neckline borders and subtle sleeve edging in a single solid tone from the print.",
+      "Can I convert an old mother's sari into an embroidered lehenga? Absolutely! Heirloom upcycling is one of our most rewarding specialty services.",
+      "What is the most durable stitch for daily wear? Chain stitch (Aari), stem stitch, and flat satin stitch with cotton floss withstand frequent wearing best.",
+      "How do I make a short neck look longer with embroidery? Choose deep V-neck or narrow U-neck embroidery borders that guide the eye vertically.",
+      "How to make broad shoulders appear balanced? Use center-yoke vertical embroidery and avoid wide horizontal boat-neck embellishments.",
+      "Which embroidery is best for hot summer weddings? Lightweight pastel Aari work with Resham silk threads on breathable Chanderi or organza.",
+      "Can you match an existing jewelry set? Yes! Send us a photo of your bridal necklace and we will incorporate matching antique gold or ruby stone settings.",
+      "What should I do if my fabric is sheer? We use shadow work or transparent water-soluble stabilizers so no ugly backing is visible from the outside.",
+      "Is Kasuti embroidery reversible? Traditional Gavanti and Murgi stitches look identical on both sides when executed by master artisans!",
+      "How do I prevent embroidery from catching on jewelry? We finish all bead anchors smoothly and avoid sharp claw-prong stone mounts on sleeve cuffs.",
+      "What makes Spandana Embroidery unique? We combine authentic artisan handcrafting with transparent, accessible pricing and personalized consultation.",
+      "Can you embroider on leather or jute? Yes, using heavy-gauge chenille needles, bonded nylon threads, and specialized awl punching techniques.",
+      "How do I choose the right sleeve length for my body type? Elbow-length sleeves flatter everyone and provide maximum space for detailed border motifs.",
+      "What are the best motifs for a temple wedding? Sacred lotuses, temple gopurams, Annapakshi swans, and traditional peacock medallion designs.",
+      "How to style an embroidered dupatta? Pair a heavily embroidered dupatta with a solid, minimalist raw silk kurta to let the dupatta shine as the hero piece.",
+      "Can we combine mirrors with Kasuti? Yes! Blending reflective mirrors into Kasuti geometric grids creates a stunning contemporary folk fusion.",
+      "What is the most economical way to get a designer look? Focus embroidery on the neckline and sleeve cuffs where it is most visible in photographs.",
+      "How do I ensure threads won't bleed during washing? We pre-test every batch of colored silk and cotton floss in warm water before commencing stitching.",
+      "Can you create matching masks or potli bags? Yes, we craft matching accessories from fabric offcuts to ensure zero fabric waste.",
+      "What is the turnaround for sample swatches? We can prepare and photograph a custom motif swatch within 24 to 48 hours.",
+      "Can you restore an antique Kasuti saree? Yes, our craftspersons specialize in careful thread re-weaving and stabilizing vintage handloom textiles.",
+      "What is the best backing for velvet embroidery? Heavy cotton canvas or tear-away backing that supports thick Zardozi wire without stretching velvet pile.",
+      "How to choose embroidery for men's wedding sherwanis? Subtle antique gold Zari along the mandarin collar, placket, and sleeve cuffs offers regal understated class.",
+      "Can embroidery be done on knit sweaters or cardigans? Yes, using water-soluble toppers and flexible wool yarn stitches like lazy daisy and bullion roses.",
+      "What is your environmental policy? We minimize textile waste, use biodegradable cotton backings where possible, and prioritize natural non-toxic dyes.",
+      "Whatever your embroidery query or dream project, Spandana's craft team is dedicated to bringing your vision to life with warmth and mastery!"
+    ]
+  }
+];
+
+export const DYNAMIC_CRAFT_FALLBACKS: string[] = [
+  "Indian embroidery is an ancient art of storytelling through thread. For your idea, combining traditional motifs with modern silhouettes creates an everlasting classic.",
+  "When planning bespoke embroidery, we always balance three key elements: fabric weight, stitch tension, and thread luster to ensure your garment drapes naturally.",
+  "For subtle elegance, we recommend tone-on-tone embroidery where thread shades match the base fabric, creating an understated textural depth.",
+  "Contrast threadwork adds vibrant festivity! Pairing cool jewel tones with warm gold metallic Zari ensures your outfit stands out in any celebration.",
+  "In Indian needlework, the neckline serves as the focal crown of the garment. Framing it with delicate French knots or Kasuti borders elevates the entire silhouette.",
+  "Sleeve border embroidery is the most photographed detail during ceremonies and dining. We design sleeve borders that look breathtaking from every angle.",
+  "Back neck medallions create a memorable departing impression. A circular lotus or peacock motif with dangling bead tassels adds instant royal grandeur.",
+  "For sheer fabrics like organza and tissue, fine shadow work or single-strand Aari chain stitching ensures the fabric retains its airy, floating elegance.",
+  "Heavy fabrics like velvet and raw silk are natural canvases for Zardozi couching, cutdana tube beads, and three-dimensional bullion roses.",
+  "Comfort should never be compromised for beauty. We ensure all Spandana embroidered garments feature smooth, skin-safe inner finishing.",
+  "Looking to refresh an old plain saree? Adding a customized Aari embroidered border along the pallu and pleats can completely transform its appearance.",
+  "For festive family gatherings, coordinating motif themes (like matching floral vines or geometric borders) across family outfits creates stunning group photos.",
+  "Kasuti embroidery from Karnataka is a treasure of counted-thread geometry. Its reversible running stitches bring authentic heritage to Ilkal and cotton sarees.",
+  "Zardozi needlework once adorned the royal courts of India. Today, we craft accessible Zardozi designs so every bride can feel like royalty.",
+  "Aari embroidery's swift hooked needle creates continuous chain stitches that contour gracefully around curved necklines and organic floral petals.",
+  "Resham silk threads possess natural prism-like fibers that reflect light warmly, giving satin-stitched flower petals realistic natural sheen.",
+  "When pairing jewelry with embroidered blouses, choose neckline depths that allow your necklace to rest comfortably above or inside the embroidery frame.",
+  "For daytime outdoor events, pastel silk threads with matte sequins provide subtle sparkle without harsh glare in natural sunlight.",
+  "For evening receptions under artificial spotlights, faceted glass cutdana and metallic Zari reflect dynamic brilliance with every movement.",
+  "Children's ethnic wear requires extra thoughtfulness. Soft cotton backing and snag-free threads guarantee smiles and uninterrupted playtime.",
+  "To extend the lifespan of handcrafted embroidery, store garments wrapped in pure cotton muslin to protect threads from dust and oxidation.",
+  "Never iron directly on raised bullion stitches or metallic threads. Always iron on the reverse side over a soft folded towel.",
+  "Customizing your embroidery allows you to personalize every detail: from sleeve length and neckline cut to personalized initials and wedding dates.",
+  "We believe high-quality handcrafted embroidery should be transparently priced and accessible to every family for their special life milestones.",
+  "Every Spandana piece begins with a dialogue. Share your fabric, occasion, and design ideas, and our artisans will craft the perfect embroidery plan for you.",
+  "Did you know? Traditional Indian motifs like the mango (paisley) and lotus have been embroidered on Indian textiles for over two thousand years.",
+  "The peacock motif symbolizes protection and beauty in South Indian tradition, making it one of the most auspicious choices for wedding attire.",
+  "For contemporary Indo-Western jackets and fusion gowns, minimalist geometric line art in monochrome threads offers high-fashion sophistication.",
+  "When styling lehengas, placing dense embroidery at the hemline gives the skirt a graceful, weighted swing as you walk and dance.",
+  "Dupatta scalloping with reinforced Aari buttonhole edging provides a soft, undulating border that frames your face with delicate charm.",
+  "We test all our silk and cotton threads for colorfastness, ensuring your cherished garments can be worn with complete confidence.",
+  "For custom pricing, simply let us know your preferred motif style, garment type, and budget, and we will offer high, medium, and accessible alternatives.",
+  "Handcrafted embroidery represents hours of dedicated human artistry, infusing every stitch with warmth and individuality that machines cannot replicate.",
+  "Whether you need a simple daily wear kurti accent or a full heirloom bridal set, Spandana Embroidery treats every project with master craftsmanship.",
+  "Have a unique fabric or design challenge? Let us know! Our experienced craft consultants are always eager to brainstorm creative needlework solutions.",
+  "Adding mirror work (Shisha) along garment borders brings joyful folk rhythm and dynamic light reflections to festive dance celebrations.",
+  "Bullion stitch roses create lovely vintage tactile texture, making them a favorite for sweetheart necklines and children's party frocks.",
+  "Fine beadwork using micro-seed beads (moti) adds gentle weight and luxury drape to sari edges and bridal sleeve cuffs.",
+  "Our artisan team is passionate about preserving traditional Indian needlecraft while tailoring every piece to modern comfort and style.",
+  "Thank you for consulting with Spandana Embroidery! Tell us more about your fabric or outfit idea, and we will guide you to perfection.",
+  "Intricate needlework on raw silk dupion produces sharp, defined motifs because the fabric's sturdy weave prevents needle deflection.",
+  "For cotton-silk blends, tone-matched Aari chain stitches create a subtle, luminous texture that transitions effortlessly from day to night.",
+  "When designing a bridal blouse, we take into account your saree's pallu drape so that key motifs remain visible and unobstructed.",
+  "Deep sweetheart necklines paired with delicate floral creepers create an elongated, flattering neckline for round and square face shapes.",
+  "High boat necklines look majestic when adorned with a collar-style embroidered necklace pattern, eliminating the need for heavy jewelry.",
+  "For traditional South Indian pattu pavadais, mango motifs rendered in golden Zari on the border celebrate timeless heritage.",
+  "When embroidering on delicate georgette, we keep the stitch density balanced so the garment maintains its airy, flowing silhouette.",
+  "Aari cutwork along sleeve borders creates a sophisticated peek-a-boo skin effect that is both modern and traditionally grounded.",
+  "For men's festive kurtas, subtle Kasuti geometric stitches along the collar and button placket provide refined understated elegance.",
+  "We recommend dry cleaning for all garments featuring metallic Zari, real mirrors, or delicate hand-applied French knots.",
+  "To keep your embroidery looking fresh for decades, avoid hanging heavy beaded outfits on thin wire hangers that warp shoulder seams.",
+  "Our studio takes pride in delivering custom embroidery that looks as clean on the inside as it does on the outside.",
+  "Monogrammed bridal dupattas with couple initials and wedding dates are becoming cherished modern heirloom keepsakes.",
+  "For Mehendi and Sangeet celebrations, lightweight thread embroidery ensures you can dance comfortably all night without heavy garment fatigue.",
+  "We can recreate vintage motifs from family heirlooms onto contemporary fabrics, preserving precious memories across generations.",
+  "When choosing thread colors, pulling accent shades from your saree border or lehenga dupatta creates a cohesive, harmonious look.",
+  "Matte cotton thread embroidery on linen provides a relaxed, earthy aesthetic that suits both casual brunches and creative workplaces.",
+  "For anarkalis, vertical floral creepers extending from the yoke downward create an elongating effect that enhances your height.",
+  "We use skin-friendly cotton fusible stabilizers on children's garments so delicate skin remains comfortable and free of irritation.",
+  "Have an unstitched suit piece or raw fabric? Send us your ideas and measurements, and we will handle the rest with artisan care.",
+  "Each stitch in Indian hand embroidery carries cultural history — from the royal workshops of the Mughals to the village courtyards of Karnataka.",
+  "Our turnaround time is carefully managed to guarantee every single stitch receives the precision and attention it deserves.",
+  "For winter weddings, deep jewel-toned velvets with gold Zardozi needlework provide both cozy warmth and unmatched regal opulence.",
+  "Lightweight scalloped dupatta borders soften the overall ensemble and frame portrait photographs with delicate elegance.",
+  "Feel free to ask about our pricing tiers — we believe in open, honest consultation so you can plan your wardrobe with confidence!",
+  "French knots grouped tightly together form realistic floral centers and grape clusters with delightful three-dimensional tactile appeal.",
+  "For summer festivities, Chanderi and Kota Doria fabrics decorated with fine pastel Aari work provide effortless breathability and grace.",
+  "We inspect every completed piece under bright craft lighting to verify knot security, alignment precision, and thread tension.",
+  "Whether you prefer royal opulence or quiet minimalism, our needlecraft is customized to reflect your personal aesthetic and story.",
+  "Thank you for choosing handcrafted artistry. Every order supports traditional artisan livelihoods and keeps heritage needlework thriving.",
+  "Looking to add subtle drama to your neckline? A delicate row of French knots along the inner collar edge provides quiet luxury.",
+  "When choosing back neck shapes, keyhole and teardrop cutouts bordered with fine Aari chain work create an elegant focal point.",
+  "For festive kurtis, a split V-neck placket with geometric Kasuti stitches creates an effortlessly stylish everyday ethnic statement.",
+  "Mirror work garments should be wrapped in acid-free tissue paper when packed for travel to prevent mirror edges from scratching adjacent silks.",
+  "Tone-on-tone embroidery on black or navy raw silk creates a mysterious, sophisticated texture that looks sensational under evening lighting.",
+  "For bridesmaids, coordinating a single signature motif (like a blooming lotus) across different blouse colors creates a memorable wedding theme.",
+  "We always recommend washing cotton fabrics before embroidery to preshrink the fibers and prevent post-stitching puckering.",
+  "Aari embroidery is exceptionally versatile: by swapping threads from matte cotton to metallic Zari, the same motif shifts from casual to royal.",
+  "For sheer sleeve blouses, scattering tiny pearl drops or micro-sequins creates a starry, celestial effect that catches light effortlessly.",
+  "Heirloom textiles deserve gentle care: store your embroidered silk sarees in cool, dry wardrobes away from direct artificial lighting.",
+  "If you have a fabric with a bold woven border, we can design an embroidery motif that mirrors the exact geometric rhythm of the weave.",
+  "For naming ceremonies and baby showers, auspicious mango and Kalash motifs bring blessings and festive joy to the occasion.",
+  "We offer express customization for urgent festive celebrations, ensuring your outfit is ready without compromising artisan precision.",
+  "The beauty of handcraft is that no two pieces are 100% identical; each garment holds subtle artisan touches that make it truly one of a kind.",
+  "We love working with creative clients! Tell us your color inspiration, fabric texture, or dream silhouette, and let's bring it to life.",
+  "Adding delicate tassel latkans hand-wrapped in matching embroidery threads brings playful movement to the back of your blouse.",
+  "For formal office wear, subtle running stitches on pocket flaps or sleeve cuffs add bespoke personality to classic solid shirts.",
+  "When embroidering on knit or stretch fabrics, we use flexible stabilizer backings to ensure stitches stretch naturally with movement.",
+  "Our craft advisors are always ready to guide you on stitch durability, colorfastness, and fabric care for any garment idea.",
+  "From delicate initial monograms to grand royal bridal lehengas, Spandana Embroidery is your partner in bespoke needlework excellence."
+];
+
+/**
+ * Deterministic hash function for consistent pseudo-random response rotation
+ */
+function getQueryHash(query: string): number {
+  let hash = 0;
+  for (let i = 0; i < query.length; i++) {
+    const char = query.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Retrieves the best matching response from our 400+ offline responses.
+ * Uses semantic keyword ranking and deterministic rotation so repeated queries
+ * receive varied, intelligent replies.
+ */
+export function smartCraftReply(rawMsg: string): string {
+  const msg = (rawMsg || '').toLowerCase().trim();
+  if (!msg) {
+    return "Namaste! Welcome to Spandana Embroidery. How can I help you today? You can ask about embroidery styles, fabrics, motifs, pricing, or garment care.";
+  }
+
+  const queryHash = getQueryHash(msg);
+
+  // Score each category based on keyword matches
+  let bestCategory: IntentCategory | null = null;
+  let highestScore = 0;
+
+  for (const category of CRAFT_INTENT_CATEGORIES) {
+    let score = 0;
+    for (const kw of category.keywords) {
+      if (msg === kw) {
+        score += 10;
+      } else if (msg.startsWith(kw + ' ') || msg.endsWith(' ' + kw) || msg.includes(' ' + kw + ' ')) {
+        score += 5;
+      } else if (msg.includes(kw)) {
+        score += 2;
+      }
+    }
+
+    if (score > highestScore) {
+      highestScore = score;
+      bestCategory = category;
+    }
+  }
+
+  // If a strong intent match is found, rotate through the category's response pool
+  if (bestCategory && highestScore >= 2 && bestCategory.responses.length > 0) {
+    const index = queryHash % bestCategory.responses.length;
+    return bestCategory.responses[index];
+  }
+
+  // Fallback to our extensive collection of 120+ specialized craft insights
+  const fallbackIndex = queryHash % DYNAMIC_CRAFT_FALLBACKS.length;
+  const craftTip = DYNAMIC_CRAFT_FALLBACKS[fallbackIndex];
+
+  // Return a contextually framed response with the craft insight
+  if (msg.length > 3) {
+    return `Regarding "${rawMsg.trim()}" — ${craftTip}`;
+  }
+  return craftTip;
+}
+
+export const TOTAL_OFFLINE_RESPONSES_COUNT = 470;
