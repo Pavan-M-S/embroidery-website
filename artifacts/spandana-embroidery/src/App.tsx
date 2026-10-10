@@ -88,6 +88,10 @@ const pageMeta: Record<string, [string, string]> = {
     "Resources | Spandana Embroidery",
     "Practical notes for choosing, caring for, and planning embroidery.",
   ],
+  "/track-order": [
+    "Track Order | Spandana Embroidery",
+    "Live needlework status for your custom embroidery order.",
+  ],
   "/account": [
     "Account | Spandana Embroidery",
     "Try local-only demo sign-in and registration states.",
@@ -348,26 +352,20 @@ function App() {
       )}
       <main id="main" tabIndex={-1}>
         <Switch>
-          <Route path="/" component={() => <Home addQuote={addQuote} />} />
+          <Route path="/" element={<Home addQuote={addQuote} />} />
           <Route
             path="/designs"
-            component={() => (
+            element={
               <DesignsPage
                 favorites={favorites}
                 toggleFavorite={toggleFavorite}
                 addQuote={addQuote}
                 focusSearch={focusPortfolioSearch}
               />
-            )}
+            }
           />
-          <Route
-            path="/pricing"
-            component={() => <PricingPage addQuote={addQuote} />}
-          />
-          <Route
-            path="/custom-design"
-            component={() => <CustomPage quoteIds={quotes} />}
-          />
+          <Route path="/pricing" element={<PricingPage addQuote={addQuote} />} />
+          <Route path="/custom-design" element={<CustomPage quoteIds={quotes} />} />
           <Route path="/membership" component={MembershipPage} />
           <Route path="/resources" component={ResourcesPage} />
           <Route path="/track-order" component={TrackOrderPage} />
