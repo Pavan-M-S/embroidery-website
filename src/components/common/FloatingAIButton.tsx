@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Sparkles, MessageSquareHeart } from 'lucide-react';
-import { useShopping } from '../../context/ShoppingContext';
+import React, { useState } from "react";
+import { Sparkles, MessageSquareHeart } from "lucide-react";
+import { useShopping } from "../../context/ShoppingContext";
 
 export const FloatingAIButton: React.FC = () => {
   const { openAdvisor, isAdvisorOpen } = useShopping();

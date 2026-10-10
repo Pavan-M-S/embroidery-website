@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 /**
  * Custom Cursor Component
@@ -14,8 +14,12 @@ export const CustomCursor: React.FC = () => {
 
   useEffect(() => {
     // Check if device supports fine hover and prefers normal motion
-    const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fineHover = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     if (!fineHover || prefersReduced) {
       return;
@@ -30,14 +34,14 @@ export const CustomCursor: React.FC = () => {
       const target = e.target as HTMLElement | null;
       if (target) {
         const isClickable =
-          target.tagName === 'BUTTON' ||
-          target.tagName === 'A' ||
-          target.tagName === 'INPUT' ||
-          target.tagName === 'SELECT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.getAttribute('role') === 'button' ||
-          target.closest('button') !== null ||
-          target.closest('a') !== null;
+          target.tagName === "BUTTON" ||
+          target.tagName === "A" ||
+          target.tagName === "INPUT" ||
+          target.tagName === "SELECT" ||
+          target.tagName === "TEXTAREA" ||
+          target.getAttribute("role") === "button" ||
+          target.closest("button") !== null ||
+          target.closest("a") !== null;
         setIsPointer(isClickable);
       }
     };
@@ -45,14 +49,14 @@ export const CustomCursor: React.FC = () => {
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseenter', onMouseEnter);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseleave", onMouseLeave);
+    document.addEventListener("mouseenter", onMouseEnter);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseleave', onMouseLeave);
-      document.removeEventListener('mouseenter', onMouseEnter);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      document.removeEventListener("mouseenter", onMouseEnter);
     };
   }, [isVisible]);
 
@@ -70,14 +74,14 @@ export const CustomCursor: React.FC = () => {
       <div
         className={`-translate-x-1/2 -translate-y-1/2 rounded-full border border-rose-500/60 transition-all duration-150 ease-out ${
           isPointer
-            ? 'w-9 h-9 bg-rose-500/15 scale-125 border-dashed border-rose-500'
-            : 'w-6 h-6 bg-transparent border-solid'
+            ? "w-9 h-9 bg-rose-500/15 scale-125 border-dashed border-rose-500"
+            : "w-6 h-6 bg-transparent border-solid"
         }`}
       />
       {/* Center thread dot */}
       <div
         className={`absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-75 ${
-          isPointer ? 'w-2 h-2 bg-amber-500' : 'w-1.5 h-1.5 bg-rose-500'
+          isPointer ? "w-2 h-2 bg-amber-500" : "w-1.5 h-1.5 bg-rose-500"
         }`}
       />
     </div>

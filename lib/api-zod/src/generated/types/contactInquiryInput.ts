@@ -5,21 +5,21 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { ContactInquiryInputTopic } from './contactInquiryInputTopic';
+import type { ContactInquiryInputTopic } from "./contactInquiryInputTopic";
 
 export interface ContactInquiryInput {
   /**
-     * @minLength 1
-     * @maxLength 100
-     */
+   * @minLength 1
+   * @maxLength 100
+   */
   name: string;
   /** @maxLength 254 */
   email: string;
   topic: ContactInquiryInputTopic;
   /**
-     * @minLength 1
-     * @maxLength 5000
-     */
+   * @minLength 1
+   * @maxLength 5000
+   */
   message: string;
   consent: boolean;
   /** @maxLength 200 */

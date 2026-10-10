@@ -7,14 +7,20 @@ import type {
 const businessInbox = "spandanaemb.181224@gmail.com";
 
 function clean(value: string): string {
-  return value.replace(/\r\n?/g, "\n").replace(/\u0000/g, "").trim();
+  return value
+    .replace(/\r\n?/g, "\n")
+    .replace(/\u0000/g, "")
+    .trim();
 }
 
 function encodeRawMessage(message: string): string {
   return Buffer.from(message, "utf8").toString("base64url");
 }
 
-async function sendPlainTextEmail(subject: string, body: string): Promise<void> {
+async function sendPlainTextEmail(
+  subject: string,
+  body: string,
+): Promise<void> {
   const raw = encodeRawMessage(
     [
       `To: ${businessInbox}`,

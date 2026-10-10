@@ -6,13 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CustomInquiryInputGarment = typeof CustomInquiryInputGarment[keyof typeof CustomInquiryInputGarment];
-
+export type CustomInquiryInputGarment =
+  (typeof CustomInquiryInputGarment)[keyof typeof CustomInquiryInputGarment];
 
 export const CustomInquiryInputGarment = {
-  Blouse: 'Blouse',
-  Kurta: 'Kurta',
-  Dupatta: 'Dupatta',
-  'Children’s_clothing': 'Children’s clothing',
-  Other: 'Other',
+  Blouse: "Blouse",
+  Kurta: "Kurta",
+  Dupatta: "Dupatta",
+  "Children’s_clothing": "Children’s clothing",
+  Other: "Other",
 } as const;

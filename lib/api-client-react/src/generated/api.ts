@@ -5,10 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   MutationFunction,
   QueryFunction,
@@ -16,35 +13,35 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   ContactInquiryInput,
   CustomInquiryInput,
   HealthStatus,
   InquiryAccepted,
-  InquiryError
-} from './api.schemas';
+  InquiryError,
+} from "./api.schemas";
 
-import { customFetch } from '../custom-fetch';
-import type { ErrorType , BodyType } from '../custom-fetch';
+import { customFetch } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
-      type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
-
+type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
+const withQueryKey = <T extends object, K>(
+  query: T,
+  queryKey: K,
+): T & { queryKey: K } => {
   const result = { queryKey } as T & { queryKey: K };
   for (const key of Object.keys(query)) {
     // The explicit queryKey always wins, matching the previous
     // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
+    if (key === "queryKey") continue;
     Object.defineProperty(result, key, {
       enumerable: true,
       configurable: true,
@@ -55,256 +52,309 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 };
 
 export const getHealthCheckUrl = () => {
-
-
-
-
-  return `/api/healthz`
-}
+  return `/api/healthz`;
+};
 
 /**
  * Returns server health status
  * @summary Health check
  */
-export const healthCheck = async ( options?: Parameters<typeof customFetch>[1]): Promise<HealthStatus> => {
-
-  return customFetch<HealthStatus>(getHealthCheckUrl(),
-  {
+export const healthCheck = async (
+  options?: Parameters<typeof customFetch>[1],
+): Promise<HealthStatus> => {
+  return customFetch<HealthStatus>(getHealthCheckUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
+    method: "GET",
+  });
+};
 
 export const getHealthCheckQueryKey = () => {
-    return [
-    `/api/healthz`
-    ] as const;
-    }
+  return [`/api/healthz`] as const;
+};
 
+export const getHealthCheckQueryOptions = <
+  TData = Awaited<ReturnType<typeof healthCheck>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof healthCheck>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
+  const queryKey = queryOptions?.queryKey ?? getHealthCheckQueryKey();
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof healthCheck>>> = ({
+    signal,
+  }) => healthCheck({ signal, ...requestOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getHealthCheckQueryKey();
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof healthCheck>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
 
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof healthCheck>>> = ({ signal }) => healthCheck({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type HealthCheckQueryResult = NonNullable<Awaited<ReturnType<typeof healthCheck>>>
-export type HealthCheckQueryError = ErrorType<unknown>
-
+export type HealthCheckQueryResult = NonNullable<
+  Awaited<ReturnType<typeof healthCheck>>
+>;
+export type HealthCheckQueryError = ErrorType<unknown>;
 
 /**
  * @summary Health check
  */
 
-export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export function useHealthCheck<
+  TData = Awaited<ReturnType<typeof healthCheck>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof healthCheck>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getHealthCheckQueryOptions(options);
 
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getHealthCheckQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
 
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
-
 export const getSendCustomInquiryUrl = () => {
-
-
-
-
-  return `/api/inquiries/custom`
-}
+  return `/api/inquiries/custom`;
+};
 
 /**
  * @summary Send a custom embroidery inquiry
  */
-export const sendCustomInquiry = async (customInquiryInput: CustomInquiryInput, options?: Parameters<typeof customFetch>[1]): Promise<InquiryAccepted> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const sendCustomInquiry = async (
+  customInquiryInput: CustomInquiryInput,
+  options?: Parameters<typeof customFetch>[1],
+): Promise<InquiryAccepted> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-return customFetch<InquiryAccepted>(getSendCustomInquiryUrl(),
-  {
+  return customFetch<InquiryAccepted>(getSendCustomInquiryUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(customInquiryInput)
-  }
-);}
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(customInquiryInput),
+  });
+};
 
+export const getSendCustomInquiryMutationKey = () =>
+  ["sendCustomInquiry"] as const;
 
+export const getSendCustomInquiryMutationOptions = <
+  TError = ErrorType<InquiryError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendCustomInquiry>>,
+    TError,
+    SendCustomInquiryMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sendCustomInquiry>>,
+  TError,
+  SendCustomInquiryMutationVariables,
+  TContext
+> => {
+  const mutationKey = getSendCustomInquiryMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sendCustomInquiry>>,
+    SendCustomInquiryMutationVariables
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return sendCustomInquiry(data, requestOptions);
+  };
 
-export const getSendCustomInquiryMutationKey = () => ['sendCustomInquiry'] as const;
+  return { mutationFn, ...mutationOptions };
+};
 
-export const getSendCustomInquiryMutationOptions = <TError = ErrorType<InquiryError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendCustomInquiry>>, TError,SendCustomInquiryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof sendCustomInquiry>>, TError,SendCustomInquiryMutationVariables, TContext> => {
+export type SendCustomInquiryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sendCustomInquiry>>
+>;
+export type SendCustomInquiryMutationBody = BodyType<CustomInquiryInput>;
+export type SendCustomInquiryMutationError = ErrorType<InquiryError>;
+export type SendCustomInquiryMutationVariables = {
+  data: BodyType<CustomInquiryInput>;
+};
 
-const mutationKey = getSendCustomInquiryMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendCustomInquiry>>, SendCustomInquiryMutationVariables> = (props) => {
-          const {data} = props ?? {};
-
-          return  sendCustomInquiry(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SendCustomInquiryMutationResult = NonNullable<Awaited<ReturnType<typeof sendCustomInquiry>>>
-    export type SendCustomInquiryMutationBody = BodyType<CustomInquiryInput>
-    export type SendCustomInquiryMutationError = ErrorType<InquiryError>
-    export type SendCustomInquiryMutationVariables = {data: BodyType<CustomInquiryInput>}
-
-    /**
+/**
  * @summary Send a custom embroidery inquiry
  */
-export const useSendCustomInquiry = <TError = ErrorType<InquiryError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendCustomInquiry>>, TError,SendCustomInquiryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof sendCustomInquiry>>,
-        TError,
-        SendCustomInquiryMutationVariables,
-        TContext
-      > => {
-      return useMutation(getSendCustomInquiryMutationOptions(options));
-    }
+export const useSendCustomInquiry = <
+  TError = ErrorType<InquiryError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendCustomInquiry>>,
+    TError,
+    SendCustomInquiryMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sendCustomInquiry>>,
+  TError,
+  SendCustomInquiryMutationVariables,
+  TContext
+> => {
+  return useMutation(getSendCustomInquiryMutationOptions(options));
+};
 
 export const getSendContactInquiryUrl = () => {
-
-
-
-
-  return `/api/inquiries/contact`
-}
+  return `/api/inquiries/contact`;
+};
 
 /**
  * @summary Send a contact inquiry
  */
-export const sendContactInquiry = async (contactInquiryInput: ContactInquiryInput, options?: Parameters<typeof customFetch>[1]): Promise<InquiryAccepted> => {
-
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+export const sendContactInquiry = async (
+  contactInquiryInput: ContactInquiryInput,
+  options?: Parameters<typeof customFetch>[1],
+): Promise<InquiryAccepted> => {
+  const getHeaders = (
+    h?: NonNullable<RequestInit["headers"]>,
+  ): Record<string, string | readonly string[]> => {
     if (!h) return {};
     if (h instanceof Headers) return Object.fromEntries(h.entries());
     if (Symbol.iterator in h) {
       return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+        Array.from(
+          h as Iterable<Iterable<string>>,
+          (entry) => Array.from(entry) as [string, string],
+        ),
       );
     }
     const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+    for (const [name, value] of Object.entries<
+      string | readonly string[] | undefined
+    >(h)) {
       if (value !== undefined) headers[name] = value;
     }
     return headers;
   };
-return customFetch<InquiryAccepted>(getSendContactInquiryUrl(),
-  {
+  return customFetch<InquiryAccepted>(getSendContactInquiryUrl(), {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(contactInquiryInput)
-  }
-);}
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(options?.headers),
+    },
+    body: JSON.stringify(contactInquiryInput),
+  });
+};
 
+export const getSendContactInquiryMutationKey = () =>
+  ["sendContactInquiry"] as const;
 
+export const getSendContactInquiryMutationOptions = <
+  TError = ErrorType<InquiryError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendContactInquiry>>,
+    TError,
+    SendContactInquiryMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof sendContactInquiry>>,
+  TError,
+  SendContactInquiryMutationVariables,
+  TContext
+> => {
+  const mutationKey = getSendContactInquiryMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof sendContactInquiry>>,
+    SendContactInquiryMutationVariables
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return sendContactInquiry(data, requestOptions);
+  };
 
-export const getSendContactInquiryMutationKey = () => ['sendContactInquiry'] as const;
+  return { mutationFn, ...mutationOptions };
+};
 
-export const getSendContactInquiryMutationOptions = <TError = ErrorType<InquiryError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendContactInquiry>>, TError,SendContactInquiryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof sendContactInquiry>>, TError,SendContactInquiryMutationVariables, TContext> => {
+export type SendContactInquiryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof sendContactInquiry>>
+>;
+export type SendContactInquiryMutationBody = BodyType<ContactInquiryInput>;
+export type SendContactInquiryMutationError = ErrorType<InquiryError>;
+export type SendContactInquiryMutationVariables = {
+  data: BodyType<ContactInquiryInput>;
+};
 
-const mutationKey = getSendContactInquiryMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendContactInquiry>>, SendContactInquiryMutationVariables> = (props) => {
-          const {data} = props ?? {};
-
-          return  sendContactInquiry(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SendContactInquiryMutationResult = NonNullable<Awaited<ReturnType<typeof sendContactInquiry>>>
-    export type SendContactInquiryMutationBody = BodyType<ContactInquiryInput>
-    export type SendContactInquiryMutationError = ErrorType<InquiryError>
-    export type SendContactInquiryMutationVariables = {data: BodyType<ContactInquiryInput>}
-
-    /**
+/**
  * @summary Send a contact inquiry
  */
-export const useSendContactInquiry = <TError = ErrorType<InquiryError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendContactInquiry>>, TError,SendContactInquiryMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof sendContactInquiry>>,
-        TError,
-        SendContactInquiryMutationVariables,
-        TContext
-      > => {
-      return useMutation(getSendContactInquiryMutationOptions(options));
-    }
-
+export const useSendContactInquiry = <
+  TError = ErrorType<InquiryError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof sendContactInquiry>>,
+    TError,
+    SendContactInquiryMutationVariables,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof sendContactInquiry>>,
+  TError,
+  SendContactInquiryMutationVariables,
+  TContext
+> => {
+  return useMutation(getSendContactInquiryMutationOptions(options));
+};

@@ -9,11 +9,11 @@ export interface HealthStatus {
   status: string;
 }
 
-export type InquiryAcceptedStatus = typeof InquiryAcceptedStatus[keyof typeof InquiryAcceptedStatus];
-
+export type InquiryAcceptedStatus =
+  (typeof InquiryAcceptedStatus)[keyof typeof InquiryAcceptedStatus];
 
 export const InquiryAcceptedStatus = {
-  sent: 'sent',
+  sent: "sent",
 } as const;
 
 export interface InquiryAccepted {
@@ -24,54 +24,54 @@ export interface InquiryError {
   error: string;
 }
 
-export type CustomInquiryInputContactMethod = typeof CustomInquiryInputContactMethod[keyof typeof CustomInquiryInputContactMethod];
-
+export type CustomInquiryInputContactMethod =
+  (typeof CustomInquiryInputContactMethod)[keyof typeof CustomInquiryInputContactMethod];
 
 export const CustomInquiryInputContactMethod = {
-  email: 'email',
-  phone: 'phone',
+  email: "email",
+  phone: "phone",
 } as const;
 
-export type CustomInquiryInputGarment = typeof CustomInquiryInputGarment[keyof typeof CustomInquiryInputGarment];
-
+export type CustomInquiryInputGarment =
+  (typeof CustomInquiryInputGarment)[keyof typeof CustomInquiryInputGarment];
 
 export const CustomInquiryInputGarment = {
-  Blouse: 'Blouse',
-  Kurta: 'Kurta',
-  Dupatta: 'Dupatta',
-  'Children’s_clothing': 'Children’s clothing',
-  Other: 'Other',
+  Blouse: "Blouse",
+  Kurta: "Kurta",
+  Dupatta: "Dupatta",
+  "Children’s_clothing": "Children’s clothing",
+  Other: "Other",
 } as const;
 
-export type CustomInquiryInputBudget = typeof CustomInquiryInputBudget[keyof typeof CustomInquiryInputBudget];
-
+export type CustomInquiryInputBudget =
+  (typeof CustomInquiryInputBudget)[keyof typeof CustomInquiryInputBudget];
 
 export const CustomInquiryInputBudget = {
-  'Under_₹1,000': 'Under ₹1,000',
-  '₹1,000–₹3,000': '₹1,000–₹3,000',
-  '₹3,000+': '₹3,000+',
+  "Under_₹1,000": "Under ₹1,000",
+  "₹1,000–₹3,000": "₹1,000–₹3,000",
+  "₹3,000+": "₹3,000+",
 } as const;
 
 export interface CustomInquiryInput {
   /**
-     * @minLength 1
-     * @maxLength 100
-     */
+   * @minLength 1
+   * @maxLength 100
+   */
   name: string;
   contactMethod: CustomInquiryInputContactMethod;
   /**
-     * @minLength 3
-     * @maxLength 254
-     */
+   * @minLength 3
+   * @maxLength 254
+   */
   contactValue: string;
   garment: CustomInquiryInputGarment;
   budget?: CustomInquiryInputBudget;
   /** @maxLength 150 */
   colors?: string;
   /**
-     * @minLength 1
-     * @maxLength 4000
-     */
+   * @minLength 1
+   * @maxLength 4000
+   */
   idea: string;
   /** @maxLength 2000 */
   referenceUrl?: string;
@@ -80,31 +80,30 @@ export interface CustomInquiryInput {
   website?: string;
 }
 
-export type ContactInquiryInputTopic = typeof ContactInquiryInputTopic[keyof typeof ContactInquiryInputTopic];
-
+export type ContactInquiryInputTopic =
+  (typeof ContactInquiryInputTopic)[keyof typeof ContactInquiryInputTopic];
 
 export const ContactInquiryInputTopic = {
-  Custom_embroidery: 'Custom embroidery',
-  Pricing_question: 'Pricing question',
-  Something_else: 'Something else',
+  Custom_embroidery: "Custom embroidery",
+  Pricing_question: "Pricing question",
+  Something_else: "Something else",
 } as const;
 
 export interface ContactInquiryInput {
   /**
-     * @minLength 1
-     * @maxLength 100
-     */
+   * @minLength 1
+   * @maxLength 100
+   */
   name: string;
   /** @maxLength 254 */
   email: string;
   topic: ContactInquiryInputTopic;
   /**
-     * @minLength 1
-     * @maxLength 5000
-     */
+   * @minLength 1
+   * @maxLength 5000
+   */
   message: string;
   consent: boolean;
   /** @maxLength 200 */
   website?: string;
 }
-

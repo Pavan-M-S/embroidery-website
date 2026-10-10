@@ -6,9 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type InquiryAcceptedStatus = typeof InquiryAcceptedStatus[keyof typeof InquiryAcceptedStatus];
-
+export type InquiryAcceptedStatus =
+  (typeof InquiryAcceptedStatus)[keyof typeof InquiryAcceptedStatus];
 
 export const InquiryAcceptedStatus = {
-  sent: 'sent',
+  sent: "sent",
 } as const;

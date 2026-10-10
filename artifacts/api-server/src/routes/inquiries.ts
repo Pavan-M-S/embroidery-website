@@ -29,9 +29,7 @@ async function deliverInquiry(
 ): Promise<void> {
   try {
     await send();
-    res
-      .status(202)
-      .json(SendCustomInquiryResponse.parse({ status: "sent" }));
+    res.status(202).json(SendCustomInquiryResponse.parse({ status: "sent" }));
   } catch (error) {
     req.log.error(
       {
@@ -53,9 +51,7 @@ function isValidEmail(value: string): boolean {
 function isValidPhone(value: string): boolean {
   const digits = value.replace(/\D/g, "");
   return (
-    digits.length >= 7 &&
-    digits.length <= 15 &&
-    /^\+?[\d\s().-]+$/.test(value)
+    digits.length >= 7 && digits.length <= 15 && /^\+?[\d\s().-]+$/.test(value)
   );
 }
 
@@ -84,17 +80,14 @@ router.post("/inquiries/custom", async (req, res): Promise<void> => {
   if (
     (inquiry.contactMethod === "email" &&
       !isValidEmail(inquiry.contactValue)) ||
-    (inquiry.contactMethod === "phone" &&
-      !isValidPhone(inquiry.contactValue))
+    (inquiry.contactMethod === "phone" && !isValidPhone(inquiry.contactValue))
   ) {
     rejectInvalidRequest(req, res, ["contactValue"]);
     return;
   }
 
   if (inquiry.website?.trim()) {
-    res
-      .status(202)
-      .json(SendCustomInquiryResponse.parse({ status: "sent" }));
+    res.status(202).json(SendCustomInquiryResponse.parse({ status: "sent" }));
     return;
   }
 
@@ -123,9 +116,7 @@ router.post("/inquiries/contact", async (req, res): Promise<void> => {
   }
 
   if (inquiry.website?.trim()) {
-    res
-      .status(202)
-      .json(SendCustomInquiryResponse.parse({ status: "sent" }));
+    res.status(202).json(SendCustomInquiryResponse.parse({ status: "sent" }));
     return;
   }
 

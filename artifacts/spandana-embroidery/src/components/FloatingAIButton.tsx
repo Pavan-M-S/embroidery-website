@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, MessageSquareHeart } from 'lucide-react';
+import React, { useState } from "react";
+import { Sparkles, MessageSquareHeart } from "lucide-react";
 export const FloatingAIButton: React.FC<{
   isOpen: boolean;
   onOpen: () => void;

@@ -6,13 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './contactInquiryInput';
-export * from './contactInquiryInputTopic';
-export * from './customInquiryInput';
-export * from './customInquiryInputBudget';
-export * from './customInquiryInputContactMethod';
-export * from './customInquiryInputGarment';
-export * from './healthStatus';
-export * from './inquiryAccepted';
-export * from './inquiryAcceptedStatus';
-export * from './inquiryError';
+export * from "./contactInquiryInput";
+export * from "./contactInquiryInputTopic";
+export * from "./customInquiryInput";
+export * from "./customInquiryInputBudget";
+export * from "./customInquiryInputContactMethod";
+export * from "./customInquiryInputGarment";
+export * from "./healthStatus";
+export * from "./inquiryAccepted";
+export * from "./inquiryAcceptedStatus";
+export * from "./inquiryError";

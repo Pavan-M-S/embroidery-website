@@ -5,17 +5,15 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import * as zod from 'zod';
-
+import * as zod from "zod";
 
 /**
  * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
-  "status": zod.string()
-})
-
+  status: zod.string(),
+});
 
 /**
  * @summary Send a custom embroidery inquiry
@@ -33,25 +31,35 @@ export const sendCustomInquiryBodyReferenceUrlMax = 2000;
 
 export const sendCustomInquiryBodyWebsiteMax = 200;
 
-
-
 export const SendCustomInquiryBody = zod.object({
-  "name": zod.string().min(1).max(sendCustomInquiryBodyNameMax),
-  "contactMethod": zod.enum(['email', 'phone']),
-  "contactValue": zod.string().min(sendCustomInquiryBodyContactValueMin).max(sendCustomInquiryBodyContactValueMax),
-  "garment": zod.enum(['Blouse', 'Kurta', 'Dupatta', 'Children’s clothing', 'Other']),
-  "budget": zod.enum(['Under ₹1,000', '₹1,000–₹3,000', '₹3,000+']).optional(),
-  "colors": zod.string().max(sendCustomInquiryBodyColorsMax).optional(),
-  "idea": zod.string().min(1).max(sendCustomInquiryBodyIdeaMax),
-  "referenceUrl": zod.string().url().max(sendCustomInquiryBodyReferenceUrlMax).optional(),
-  "consent": zod.boolean(),
-  "website": zod.string().max(sendCustomInquiryBodyWebsiteMax).optional()
-})
+  name: zod.string().min(1).max(sendCustomInquiryBodyNameMax),
+  contactMethod: zod.enum(["email", "phone"]),
+  contactValue: zod
+    .string()
+    .min(sendCustomInquiryBodyContactValueMin)
+    .max(sendCustomInquiryBodyContactValueMax),
+  garment: zod.enum([
+    "Blouse",
+    "Kurta",
+    "Dupatta",
+    "Children’s clothing",
+    "Other",
+  ]),
+  budget: zod.enum(["Under ₹1,000", "₹1,000–₹3,000", "₹3,000+"]).optional(),
+  colors: zod.string().max(sendCustomInquiryBodyColorsMax).optional(),
+  idea: zod.string().min(1).max(sendCustomInquiryBodyIdeaMax),
+  referenceUrl: zod
+    .string()
+    .url()
+    .max(sendCustomInquiryBodyReferenceUrlMax)
+    .optional(),
+  consent: zod.boolean(),
+  website: zod.string().max(sendCustomInquiryBodyWebsiteMax).optional(),
+});
 
 export const SendCustomInquiryResponse = zod.object({
-  "status": zod.enum(['sent'])
-})
-
+  status: zod.enum(["sent"]),
+});
 
 /**
  * @summary Send a contact inquiry
@@ -64,19 +72,15 @@ export const sendContactInquiryBodyMessageMax = 5000;
 
 export const sendContactInquiryBodyWebsiteMax = 200;
 
-
-
 export const SendContactInquiryBody = zod.object({
-  "name": zod.string().min(1).max(sendContactInquiryBodyNameMax),
-  "email": zod.string().email().max(sendContactInquiryBodyEmailMax),
-  "topic": zod.enum(['Custom embroidery', 'Pricing question', 'Something else']),
-  "message": zod.string().min(1).max(sendContactInquiryBodyMessageMax),
-  "consent": zod.boolean(),
-  "website": zod.string().max(sendContactInquiryBodyWebsiteMax).optional()
-})
+  name: zod.string().min(1).max(sendContactInquiryBodyNameMax),
+  email: zod.string().email().max(sendContactInquiryBodyEmailMax),
+  topic: zod.enum(["Custom embroidery", "Pricing question", "Something else"]),
+  message: zod.string().min(1).max(sendContactInquiryBodyMessageMax),
+  consent: zod.boolean(),
+  website: zod.string().max(sendContactInquiryBodyWebsiteMax).optional(),
+});
 
 export const SendContactInquiryResponse = zod.object({
-  "status": zod.enum(['sent'])
-})
-
-
+  status: zod.enum(["sent"]),
+});

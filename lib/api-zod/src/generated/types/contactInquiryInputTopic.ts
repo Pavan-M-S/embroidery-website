@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ContactInquiryInputTopic = typeof ContactInquiryInputTopic[keyof typeof ContactInquiryInputTopic];
-
+export type ContactInquiryInputTopic =
+  (typeof ContactInquiryInputTopic)[keyof typeof ContactInquiryInputTopic];
 
 export const ContactInquiryInputTopic = {
-  Custom_embroidery: 'Custom embroidery',
-  Pricing_question: 'Pricing question',
-  Something_else: 'Something else',
+  Custom_embroidery: "Custom embroidery",
+  Pricing_question: "Pricing question",
+  Something_else: "Something else",
 } as const;

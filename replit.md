@@ -10,6 +10,7 @@ This project represents the smart-merge of the `main` and `main2` branches for t
 - `pnpm run build` — typecheck + build all packages.
 
 **Required env vars:**
+
 - `GEMINI_API_KEY`: Needed for the AI consultant and analysis features.
 - `PORT` & `BASE_PATH`: Needed by the frontend dev server.
 - `API_PORT`: Port for the API server (optional, defaults to 5000).

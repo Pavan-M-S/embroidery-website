@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from 'lucide-react';
-import { useShopping } from '../../context/ShoppingContext';
+import React, { useState, useEffect, useRef } from "react";
+import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from "lucide-react";
+import { useShopping } from "../../context/ShoppingContext";
 
 interface ChatMessage {
-  role: 'user' | 'model';
+  role: "user" | "model";
   text: string;
   timestamp: number;
 }
@@ -12,12 +12,12 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
   const { isAdvisorOpen, closeAdvisor, advisorTopic } = useShopping();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      role: 'model',
-      text: 'Namaste! Welcome to Spandana Embroidery. I am your Craft & Motif Consultant. How can I help you today? You can ask about embroidery styles, fabric recommendations, festive color pairings, or garment care.',
+      role: "model",
+      text: "Namaste! Welcome to Spandana Embroidery. I am your Craft & Motif Consultant. How can I help you today? You can ask about embroidery styles, fabric recommendations, festive color pairings, or garment care.",
       timestamp: Date.now(),
     },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -32,7 +32,7 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
   useEffect(() => {
     if (isAdvisorOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [isAdvisorOpen, messages]);
 
@@ -42,13 +42,13 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
     if (!textToSend.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
-      role: 'user',
+      role: "user",
       text: textToSend.trim(),
       timestamp: Date.now(),
     };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInput('');
+    setInput("");
     setIsLoading(true);
 
     try {
@@ -58,9 +58,9 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
         text: m.text,
       }));
 
-      const res = await fetch('/api/gemini/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/gemini/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: textToSend.trim(),
           history,
@@ -72,30 +72,41 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
       }
 
       const data = await res.json();
-      const reply = data.reply || 'Thank you for your question! For custom embroidery inquiries, feel free to share your fabric type and preferred motifs with our home craft workshop.';
+      const reply =
+        data.reply ||
+        "Thank you for your question! For custom embroidery inquiries, feel free to share your fabric type and preferred motifs with our home craft workshop.";
 
       setMessages((prev) => [
         ...prev,
         {
-          role: 'model',
+          role: "model",
           text: reply,
           timestamp: Date.now(),
         },
       ]);
     } catch (err) {
-      console.warn('Gemini chat error, using graceful craft response:', err);
+      console.warn("Gemini chat error, using graceful craft response:", err);
       // Graceful domain-authentic fallback
-      let fallback = 'For Indian embroidery on silk and festive garments, we recommend testing stitch tension with soft cotton backing. Zari and metallic threads look striking on raw silk and tussar, while bullion knots and lazy daisy stitches are gentlest on children’s garments.';
-      if (textToSend.toLowerCase().includes('price') || textToSend.toLowerCase().includes('cost')) {
-        fallback = 'At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.';
-      } else if (textToSend.toLowerCase().includes('wash') || textToSend.toLowerCase().includes('care')) {
-        fallback = 'Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!';
+      let fallback =
+        "For Indian embroidery on silk and festive garments, we recommend testing stitch tension with soft cotton backing. Zari and metallic threads look striking on raw silk and tussar, while bullion knots and lazy daisy stitches are gentlest on children’s garments.";
+      if (
+        textToSend.toLowerCase().includes("price") ||
+        textToSend.toLowerCase().includes("cost")
+      ) {
+        fallback =
+          "At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.";
+      } else if (
+        textToSend.toLowerCase().includes("wash") ||
+        textToSend.toLowerCase().includes("care")
+      ) {
+        fallback =
+          "Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!";
       }
 
       setMessages((prev) => [
         ...prev,
         {
-          role: 'model',
+          role: "model",
           text: fallback,
           timestamp: Date.now(),
         },
@@ -111,10 +122,10 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
   };
 
   const samplePrompts = [
-    'Best neckline stitches for raw silk kurti',
-    'Which embroidery is gentlest for children\'s clothes?',
-    'How do I care for zari thread work?',
-    'How does Spandana calculate custom quotes?',
+    "Best neckline stitches for raw silk kurti",
+    "Which embroidery is gentlest for children's clothes?",
+    "How do I care for zari thread work?",
+    "How does Spandana calculate custom quotes?",
   ];
 
   return (
@@ -138,7 +149,10 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
               <Sparkles className="w-4 h-4" aria-hidden="true" />
             </div>
             <div>
-              <h2 id="advisor-modal-title" className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2">
+              <h2
+                id="advisor-modal-title"
+                className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2"
+              >
                 <span>Spandana Craft Consultant</span>
                 <span className="text-[10px] font-sans font-medium px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-200">
                   AI Powered
@@ -165,9 +179,9 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`flex gap-2.5 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex gap-2.5 ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              {m.role === 'model' && (
+              {m.role === "model" && (
                 <div className="w-7 h-7 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-300 flex items-center justify-center shrink-0 mt-0.5">
                   <Bot className="w-4 h-4" aria-hidden="true" />
                 </div>
@@ -175,15 +189,15 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
 
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed ${
-                  m.role === 'user'
-                    ? 'bg-rose-500 text-white rounded-br-none'
-                    : 'bg-white dark:bg-neutral-900 text-slate-800 dark:text-slate-200 border border-rose-100 dark:border-rose-950 rounded-bl-none shadow-2xs'
+                  m.role === "user"
+                    ? "bg-rose-500 text-white rounded-br-none"
+                    : "bg-white dark:bg-neutral-900 text-slate-800 dark:text-slate-200 border border-rose-100 dark:border-rose-950 rounded-bl-none shadow-2xs"
                 }`}
               >
                 {m.text}
               </div>
 
-              {m.role === 'user' && (
+              {m.role === "user" && (
                 <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 flex items-center justify-center shrink-0 mt-0.5">
                   <User className="w-4 h-4" aria-hidden="true" />
                 </div>
@@ -196,7 +210,9 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
               <div className="w-7 h-7 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-600 flex items-center justify-center">
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
               </div>
-              <span className="italic">Thinking through craft recommendations...</span>
+              <span className="italic">
+                Thinking through craft recommendations...
+              </span>
             </div>
           )}
 
@@ -218,7 +234,10 @@ export const GeminiCraftAdvisorModal: React.FC = () => {
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSubmit} className="p-3 border-t border-rose-100 dark:border-rose-950 bg-white dark:bg-[#181318] flex items-center gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="p-3 border-t border-rose-100 dark:border-rose-950 bg-white dark:bg-[#181318] flex items-center gap-2"
+        >
           <input
             ref={inputRef}
             type="text"

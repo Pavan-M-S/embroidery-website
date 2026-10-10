@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import { Heart, Plus, Eye, Check } from 'lucide-react';
-import { DesignItem } from '../../types';
-import { useShopping } from '../../context/ShoppingContext';
+import React, { useState } from "react";
+import { Heart, Plus, Eye, Check } from "lucide-react";
+import { DesignItem } from "../../types";
+import { useShopping } from "../../context/ShoppingContext";
 
 interface DesignCardProps {
   design: DesignItem;
 }
 
 export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
-  const { isFavourite, toggleFavourite, addToBasket, isItemInBasket, openDesignDetail } = useShopping();
+  const {
+    isFavourite,
+    toggleFavourite,
+    addToBasket,
+    isItemInBasket,
+    openDesignDetail,
+  } = useShopping();
   const [imageError, setImageError] = useState(false);
   const isFav = isFavourite(design.id);
   const inBasket = isItemInBasket(design.id);
@@ -37,7 +43,10 @@ export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
               aria-hidden="true"
             >
               <circle cx="24" cy="24" r="18" strokeDasharray="3 3" />
-              <path d="M24 10v28M10 24h28M14 14l20 20M34 14L14 34" strokeLinecap="round" />
+              <path
+                d="M24 10v28M10 24h28M14 14l20 20M34 14L14 34"
+                strokeLinecap="round"
+              />
             </svg>
             <span className="font-serif text-sm font-semibold text-rose-900 dark:text-rose-200">
               {design.title}
@@ -53,11 +62,15 @@ export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
           <button
             type="button"
             onClick={() => toggleFavourite(design.id)}
-            aria-label={isFav ? `Remove ${design.title} from saved favourites` : `Save ${design.title} to favourites`}
+            aria-label={
+              isFav
+                ? `Remove ${design.title} from saved favourites`
+                : `Save ${design.title} to favourites`
+            }
             className="p-2 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs text-slate-700 dark:text-slate-200 hover:text-rose-500 hover:scale-110 shadow-xs transition-all focus-visible:outline-rose-500"
           >
             <Heart
-              className={`w-4 h-4 transition-colors ${isFav ? 'fill-rose-500 text-rose-500' : ''}`}
+              className={`w-4 h-4 transition-colors ${isFav ? "fill-rose-500 text-rose-500" : ""}`}
               aria-hidden="true"
             />
           </button>
@@ -81,7 +94,12 @@ export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
           {/* Zero-Pill Clean Metadata */}
           <div className="flex items-center gap-2 text-xs text-rose-600 dark:text-rose-400 font-medium tracking-wide mb-1.5">
             <span>{design.garmentType}</span>
-            <span aria-hidden="true" className="text-rose-300 dark:text-rose-700">·</span>
+            <span
+              aria-hidden="true"
+              className="text-rose-300 dark:text-rose-700"
+            >
+              ·
+            </span>
             <span>{design.complexity}</span>
           </div>
 
@@ -95,11 +113,20 @@ export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
 
           {/* Stitch Types Preview */}
           <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 mt-3 pt-3 border-t border-rose-100/60 dark:border-rose-950/40">
-            <span className="font-medium text-slate-700 dark:text-slate-300">Stitches:</span>
+            <span className="font-medium text-slate-700 dark:text-slate-300">
+              Stitches:
+            </span>
             {design.stitchTypes.map((stitch, idx) => (
               <span key={stitch}>
                 {stitch}
-                {idx < design.stitchTypes.length - 1 && <span className="ml-1 text-slate-300 dark:text-slate-600" aria-hidden="true">/</span>}
+                {idx < design.stitchTypes.length - 1 && (
+                  <span
+                    className="ml-1 text-slate-300 dark:text-slate-600"
+                    aria-hidden="true"
+                  >
+                    /
+                  </span>
+                )}
               </span>
             ))}
           </div>
@@ -112,18 +139,23 @@ export const DesignCard: React.FC<DesignCardProps> = ({ design }) => {
               Indicative starting range
             </span>
             <span className="font-mono text-base font-bold text-slate-900 dark:text-rose-100 tabular-nums">
-              ₹{design.priceRangeINR.min.toLocaleString()} – ₹{design.priceRangeINR.max.toLocaleString()}
+              ₹{design.priceRangeINR.min.toLocaleString()} – ₹
+              {design.priceRangeINR.max.toLocaleString()}
             </span>
           </div>
 
           <button
             type="button"
             onClick={() => addToBasket(design)}
-            aria-label={inBasket ? `Add another ${design.title} to quote basket` : `Add ${design.title} to quote basket`}
+            aria-label={
+              inBasket
+                ? `Add another ${design.title} to quote basket`
+                : `Add ${design.title} to quote basket`
+            }
             className={`px-3 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all shadow-2xs active:scale-95 ${
               inBasket
-                ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200 border border-amber-300 dark:border-amber-800'
-                : 'bg-rose-500 hover:bg-rose-600 text-white'
+                ? "bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200 border border-amber-300 dark:border-amber-800"
+                : "bg-rose-500 hover:bg-rose-600 text-white"
             }`}
           >
             {inBasket ? (

@@ -1,6 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import { X, Heart, Plus, Check, Sparkles, MessageCircle, Info } from 'lucide-react';
-import { useShopping } from '../../context/ShoppingContext';
+import React, { useEffect, useRef } from "react";
+import {
+  X,
+  Heart,
+  Plus,
+  Check,
+  Sparkles,
+  MessageCircle,
+  Info,
+} from "lucide-react";
+import { useShopping } from "../../context/ShoppingContext";
 
 export const DesignDetailModal: React.FC = () => {
   const {
@@ -21,15 +29,15 @@ export const DesignDetailModal: React.FC = () => {
     closeBtnRef.current?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeDesignDetail();
+      if (e.key === "Escape") closeDesignDetail();
     };
 
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeDesignDetail, closeDesignDetail]);
 
@@ -84,14 +92,17 @@ export const DesignDetailModal: React.FC = () => {
                 alt={design.alt}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  (e.currentTarget as HTMLElement).style.display = 'none';
+                  (e.currentTarget as HTMLElement).style.display = "none";
                 }}
               />
             </div>
 
             {/* Design Info */}
             <div className="space-y-3">
-              <h3 id="design-detail-title" className="font-serif text-2xl font-bold text-slate-900 dark:text-rose-50">
+              <h3
+                id="design-detail-title"
+                className="font-serif text-2xl font-bold text-slate-900 dark:text-rose-50"
+              >
                 {design.title}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -104,11 +115,18 @@ export const DesignDetailModal: React.FC = () => {
                   Illustrative Starting Range
                 </span>
                 <span className="font-mono text-xl font-bold text-slate-900 dark:text-rose-100 tabular-nums">
-                  ₹{design.priceRangeINR.min.toLocaleString()} – ₹{design.priceRangeINR.max.toLocaleString()}
+                  ₹{design.priceRangeINR.min.toLocaleString()} – ₹
+                  {design.priceRangeINR.max.toLocaleString()}
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex items-start gap-1">
-                  <Info className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>Final pricing is confirmed upon assessing your fabric, placement dimensions & custom stitch density.</span>
+                  <Info
+                    className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <span>
+                    Final pricing is confirmed upon assessing your fabric,
+                    placement dimensions & custom stitch density.
+                  </span>
                 </p>
               </div>
             </div>
@@ -121,7 +139,10 @@ export const DesignDetailModal: React.FC = () => {
             </h4>
             <div className="flex flex-wrap gap-2 text-xs text-slate-600 dark:text-slate-300">
               {design.stitchTypes.map((st) => (
-                <span key={st} className="px-2.5 py-1 bg-rose-50 dark:bg-rose-950/50 rounded-md border border-rose-100 dark:border-rose-900/60 font-medium">
+                <span
+                  key={st}
+                  className="px-2.5 py-1 bg-rose-50 dark:bg-rose-950/50 rounded-md border border-rose-100 dark:border-rose-900/60 font-medium"
+                >
                   {st}
                 </span>
               ))}
@@ -130,12 +151,18 @@ export const DesignDetailModal: React.FC = () => {
 
           {/* Tags */}
           <div className="space-y-1.5">
-            <span className="text-xs text-slate-500 dark:text-slate-400">Design Tags:</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Design Tags:
+            </span>
             <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
               {design.tags.map((tag, idx) => (
                 <span key={tag}>
                   {tag}
-                  {idx < design.tags.length - 1 && <span className="ml-2 text-slate-300" aria-hidden="true">·</span>}
+                  {idx < design.tags.length - 1 && (
+                    <span className="ml-2 text-slate-300" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                 </span>
               ))}
             </div>
@@ -147,11 +174,14 @@ export const DesignDetailModal: React.FC = () => {
           <button
             type="button"
             onClick={() => toggleFavourite(design.id)}
-            aria-label={isFav ? 'Remove from favourites' : 'Save to favourites'}
+            aria-label={isFav ? "Remove from favourites" : "Save to favourites"}
             className="px-3.5 py-2 rounded-lg border border-rose-200 dark:border-rose-900 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-rose-100 dark:hover:bg-rose-950/60 flex items-center gap-2"
           >
-            <Heart className={`w-4 h-4 ${isFav ? 'fill-rose-500 text-rose-500' : ''}`} aria-hidden="true" />
-            <span>{isFav ? 'Favorited' : 'Favorite'}</span>
+            <Heart
+              className={`w-4 h-4 ${isFav ? "fill-rose-500 text-rose-500" : ""}`}
+              aria-hidden="true"
+            />
+            <span>{isFav ? "Favorited" : "Favorite"}</span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -159,11 +189,16 @@ export const DesignDetailModal: React.FC = () => {
               type="button"
               onClick={() => {
                 closeDesignDetail();
-                openAdvisor(`I have a question about the ${design.title} design (${design.garmentType}). Can this be adapted to my fabric?`);
+                openAdvisor(
+                  `I have a question about the ${design.title} design (${design.garmentType}). Can this be adapted to my fabric?`,
+                );
               }}
               className="px-3.5 py-2 rounded-lg border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-xs font-semibold flex items-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+              <Sparkles
+                className="w-3.5 h-3.5 text-amber-500"
+                aria-hidden="true"
+              />
               <span>Ask AI Consultant</span>
             </button>
 
@@ -176,7 +211,9 @@ export const DesignDetailModal: React.FC = () => {
               className="px-4 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs"
             >
               <Plus className="w-4 h-4" aria-hidden="true" />
-              <span>{inBasket ? 'In Basket (Add Another)' : 'Add to Quote Basket'}</span>
+              <span>
+                {inBasket ? "In Basket (Add Another)" : "Add to Quote Basket"}
+              </span>
             </button>
           </div>
         </div>

@@ -2,14 +2,14 @@
  * Core TypeScript definitions for Spandana Embroidery
  */
 
-export type GarmentCategory = 'all' | 'womens' | 'childrens' | 'festive';
+export type GarmentCategory = "all" | "womens" | "childrens" | "festive";
 
-export type ComplexityLevel = 'Gentle' | 'Moderate' | 'Intricate';
+export type ComplexityLevel = "Gentle" | "Moderate" | "Intricate";
 
 export interface DesignItem {
   id: string;
   title: string;
-  category: 'womens' | 'childrens' | 'festive';
+  category: "womens" | "childrens" | "festive";
   garmentType: string;
   description: string;
   priceRangeINR: {
@@ -46,7 +46,7 @@ export interface QuoteBasketItem {
 
 export interface CustomDesignFormData {
   fullName: string;
-  contactMethod: 'phone' | 'whatsapp' | 'email';
+  contactMethod: "phone" | "whatsapp" | "email";
   contactValue: string;
   garmentType: string;
   designIdea: string;
@@ -67,10 +67,11 @@ export interface FAQItem {
   id: string;
   question: string;
   answer: string;
-  category: 'ordering' | 'craft' | 'care' | 'pricing';
+  category: "ordering" | "craft" | "care" | "pricing";
 }
 
-export type ProjectStatus = 'Received' | 'In Progress' | 'Quality Check' | 'Ready for Shipping';
+export type ProjectStatus =
+  "Received" | "In Progress" | "Quality Check" | "Ready for Shipping";
 
 export interface TrackedProject {
   quoteId: string;

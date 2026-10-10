@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { Download, FileText, CheckSquare, Sparkles, Volume2, Loader2, ShieldCheck, HelpCircle } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Download,
+  FileText,
+  CheckSquare,
+  Sparkles,
+  Volume2,
+  Loader2,
+  ShieldCheck,
+  HelpCircle,
+} from "lucide-react";
 
 export const FreeResourcesPage: React.FC = () => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -43,11 +52,11 @@ For custom inquiries & consultations:
 Spandana Embroidery Atelier
 `;
 
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = 'Spandana_Embroidery_Care_Guide.txt';
+    link.download = "Spandana_Embroidery_Care_Guide.txt";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -66,13 +75,13 @@ Spandana Embroidery Atelier
     setAudioError(null);
 
     const speechText =
-      'Welcome to Spandana Embroidery Care Guidelines. To maintain the brilliance of hand-stitched garments, always dry clean items with zari and silk resham threads. When pressing, always iron on the reverse side with a soft towel underneath, so your bullion knots and delicate petals remain three-dimensional and vibrant.';
+      "Welcome to Spandana Embroidery Care Guidelines. To maintain the brilliance of hand-stitched garments, always dry clean items with zari and silk resham threads. When pressing, always iron on the reverse side with a soft towel underneath, so your bullion knots and delicate petals remain three-dimensional and vibrant.";
 
     try {
       // First attempt server-side Gemini TTS proxy
-      const res = await fetch('/api/gemini/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/gemini/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: speechText }),
       });
 
@@ -95,7 +104,7 @@ Spandana Embroidery Atelier
   };
 
   const fallbackBrowserTTS = (text: string) => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.95;
@@ -103,12 +112,14 @@ Spandana Embroidery Atelier
       utterance.onend = () => setIsPlayingAudio(false);
       utterance.onerror = () => {
         setIsPlayingAudio(false);
-        setAudioError('Audio playback unavailable in this browser environment.');
+        setAudioError(
+          "Audio playback unavailable in this browser environment.",
+        );
       };
       window.speechSynthesis.speak(utterance);
     } else {
       setIsPlayingAudio(false);
-      setAudioError('Speech synthesis is not supported on this browser.');
+      setAudioError("Speech synthesis is not supported on this browser.");
     }
   };
 
@@ -123,7 +134,9 @@ Spandana Embroidery Atelier
           Free Embroidery Care & Planning Resources
         </h1>
         <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-          Crafting an embroidered garment is a collaboration. Use our practical guides below to prepare your fabric before stitching and maintain needlework longevity for years to come.
+          Crafting an embroidered garment is a collaboration. Use our practical
+          guides below to prepare your fabric before stitching and maintain
+          needlework longevity for years to come.
         </p>
       </div>
 
@@ -138,7 +151,8 @@ Spandana Embroidery Atelier
               Listen to Fabric Care Audio Narration
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Narrated guidance on washing, storing, and reverse-ironing hand-embroidered clothing
+              Narrated guidance on washing, storing, and reverse-ironing
+              hand-embroidered clothing
             </p>
           </div>
         </div>
@@ -148,8 +162,8 @@ Spandana Embroidery Atelier
           onClick={handlePlayAudioGuide}
           className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
             isPlayingAudio
-              ? 'bg-amber-500 text-white animate-pulse'
-              : 'bg-rose-500 hover:bg-rose-600 text-white shadow-xs'
+              ? "bg-amber-500 text-white animate-pulse"
+              : "bg-rose-500 hover:bg-rose-600 text-white shadow-xs"
           }`}
         >
           {isPlayingAudio ? (
@@ -185,15 +199,24 @@ Spandana Embroidery Atelier
           <ul className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-2.5">
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-1.5" />
-              <span><strong>Pre-washing:</strong> Always pre-wash raw cottons to account for thread shrinkage before hoop mounting.</span>
+              <span>
+                <strong>Pre-washing:</strong> Always pre-wash raw cottons to
+                account for thread shrinkage before hoop mounting.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-1.5" />
-              <span><strong>Seam Margins:</strong> Maintain at least 2 inches of uncut fabric perimeter around the planned embroidery area.</span>
+              <span>
+                <strong>Seam Margins:</strong> Maintain at least 2 inches of
+                uncut fabric perimeter around the planned embroidery area.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-1.5" />
-              <span><strong>Unstitched Pieces:</strong> Send unstitched blouse and kurti panels whenever possible for maximum stitch precision.</span>
+              <span>
+                <strong>Unstitched Pieces:</strong> Send unstitched blouse and
+                kurti panels whenever possible for maximum stitch precision.
+              </span>
             </li>
           </ul>
         </section>
@@ -209,15 +232,26 @@ Spandana Embroidery Atelier
           <ul className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-2.5">
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0 mt-1.5" />
-              <span><strong>Neckline Depth:</strong> Check your tailor’s neckline cutting line so embroidery is not cut off during final stitching.</span>
+              <span>
+                <strong>Neckline Depth:</strong> Check your tailor’s neckline
+                cutting line so embroidery is not cut off during final
+                stitching.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0 mt-1.5" />
-              <span><strong>Occasion Durability:</strong> For kids’ clothes, choose bullion knots or flat satin stitches over loose wire loops.</span>
+              <span>
+                <strong>Occasion Durability:</strong> For kids’ clothes, choose
+                bullion knots or flat satin stitches over loose wire loops.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0 mt-1.5" />
-              <span><strong>Color Contrast:</strong> Pick thread tones at least 2 shades lighter or darker than the base fabric for crisp visual pop.</span>
+              <span>
+                <strong>Color Contrast:</strong> Pick thread tones at least 2
+                shades lighter or darker than the base fabric for crisp visual
+                pop.
+              </span>
             </li>
           </ul>
         </section>
@@ -233,15 +267,24 @@ Spandana Embroidery Atelier
           <ul className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-2.5">
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-1.5" />
-              <span><strong>Dry Cleaning:</strong> Mandatory for pure silk, zari embroidery, mirror work, and cutdana beads.</span>
+              <span>
+                <strong>Dry Cleaning:</strong> Mandatory for pure silk, zari
+                embroidery, mirror work, and cutdana beads.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-1.5" />
-              <span><strong>Reverse Ironing:</strong> Always iron from the back over a plush towel to preserve raised thread textures.</span>
+              <span>
+                <strong>Reverse Ironing:</strong> Always iron from the back over
+                a plush towel to preserve raised thread textures.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-1.5" />
-              <span><strong>Storage:</strong> Wrap embroidered garments in muslin cloth rather than plastic bags to allow fibers to breathe.</span>
+              <span>
+                <strong>Storage:</strong> Wrap embroidered garments in muslin
+                cloth rather than plastic bags to allow fibers to breathe.
+              </span>
             </li>
           </ul>
         </section>
@@ -257,7 +300,8 @@ Spandana Embroidery Atelier
             Download the Complete Care Checklist (.txt)
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            Save our complete reference guide to your device for quick checking before laundering or tailoring your embroidered clothes.
+            Save our complete reference guide to your device for quick checking
+            before laundering or tailoring your embroidered clothes.
           </p>
         </div>
 

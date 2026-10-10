@@ -6,10 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CustomInquiryInputContactMethod = typeof CustomInquiryInputContactMethod[keyof typeof CustomInquiryInputContactMethod];
-
+export type CustomInquiryInputContactMethod =
+  (typeof CustomInquiryInputContactMethod)[keyof typeof CustomInquiryInputContactMethod];
 
 export const CustomInquiryInputContactMethod = {
-  email: 'email',
-  phone: 'phone',
+  email: "email",
+  phone: "phone",
 } as const;

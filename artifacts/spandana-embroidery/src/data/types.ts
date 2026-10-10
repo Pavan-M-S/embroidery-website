@@ -2,25 +2,25 @@
  * Core TypeScript definitions for Spandana Embroidery
  */
 
-export type GarmentCategory = 'all' | 'womens' | 'childrens' | 'festive';
+export type GarmentCategory = "all" | "womens" | "childrens" | "festive";
 
-export type ComplexityLevel = 'Gentle' | 'Moderate' | 'Intricate';
+export type ComplexityLevel = "Gentle" | "Moderate" | "Intricate";
 
 export interface DesignItem {
   id: string;
   title: string;
-  category: 'womens' | 'childrens' | 'festive';
+  category: "womens" | "childrens" | "festive";
   displayCategory: string; // from main2 (e.g. 'Floral', 'Motif')
   garmentType: string;
-  garment: string;         // from main2 (e.g. 'Blouse', 'Saree')
-  style: string;           // from main2 (e.g. 'Traditional', 'Playful')
+  garment: string; // from main2 (e.g. 'Blouse', 'Saree')
+  style: string; // from main2 (e.g. 'Traditional', 'Playful')
   description: string;
   priceRangeINR: {
     min: number;
     max: number;
   };
-  image: string;           // Unsplash URL from main
-  fallbackArt: string;     // main2 SVG data-URI fallback
+  image: string; // Unsplash URL from main
+  fallbackArt: string; // main2 SVG data-URI fallback
   alt: string;
   tags: string[];
   complexity: ComplexityLevel;
@@ -42,12 +42,13 @@ export interface PricingTier {
 
 export interface FAQItem {
   id: string;
-  category: 'ordering' | 'craft' | 'care' | 'pricing';
+  category: "ordering" | "craft" | "care" | "pricing";
   question: string;
   answer: string;
 }
 
-export type ProjectStatus = 'Received' | 'In Progress' | 'Quality Check' | 'Ready for Shipping';
+export type ProjectStatus =
+  "Received" | "In Progress" | "Quality Check" | "Ready for Shipping";
 
 export interface TrackedProject {
   quoteId: string;

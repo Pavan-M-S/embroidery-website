@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Scissors, Palette, ShieldCheck, Heart, ChevronDown, ChevronUp } from 'lucide-react';
-import { ThreadCanvas } from '../components/common/ThreadCanvas';
-import { DesignCard } from '../components/common/DesignCard';
-import { SAMPLE_DESIGNS, FAQ_DATA, BUSINESS_CONFIG } from '../data/designsData';
-import { useShopping } from '../context/ShoppingContext';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Sparkles,
+  Scissors,
+  Palette,
+  ShieldCheck,
+  Heart,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { ThreadCanvas } from "../components/common/ThreadCanvas";
+import { DesignCard } from "../components/common/DesignCard";
+import { SAMPLE_DESIGNS, FAQ_DATA, BUSINESS_CONFIG } from "../data/designsData";
+import { useShopping } from "../context/ShoppingContext";
 
 export const HomePage: React.FC = () => {
   const { openAdvisor } = useShopping();
@@ -43,7 +52,10 @@ export const HomePage: React.FC = () => {
 
             {/* Warm Welcoming Introduction */}
             <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed max-w-2xl">
-              Welcome to our home-owned craft space in India. We hand-embellish women’s kurtis, festive blouses, sarees, and children’s traditional outfits with timeless Resham silk, Kasuti, and Zari needlework.
+              Welcome to our home-owned craft space in India. We hand-embellish
+              women’s kurtis, festive blouses, sarees, and children’s
+              traditional outfits with timeless Resham silk, Kasuti, and Zari
+              needlework.
             </p>
 
             {/* Primary Actions */}
@@ -68,7 +80,10 @@ export const HomePage: React.FC = () => {
                 onClick={() => openAdvisor()}
                 className="px-4 py-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 hover:bg-amber-100 text-xs sm:text-sm font-semibold border border-amber-200 dark:border-amber-800 flex items-center gap-2"
               >
-                <Sparkles className="w-4 h-4 text-amber-500" aria-hidden="true" />
+                <Sparkles
+                  className="w-4 h-4 text-amber-500"
+                  aria-hidden="true"
+                />
                 <span>Ask AI Consultant</span>
               </button>
             </div>
@@ -87,7 +102,8 @@ export const HomePage: React.FC = () => {
               Home-Owned Atelier
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Every garment is stitched personally with individual attention, without industrial mass-production shortcuts.
+              Every garment is stitched personally with individual attention,
+              without industrial mass-production shortcuts.
             </p>
           </div>
 
@@ -99,7 +115,8 @@ export const HomePage: React.FC = () => {
               Colourfast Silk & Zari
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Tested resham threads and tarnish-resistant zari chosen specifically to match your base fabric without bleeding.
+              Tested resham threads and tarnish-resistant zari chosen
+              specifically to match your base fabric without bleeding.
             </p>
           </div>
 
@@ -111,7 +128,8 @@ export const HomePage: React.FC = () => {
               Gentle on Children
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Kids’ pattu pavadais and jhablas are backed with ultra-soft inner lining so delicate skin stays itch-free.
+              Kids’ pattu pavadais and jhablas are backed with ultra-soft inner
+              lining so delicate skin stays itch-free.
             </p>
           </div>
 
@@ -123,7 +141,8 @@ export const HomePage: React.FC = () => {
               Affordable & Upfront
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Transparent starting rates from ₹350. We discuss design dimensions and stitch density before confirming quotes.
+              Transparent starting rates from ₹350. We discuss design dimensions
+              and stitch density before confirming quotes.
             </p>
           </div>
         </div>
@@ -168,48 +187,61 @@ export const HomePage: React.FC = () => {
               How We Work With You
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-              From your initial idea to handcrafting the final stitch on your fabric.
+              From your initial idea to handcrafting the final stitch on your
+              fabric.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="space-y-2">
-              <span className="font-serif text-2xl font-bold text-rose-500">01.</span>
+              <span className="font-serif text-2xl font-bold text-rose-500">
+                01.
+              </span>
               <h3 className="font-serif text-base font-bold text-slate-900 dark:text-rose-100">
                 Idea & Garment Selection
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Choose a design from our portfolio or share a motif picture. Tell us your garment type (kurti, blouse, pattu pavadai).
+                Choose a design from our portfolio or share a motif picture.
+                Tell us your garment type (kurti, blouse, pattu pavadai).
               </p>
             </div>
 
             <div className="space-y-2">
-              <span className="font-serif text-2xl font-bold text-rose-500">02.</span>
+              <span className="font-serif text-2xl font-bold text-rose-500">
+                02.
+              </span>
               <h3 className="font-serif text-base font-bold text-slate-900 dark:text-rose-100">
                 Thread & Color Harmonization
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                We select matching silk resham shades, metallic zari, and glass beads to complement your base fabric tone.
+                We select matching silk resham shades, metallic zari, and glass
+                beads to complement your base fabric tone.
               </p>
             </div>
 
             <div className="space-y-2">
-              <span className="font-serif text-2xl font-bold text-rose-500">03.</span>
+              <span className="font-serif text-2xl font-bold text-rose-500">
+                03.
+              </span>
               <h3 className="font-serif text-base font-bold text-slate-900 dark:text-rose-100">
                 Precision Hand-Stitching
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Mounted on artisan frames, our needlework proceeds stitch by stitch with gentle tension and protective backing.
+                Mounted on artisan frames, our needlework proceeds stitch by
+                stitch with gentle tension and protective backing.
               </p>
             </div>
 
             <div className="space-y-2">
-              <span className="font-serif text-2xl font-bold text-rose-500">04.</span>
+              <span className="font-serif text-2xl font-bold text-rose-500">
+                04.
+              </span>
               <h3 className="font-serif text-base font-bold text-slate-900 dark:text-rose-100">
                 Inspection & Handover
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                We trim all loose thread tails, press the garment from the reverse, and prepare it for collection or courier.
+                We trim all loose thread tails, press the garment from the
+                reverse, and prepare it for collection or courier.
               </p>
             </div>
           </div>
@@ -227,7 +259,9 @@ export const HomePage: React.FC = () => {
               Bring Your Custom Embroidery Vision to Life
             </h2>
             <p className="text-sm text-rose-100 leading-relaxed">
-              Whether you want a traditional temple gopura motif for your daughter’s first festival or a customized floral kurti yoke for family celebrations, we are delighted to discuss it.
+              Whether you want a traditional temple gopura motif for your
+              daughter’s first festival or a customized floral kurti yoke for
+              family celebrations, we are delighted to discuss it.
             </p>
           </div>
 
@@ -259,7 +293,11 @@ export const HomePage: React.FC = () => {
           </h2>
         </div>
 
-        <div className="space-y-3" role="region" aria-label="Frequently Asked Questions">
+        <div
+          className="space-y-3"
+          role="region"
+          aria-label="Frequently Asked Questions"
+        >
           {FAQ_DATA.map((faq) => {
             const isOpen = openFaqId === faq.id;
             return (
@@ -276,9 +314,15 @@ export const HomePage: React.FC = () => {
                 >
                   <span>{faq.question}</span>
                   {isOpen ? (
-                    <ChevronUp className="w-5 h-5 text-rose-500 shrink-0" aria-hidden="true" />
+                    <ChevronUp
+                      className="w-5 h-5 text-rose-500 shrink-0"
+                      aria-hidden="true"
+                    />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" aria-hidden="true" />
+                    <ChevronDown
+                      className="w-5 h-5 text-slate-400 shrink-0"
+                      aria-hidden="true"
+                    />
                   )}
                 </button>
 

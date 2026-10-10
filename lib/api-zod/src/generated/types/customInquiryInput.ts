@@ -5,30 +5,30 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { CustomInquiryInputBudget } from './customInquiryInputBudget';
-import type { CustomInquiryInputContactMethod } from './customInquiryInputContactMethod';
-import type { CustomInquiryInputGarment } from './customInquiryInputGarment';
+import type { CustomInquiryInputBudget } from "./customInquiryInputBudget";
+import type { CustomInquiryInputContactMethod } from "./customInquiryInputContactMethod";
+import type { CustomInquiryInputGarment } from "./customInquiryInputGarment";
 
 export interface CustomInquiryInput {
   /**
-     * @minLength 1
-     * @maxLength 100
-     */
+   * @minLength 1
+   * @maxLength 100
+   */
   name: string;
   contactMethod: CustomInquiryInputContactMethod;
   /**
-     * @minLength 3
-     * @maxLength 254
-     */
+   * @minLength 3
+   * @maxLength 254
+   */
   contactValue: string;
   garment: CustomInquiryInputGarment;
   budget?: CustomInquiryInputBudget;
   /** @maxLength 150 */
   colors?: string;
   /**
-     * @minLength 1
-     * @maxLength 4000
-     */
+   * @minLength 1
+   * @maxLength 4000
+   */
   idea: string;
   /** @maxLength 2000 */
   referenceUrl?: string;

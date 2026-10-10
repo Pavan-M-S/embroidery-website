@@ -6,11 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CustomInquiryInputBudget = typeof CustomInquiryInputBudget[keyof typeof CustomInquiryInputBudget];
-
+export type CustomInquiryInputBudget =
+  (typeof CustomInquiryInputBudget)[keyof typeof CustomInquiryInputBudget];
 
 export const CustomInquiryInputBudget = {
-  'Under_₹1,000': 'Under ₹1,000',
-  '₹1,000–₹3,000': '₹1,000–₹3,000',
-  '₹3,000+': '₹3,000+',
+  "Under_₹1,000": "Under ₹1,000",
+  "₹1,000–₹3,000": "₹1,000–₹3,000",
+  "₹3,000+": "₹3,000+",
 } as const;

@@ -11,7 +11,7 @@ export interface IntentCategory {
 
 export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
   {
-    "keywords": [
+    keywords: [
       "hi",
       "hello",
       "hey",
@@ -20,9 +20,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "good afternoon",
       "good evening",
       "vanakkam",
-      "namaskara"
+      "namaskara",
     ],
-    "responses": [
+    responses: [
       "Namaste! Welcome to Spandana Embroidery. Are you looking to design a bridal blouse, kurti neckline, kids outfit, or custom motif today?",
       "Hello! Welcome to our craft studio. How can I help you with embroidery styles, thread matching, or fabric advice today?",
       "Namaste! It is wonderful to meet you. Tell me what outfit or fabric you are planning, and we will find the perfect stitch pattern.",
@@ -42,11 +42,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Namaskara! We are passionate about authentic Indian needlecraft. What type of clothing project are you dreaming up?",
       "Hello! Let's craft something beautiful together. Share your fabric type or occasion and we will start brainstorming!",
       "Namaste! Welcome. Our needlework combines heritage craftsmanship with modern silhouettes. What can I help you with?",
-      "Greetings from Spandana Embroidery! How can we make your next outfit truly special and unique?"
-    ]
+      "Greetings from Spandana Embroidery! How can we make your next outfit truly special and unique?",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "who are you",
       "what are you",
       "your name",
@@ -54,9 +54,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "introduce yourself",
       "what can you do",
       "how can you help",
-      "capabilities"
+      "capabilities",
     ],
-    "responses": [
+    responses: [
       "I am the Spandana Craft Consultant — your specialized AI advisor for Indian hand and machine embroidery, motifs, fabric compatibility, and styling.",
       "I'm Spandana's Master Needlework Consultant. I guide you on stitch techniques (Aari, Zardozi, Kasuti), fabric pairings, price estimation, and garment care.",
       "I am your dedicated embroidery advisor at Spandana. I help you choose motifs, determine stitch density, pick color palettes, and plan custom bridal or casual attire.",
@@ -76,11 +76,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "I help you choose the right needles, backing stabilizers, and thread weights if you are curious about our artisan production process.",
       "I can suggest color pairings based on classic Indian color theory — such as rani pink with antique gold, or peacock blue with mustard yellow.",
       "I am here to ensure you get artisan-grade, affordable embroidery tailored exactly to your body measurements and fabric choice.",
-      "I represent Spandana Embroidery's legacy of quality craftsmanship. Ask me about our custom order process, rates, or design ideas!"
-    ]
+      "I represent Spandana Embroidery's legacy of quality craftsmanship. Ask me about our custom order process, rates, or design ideas!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "price",
       "cost",
       "rate",
@@ -93,9 +93,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "budget",
       "affordable",
       "pricing",
-      "estimate"
+      "estimate",
     ],
-    "responses": [
+    responses: [
       "At Spandana Embroidery, simplicity starts at ₹350 for subtle neck accents, ₹750–₹1,200 for detailed yokes/sleeves, and ₹2,500+ for heavy bridal/festive work.",
       "Our pricing depends on three factors: stitch density, thread material (Resham silk vs genuine metallic Zari), and fabric delicacy. Daily wear starts from just ₹350.",
       "For standard sari blouse sleeve borders and necklines, our prices typically range between ₹650 and ₹1,500 depending on bead and mirror detailing.",
@@ -120,11 +120,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Wall art embroidery in finished wooden hoops ranges from ₹450 (mini 6-inch) to ₹1,500 (detailed 12-inch portrait/floral piece).",
       "Repair and restoration of vintage family heirlooms or loose zari starts at an affordable ₹250 evaluation fee.",
       "You can send us a photo of any design you like, and we will offer high, medium, and budget-tier execution alternatives!",
-      "Quality embroidery at honest prices is our core promise. Let us know your budget limit and we will tailor the design accordingly."
-    ]
+      "Quality embroidery at honest prices is our core promise. Let us know your budget limit and we will tailor the design accordingly.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "style",
       "styles",
       "technique",
@@ -142,9 +142,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "french knot",
       "bullion",
       "shadow work",
-      "cross stitch"
+      "cross stitch",
     ],
-    "responses": [
+    responses: [
       "Aari embroidery uses a fine hooked needle (muthia) to create quick, precise chain stitches and secure beads, sequins, and pearls effortlessly.",
       "Kasuti is Karnataka's traditional counted-thread art using four classic stitches: Gavanti (double running), Murgi (zigzag), Negi (weaving), and Menthi (cross).",
       "Zardozi is opulent royal metallic embroidery using fine metallic wires like dabka, nakshi, kora, and sequins sewn onto heavy silk or velvet.",
@@ -174,11 +174,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Thread painting (needle painting) blends multiple shades of silk threads to achieve photorealistic transitions in animal and floral portraits.",
       "Smocking combines embroidery with fabric gathering, creating stretchy, ornamental bodices for baby frocks and vintage blouses.",
       "Pako embroidery features tight square chain stitches with floral motifs outlined in white and filled with warm saffron and red hues.",
-      "We can seamlessly combine multiple techniques — such as Aari outlines with French knot accents and Kasuti center motifs — for a unique heirloom piece!"
-    ]
+      "We can seamlessly combine multiple techniques — such as Aari outlines with French knot accents and Kasuti center motifs — for a unique heirloom piece!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "fabric",
       "fabrics",
       "raw silk",
@@ -196,9 +196,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "net",
       "denim",
       "modal",
-      "crepe"
+      "crepe",
     ],
-    "responses": [
+    responses: [
       "Raw silk (Dupion) is the gold standard for Indian embroidery: its crisp body effortlessly holds heavy Zardozi, Aari, and dense beadwork without puckering.",
       "Pure cotton is breathable and holds crisp Kasuti, Kantha, and thread embroidery. We pre-wash cotton fabrics to prevent shrinkage after stitching.",
       "Organza is ethereal and sheer; it calls for lightweight Resham silk, delicate shadow work, or fine micro-sequins with tear-away water-soluble backing.",
@@ -228,11 +228,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Silk organza holds needlework significantly better than synthetic nylon organza, which is prone to needle hole perforations.",
       "For summer festive wear, Chanderi or Kota Doria with pastel Aari work provides maximum breathability without compromising opulence.",
       "Taffeta provides a crisp bell-like silhouette for skirts and lehengas, serving as a clean canvas for sharp geometric thread embroidery.",
-      "Bring or send us your fabric swatches, and our master craftspersons will conduct a quick tension test to suggest the best stitch style!"
-    ]
+      "Bring or send us your fabric swatches, and our master craftspersons will conduct a quick tension test to suggest the best stitch style!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "motif",
       "motifs",
       "design",
@@ -252,9 +252,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "tree of life",
       "temple",
       "gopuram",
-      "geometric"
+      "geometric",
     ],
-    "responses": [
+    responses: [
       "The Peacock (Mayil/Mor) symbolizes grace and royalty; we embroider it with iridescent emerald and royal blue silk threads accented with gold Zari.",
       "The Sacred Lotus (Kamal) represents purity; it looks breathtaking in shaded pink satin stitches, French knot stamens, and antique bead contours.",
       "The Paisley (Mango/Kalka/Ambi) is a timeless Indian motif, adaptable from slender Kashmiri florals to grand bridal corner medallions.",
@@ -284,11 +284,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Foliage vines with shaded Ombré leaves transitioning from olive to lime green create stunning natural realism.",
       "Moroccan tile and lattice geometries give kurtas and shrugs a clean, architectural sophistication.",
       "Calligraphy and Sanskrit shloka borders (like 'Ayushyaman Bhava') can be hand-embroidered along bridal dupatta borders.",
-      "Have a custom sketch or Pinterest photo? We can digitize and hand-render any motif to scale on your chosen fabric!"
-    ]
+      "Have a custom sketch or Pinterest photo? We can digitize and hand-render any motif to scale on your chosen fabric!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "blouse",
       "neckline",
       "yoke",
@@ -310,9 +310,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "waistband",
       "cuff",
       "collar",
-      "placket"
+      "placket",
     ],
-    "responses": [
+    responses: [
       "For sari blouses, the most popular placements are sweetheart neckline outlines, heavy sleeve borders, and circular back drop cutouts.",
       "Boat neck blouses look best with horizontal collar-style embroidery or shoulder-to-shoulder floral creepers that flatter the collarbone.",
       "Square necklines are complemented by structured geometric Kasuti or framed Aari borders that highlight crisp neckline corners.",
@@ -342,11 +342,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Center-back medallion placement on high-neck blouses creates an eye-catching focal point when hair is styled in an updo.",
       "Double dupattas for brides: a heavy velvet shoulder drape paired with an ultra-lightweight embroidered head veil.",
       "Co-ord sets look ultra-chic with matching collar and trouser hemline embroidery in minimalist contemporary thread tones.",
-      "We customize placement based on your body proportions and garment drape so the embroidery flatters your silhouette perfectly."
-    ]
+      "We customize placement based on your body proportions and garment drape so the embroidery flatters your silhouette perfectly.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "kid",
       "kids",
       "child",
@@ -360,9 +360,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "scratchy",
       "itching",
       "gentle",
-      "comfort"
+      "comfort",
     ],
-    "responses": [
+    responses: [
       "For children's clothes and pattu pavadais, we apply ultra-soft 100% cotton fusible interlining on the reverse so threads never touch sensitive skin.",
       "We avoid scratchy metallic Zari or sharp glass cutdana on the inside of baby garments, using smooth Resham silk and combed cotton threads instead.",
       "Bullion roses and flat satin stitches are our top recommendation for kids' dresses: they look rich, whimsical, and stay gentle against skin.",
@@ -387,11 +387,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "We ensure thread tension is calibrated loosely enough so embroidered fabric doesn't bunch or rub against active toddlers' skin.",
       "For festive poojas, our lightweight silk-cotton pavadais keep babies cool while looking radiant in family portraits.",
       "We offer personalized baby milestone blankets embroidered with floral wreaths and birth stats as treasured newborn gifts.",
-      "Every children's outfit from Spandana is stitched with motherly care, combining festive splendour with bedtime-level comfort."
-    ]
+      "Every children's outfit from Spandana is stitched with motherly care, combining festive splendour with bedtime-level comfort.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "wash",
       "washing",
       "care",
@@ -406,9 +406,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "loose thread",
       "preservation",
       "storage",
-      "storing"
+      "storing",
     ],
-    "responses": [
+    responses: [
       "Always dry-clean heavy embroidered garments made on raw silk, velvet, tussar, or featuring metallic Zari and delicate beadwork.",
       "For everyday cotton kurtis with thread embroidery, hand wash gently in cold water using a mild, bleach-free detergent; avoid harsh wringing.",
       "Never iron directly on embroidery! Always place the garment face-down on a plush towel and iron on the reverse side to preserve 3D stitch relief.",
@@ -433,11 +433,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "If mirror work gets smudged, clean individual mirror facets gently using a lightly moistened microfiber cloth wrapped around a toothpick.",
       "For garments with heavy shoulder embroidery, use padded wide coat hangers to prevent shoulder dimples and seam strain.",
       "Avoid washing embroidered clothes in hot water, which loosens thread tension and can melt adhesive backing films.",
-      "Following these care steps ensures your Spandana handcrafted embroidery remains as dazzling on your 50th wear as on your first!"
-    ]
+      "Following these care steps ensures your Spandana handcrafted embroidery remains as dazzling on your 50th wear as on your first!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "color",
       "colour",
       "colors",
@@ -452,9 +452,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "matching",
       "pastel",
       "gold",
-      "silver"
+      "silver",
     ],
-    "responses": [
+    responses: [
       "Timeless South Indian bridal pairing: Deep Crimson Red silk with Antique Gold Zari and emerald green French knot accents.",
       "Royal evening reception palette: Midnight Navy Blue paired with Silver Zardozi, champagne crystals, and ice blue silk fills.",
       "Vibrant Mehendi & Haldi combination: Mustard Marigold Yellow accented with Rani Pink Resham and Parrot Green leaf bails.",
@@ -479,11 +479,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Ethereal engagement look: Seafoam Green organza with shimmering silver water lily embroidery and seed pearls.",
       "We always conduct thread-on-fabric sample testing before commencing full stitching to ensure color harmony under stage lighting.",
       "When choosing blouse embroidery colors for multi-colored saris, pick the secondary or border accent color to create striking contrast!",
-      "Tell us your sari and skin tone preferences, and we will curate a personalized 3-tier color palette for your custom outfit."
-    ]
+      "Tell us your sari and skin tone preferences, and we will curate a personalized 3-tier color palette for your custom outfit.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "occasion",
       "wedding",
       "bridal",
@@ -500,9 +500,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "party",
       "farewell",
       "office",
-      "casual"
+      "casual",
     ],
-    "responses": [
+    responses: [
       "For Brides: We design full bridal blouse sets with custom back medallions, auspicious motifs (peacocks, lotuses), and heavy sleeve borders.",
       "For Sangeet nights: Lightweight Aari and sparkling mirror work catch the dance floor lights without adding excessive physical weight.",
       "For Haldi ceremonies: Bright yellow and lime outfits embellished with cheerful floral bullion stitches and splash-resistant threads.",
@@ -527,11 +527,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "For Onam & Pongal: Traditional Kasavu off-white and gold pairing with vibrant green and orange temple motifs.",
       "For Cocktail Parties: Sleek Indo-Western pantsuits with embroidered lapels and metallic cuff accents.",
       "Let us know your event date and venue lighting (day vs night), and we will engineer the perfect balance of sparkle and comfort!",
-      "We recommend booking bridal orders 3 to 4 weeks in advance so we have ample time for swatch approval and precise fitting adjustments."
-    ]
+      "We recommend booking bridal orders 3 to 4 weeks in advance so we have ample time for swatch approval and precise fitting adjustments.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "order",
       "ordering",
       "timeline",
@@ -550,9 +550,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "measurement",
       "measurements",
       "photo",
-      "send"
+      "send",
     ],
-    "responses": [
+    responses: [
       "Our custom embroidery process: 1) Share your ideas & fabric, 2) We draft sketches & color swatches, 3) Handcrafting begins, 4) Final fitting & delivery!",
       "Standard custom hand embroidery takes 5 to 10 working days from design confirmation, depending on motif density and stitch complexity.",
       "Urgent orders: We offer express 3-to-4 day turnaround for urgent wedding or festive requirements with dedicated artisan priority.",
@@ -577,11 +577,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Minimum order quantity is just 1 piece! Whether it is a single handkerchief monogram or a 10-piece bridal party, every order gets equal love.",
       "Have a specific thread brand preference (like Anchor, DMC, or Japanese Zari)? We can source specialized materials upon request.",
       "Our tracing process uses skin-safe, easily removable chalk or water-washable pigments that leave zero permanent marks on fabric.",
-      "Ready to start? Simply describe your garment idea, preferred colors, and timeline, and we will get your custom quote ready!"
-    ]
+      "Ready to start? Simply describe your garment idea, preferred colors, and timeline, and we will get your custom quote ready!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "thread",
       "threads",
       "needle",
@@ -599,9 +599,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "hoop",
       "frame",
       "adda",
-      "muthia"
+      "muthia",
     ],
-    "responses": [
+    responses: [
       "We use genuine Surat metallic Zari threads in antique gold, dull copper, silver, and rose gold that resist tarnishing and fraying.",
       "Resham silk threads offer peerless natural luster and glide smoothly through fine fabrics without snagging delicate weaves.",
       "For cotton garments, we use 100% colorfast Anchor and DMC stranded cotton floss that retains vibrant color across dozens of washes.",
@@ -621,11 +621,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Chenille needles with large eyes and thick shafts are used when pulling thick metallic braids or wool threads through heavy fabrics.",
       "Micro-pearls (moti) in ivory, off-white, and champagne tones add subtle three-dimensional elegance along neckline borders.",
       "Real glass mirrors provide crisp, crystal-clear reflections, while lightweight acrylic mirrors are ideal for light children's garments.",
-      "We maintain strict quality standards on all raw materials so your bespoke embroidery remains an enduring family treasure."
-    ]
+      "We maintain strict quality standards on all raw materials so your bespoke embroidery remains an enduring family treasure.",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "location",
       "where are you",
       "address",
@@ -642,9 +642,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "bangalore",
       "bengaluru",
       "karnataka",
-      "india"
+      "india",
     ],
-    "responses": [
+    responses: [
       "Spandana Embroidery is based in Karnataka, India, with artisan workshops creating custom handcrafted needlework for clients across the country.",
       "You can connect with us directly through the website contact form, WhatsApp, or phone to discuss your custom design ideas!",
       "Our craft studio welcomes visits by appointment so we can dedicate uninterrupted time to reviewing your fabrics and design sketches.",
@@ -664,11 +664,11 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "Have questions after receiving your order? Our customer support is always available to guide you on styling and maintenance.",
       "You can send us voice notes describing your requirements if you prefer speaking over typing!",
       "We take pride in our warm, personalized service — every client is treated like part of our craft family.",
-      "Reach out to us today and let's start creating a handcrafted masterpiece tailored just for you!"
-    ]
+      "Reach out to us today and let's start creating a handcrafted masterpiece tailored just for you!",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "faq",
       "question",
       "difference",
@@ -679,9 +679,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "advice",
       "tips",
       "recommend",
-      "suggestion"
+      "suggestion",
     ],
-    "responses": [
+    responses: [
       "Hand vs Machine Embroidery: Hand embroidery offers unmatched depth, organic charm, and heritage value; machine work provides speed and sharp geometric consistency.",
       "Can embroidery be added to a pre-stitched blouse? Yes, by opening the side seams, applying the needlework on the flat panels, and reseaming.",
       "How do I choose between Aari and Zardozi? Aari is lighter and versatile for blouses and kurtis; Zardozi is heavier, regal, and best for luxury bridal wear.",
@@ -711,9 +711,9 @@ export const CRAFT_INTENT_CATEGORIES: IntentCategory[] = [
       "How to choose embroidery for men's wedding sherwanis? Subtle antique gold Zari along the mandarin collar, placket, and sleeve cuffs offers regal understated class.",
       "Can embroidery be done on knit sweaters or cardigans? Yes, using water-soluble toppers and flexible wool yarn stitches like lazy daisy and bullion roses.",
       "What is your environmental policy? We minimize textile waste, use biodegradable cotton backings where possible, and prioritize natural non-toxic dyes.",
-      "Whatever your embroidery query or dream project, Spandana's craft team is dedicated to bringing your vision to life with warmth and mastery!"
-    ]
-  }
+      "Whatever your embroidery query or dream project, Spandana's craft team is dedicated to bringing your vision to life with warmth and mastery!",
+    ],
+  },
 ];
 
 export const DYNAMIC_CRAFT_FALLBACKS: string[] = [
@@ -806,7 +806,7 @@ export const DYNAMIC_CRAFT_FALLBACKS: string[] = [
   "For formal office wear, subtle running stitches on pocket flaps or sleeve cuffs add bespoke personality to classic solid shirts.",
   "When embroidering on knit or stretch fabrics, we use flexible stabilizer backings to ensure stitches stretch naturally with movement.",
   "Our craft advisors are always ready to guide you on stitch durability, colorfastness, and fabric care for any garment idea.",
-  "From delicate initial monograms to grand royal bridal lehengas, Spandana Embroidery is your partner in bespoke needlework excellence."
+  "From delicate initial monograms to grand royal bridal lehengas, Spandana Embroidery is your partner in bespoke needlework excellence.",
 ];
 
 /**
@@ -816,7 +816,7 @@ function getQueryHash(query: string): number {
   let hash = 0;
   for (let i = 0; i < query.length; i++) {
     const char = query.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
   return Math.abs(hash);
@@ -828,7 +828,7 @@ function getQueryHash(query: string): number {
  * receive varied, intelligent replies.
  */
 export function smartCraftReply(rawMsg: string): string {
-  const msg = (rawMsg || '').toLowerCase().trim();
+  const msg = (rawMsg || "").toLowerCase().trim();
   if (!msg) {
     return "Namaste! Welcome to Spandana Embroidery. How can I help you today? You can ask about embroidery styles, fabrics, motifs, pricing, or garment care.";
   }
@@ -839,13 +839,20 @@ export function smartCraftReply(rawMsg: string): string {
   let bestCategory: IntentCategory | null = null;
   let highestScore = 0;
 
-  const allCategories = [...CRAFT_INTENT_CATEGORIES, ...MASSIVE_CRAFT_RESPONSES];
+  const allCategories = [
+    ...CRAFT_INTENT_CATEGORIES,
+    ...MASSIVE_CRAFT_RESPONSES,
+  ];
   for (const category of allCategories) {
     let score = 0;
     for (const kw of category.keywords) {
       if (msg === kw) {
         score += 10;
-      } else if (msg.startsWith(kw + ' ') || msg.endsWith(' ' + kw) || msg.includes(' ' + kw + ' ')) {
+      } else if (
+        msg.startsWith(kw + " ") ||
+        msg.endsWith(" " + kw) ||
+        msg.includes(" " + kw + " ")
+      ) {
         score += 5;
       } else if (msg.includes(kw)) {
         score += 2;
@@ -872,7 +879,7 @@ export function smartCraftReply(rawMsg: string): string {
 
 export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
   {
-    "keywords": [
+    keywords: [
       "error",
       "not working",
       "broken",
@@ -884,9 +891,9 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "issue",
       "troubleshoot",
       "help",
-      "glitch"
+      "glitch",
     ],
-    "responses": [
+    responses: [
       "If the system is not working, try refreshing the page.",
       "Okay, We are currently experiencing high traffic. Please try again in a few minutes. Let us know if you need more help.",
       "Alright, If you encounter an error, please clear your browser cache. Feel free to ask more questions.",
@@ -1086,11 +1093,11 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "Indeed, An unexpected error occurred. Please restart the application. Reach out anytime! (Ref: 196)",
       "If your design won't load, ensure the image format is supported. (Ref: 197)",
       "Okay, Please wait a moment and try submitting your request again. Let us know if you need more help. (Ref: 198)",
-      "Alright, If you see a 404 error, the requested resource might have been moved. Feel free to ask more questions. (Ref: 199)"
-    ]
+      "Alright, If you see a 404 error, the requested resource might have been moved. Feel free to ask more questions. (Ref: 199)",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "contact",
       "location",
       "address",
@@ -1102,9 +1109,9 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "visit",
       "store",
       "map",
-      "directions"
+      "directions",
     ],
-    "responses": [
+    responses: [
       "You can reach us at support@spandanaembroidery.com.",
       "Okay, Our main boutique is located in Tadipatri, Andhra Pradesh. Let us know if you need more help.",
       "Alright, Call us at +91 7207402157 for immediate assistance. Feel free to ask more questions.",
@@ -1304,11 +1311,11 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "Indeed, You can find our location on Google Maps under 'Spandana Craft Studio'. Reach out anytime! (Ref: 196)",
       "Drop us a message on WhatsApp at +91 7207402157. (Ref: 197)",
       "Okay, Our customer service desk is located on the ground floor of our main outlet. Let us know if you need more help. (Ref: 198)",
-      "Alright, Follow us and send a DM on Instagram @SpandanaEmbroidery. Feel free to ask more questions. (Ref: 199)"
-    ]
+      "Alright, Follow us and send a DM on Instagram @SpandanaEmbroidery. Feel free to ask more questions. (Ref: 199)",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "feedback",
       "review",
       "suggest",
@@ -1320,9 +1327,9 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "terrible",
       "awesome",
       "rating",
-      "opinion"
+      "opinion",
     ],
-    "responses": [
+    responses: [
       "We appreciate your feedback! It helps us improve our services.",
       "Okay, Thank you for sharing your thoughts with us. Let us know if you need more help.",
       "Alright, We will pass your compliments to our artisan team. Feel free to ask more questions.",
@@ -1622,11 +1629,11 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "Okay, We value your input and will consider it for future updates. Hope that clears it up! (Ref: 296)",
       "Alright, Thank you for rating our embroidery services. Does that make sense? (Ref: 297)",
       "Sure, We'd love to hear more details about your experience. Reach out anytime! (Ref: 298)",
-      "I see. Your review helps other customers make better choices. (Ref: 299)"
-    ]
+      "I see. Your review helps other customers make better choices. (Ref: 299)",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "alien",
       "eat",
       "sleep",
@@ -1639,9 +1646,9 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "strange",
       "funny",
       "random",
-      "who created"
+      "who created",
     ],
-    "responses": [
+    responses: [
       "I am an AI craft advisor, so I don't eat, but I love 'consuming' beautiful design patterns!",
       "Okay, I don't have a physical body, but I can help you design clothes for yours. Let us know if you need more help.",
       "Alright, That's an interesting question! I mainly focus on embroidery, though. Feel free to ask more questions.",
@@ -2091,11 +2098,11 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "Indeed, I don't play video games, my favorite activity is matching thread colors. Does that make sense? (Ref: 446)",
       "I cannot tell the future, but I predict your next outfit will look stunning. Reach out anytime! (Ref: 447)",
       "Okay, I don't have a favorite movie, but I love any scene with great costumes. (Ref: 448)",
-      "Alright, I'm afraid I don't know any good jokes, but I know some great embroidery techniques! Let us know if you need more help. (Ref: 449)"
-    ]
+      "Alright, I'm afraid I don't know any good jokes, but I know some great embroidery techniques! Let us know if you need more help. (Ref: 449)",
+    ],
   },
   {
-    "keywords": [
+    keywords: [
       "general",
       "info",
       "about",
@@ -2104,9 +2111,9 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "how it works",
       "guarantee",
       "promise",
-      "craftsmanship"
+      "craftsmanship",
     ],
-    "responses": [
+    responses: [
       "We provide high-quality bespoke embroidery.",
       "Okay, Our turnaround time is generally 5-10 days depending on the design. Let us know if you need more help.",
       "Alright, We use premium silk threads for all our works. Feel free to ask more questions.",
@@ -2956,8 +2963,7 @@ export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
       "Please note: We blend traditional techniques with modern aesthetics. Does that make sense? (Ref: 846)",
       "Here is the info: Handcrafted with love by our expert artisans. Reach out anytime! (Ref: 847)",
       "Got it. We guarantee colorfastness under standard washing conditions. (Ref: 848)",
-      "Indeed, Bringing your imagination to reality is our motto. Let us know if you need more help. (Ref: 849)"
-    ]
-  }
-
+      "Indeed, Bringing your imagination to reality is our motto. Let us know if you need more help. (Ref: 849)",
+    ],
+  },
 ];
