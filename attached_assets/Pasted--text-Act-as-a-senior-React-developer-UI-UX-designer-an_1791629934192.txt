@@ -1,0 +1,203 @@
+```text
+Act as a senior React developer, UI/UX designer, and accessibility-minded front-end engineer. Build a complete, polished, responsive, multi-page corporate website for “Spandana Embroidery,” a home-owned embroidery business in India.
+
+The business creates Indian-style embroidery, primarily for women’s clothing and children’s clothing. The tagline is:
+
+“Quality embroidery at affordable prices”
+
+Create an elegant, welcoming experience that presents the work professionally, helps visitors explore designs and prices, and makes it easy to request custom work or contact the business. Use warm, realistic copy appropriate for a small Indian craft business.
+
+Do not invent a street address, phone number, email address, social account, customer testimonial, delivery guarantee, or other business fact. If contact details are unavailable, use clearly labeled editable placeholders and document where the owner should replace them.
+
+## 1. Technology and project setup
+
+- Use React with JSX and modern functional components.
+- Use CSS Modules or a clearly organized CSS architecture with reusable styles. Avoid inline styles for general page styling.
+- Use a lightweight router such as React Router for separate pages.
+- Use a consistent, maintainable folder structure and reusable components.
+- Use a lightweight icon library, such as lucide-react, for interface icons. Do not use emoji as UI icons.
+- Use Google Fonts, with an elegant serif for headings and a highly readable sans-serif for body text.
+- Use CSS custom properties for colors, spacing, typography, shadows, border radii, and transitions.
+- Keep the project easy to install, run, and customize. Include a complete package.json, all required source files, and concise setup instructions.
+- Avoid unnecessary dependencies, fake backend integrations, broken links, and unfinished controls.
+- Add detailed comments for important interactions, data structures, accessibility decisions, and owner customization points. Avoid comments on every line.
+
+## 2. Brand and visual design
+
+Create a refined, craft-focused visual identity that feels elegant and personal rather than like a generic fashion marketplace.
+
+- Primary rose: #F43F5E
+- Accent coral: #FB923C
+- Light background: #FFF1F2
+- Add supporting colors for body text, borders, surfaces, hover states, and the dark theme. Maintain accessible contrast in both themes.
+- Use generous whitespace, strong typography, soft borders, tasteful shadows, and subtle decorative details inspired by thread, fabric, stitches, or embroidery motifs.
+- Keep imagery and decoration secondary to the embroidery work.
+- Use realistic placeholder images from picsum.photos or placehold.co when genuine business photographs are unavailable. Put image sources in one easy-to-edit data file and include useful alt text.
+- Make the layout look complete with placeholder images. Do not use empty image frames or generic lorem ipsum.
+- Use warm, specific copy about embroidery, handcrafted detail, custom clothing, and thoughtful gifting.
+- Do not make unsupported claims such as “best in India,” guaranteed turnaround times, or verified customer reviews.
+
+## 3. Site map and page content
+
+Build eight distinct pages with shared navigation, footer, theme controls, and consistent responsive behavior.
+
+### Home
+- Create a hero section with the brand name, tagline, a short welcoming introduction, and clear actions such as “Explore designs” and “Request custom work.”
+- Use a tasteful animated canvas, lightweight particle effect, or layered visual treatment inspired by thread and fabric. Keep it subtle and performant; do not let it obscure the headline or calls to action.
+- Include a concise introduction to the business, featured designs, a simple process overview, a custom-design callout, and a link to contact.
+- Add a trust-building section based only on verifiable business details. Do not fabricate reviews or credentials.
+
+### Designs / Portfolio
+- Display a responsive portfolio of embroidery examples across women’s clothing and children’s clothing.
+- Include category filters and design cards with an image, short description, garment/category, and indicative price range.
+- Make clear that listed prices are illustrative starting ranges and that final pricing may depend on fabric, stitch detail, size, and customization.
+- Add search and sorting controls that work with the local sample data.
+- Provide accessible favourite controls on each design card.
+
+### Pricing
+- Present clear, editable pricing tiers or price ranges, with a short explanation of what can affect the final quote.
+- Include a comparison table or responsive pricing cards that work on mobile.
+- Clearly identify all sample prices as illustrative placeholders, not confirmed business rates.
+- Include an action to request a quote for a specific design.
+
+### Custom Design
+- Explain the custom-order process in realistic steps, such as sharing an idea, discussing details, receiving a quote, and confirming the work.
+- Include a request form with fields for name, contact method, garment type, design idea, preferred colors, and optional reference-image URL or notes.
+- Validate required fields and show clear inline errors and success feedback.
+- Do not imply that the form uploads files or sends data to a server unless a real backend is implemented.
+- For a front-end-only build, explain that submission is a demo and provide a clearly editable contact fallback.
+
+### Membership
+- Explain a simple, optional membership or repeat-customer concept using editable sample benefits.
+- Do not suggest that a membership is already active or that benefits are guaranteed by the real business.
+- Include a sign-up interaction that uses local demo state only and make that limitation visible.
+- If membership terms or pricing are shown, label them as illustrative placeholders.
+
+### Free Resources
+- Provide useful embroidery-related resources, such as garment-preparation guidance, a design-planning checklist, fabric-care tips, or a downloadable sample guide.
+- Use real, helpful copy rather than generic filler.
+- For any download button, provide an actual included file or clearly indicate that the download is a demo. Never create a broken download link.
+
+### Account
+- Include login and registration interface states with accessible labels, password visibility controls, and form validation.
+- This is a front-end demo unless a backend is implemented. Never claim that credentials are securely stored or that a real account has been created.
+- Clearly label demo-only behavior and keep sensitive form data out of local storage.
+
+### Contact
+- Include a validated contact form with name, email or phone, topic, and message fields.
+- Show success and error feedback accessibly.
+- Include editable contact placeholders and social-media links that are clearly marked as placeholders until real profile URLs are supplied.
+- Include a Google Maps embed only when a real map location is provided. If no location is available, show a location placeholder or a clearly labeled map-unavailable state instead of embedding an invented location.
+
+## 4. Site-wide shopping and utility features
+
+- Add a search bar that can search portfolio/design content and provides a useful empty-results message.
+- Add a favourites feature that can add or remove design cards and show saved designs on a dedicated view or panel.
+- Add a cart accessible from the header. If the site does not sell fixed products, implement it as a lightweight quote basket where users can collect designs before requesting a quote.
+- Clearly explain that adding an item to the quote basket does not purchase it.
+- Persist non-sensitive cart and favourite preferences locally, with safe handling if server-side rendering is used.
+- Do not persist passwords, contact-form contents, or other sensitive personal information.
+
+## 5. Shared layout and navigation
+
+- Use a header with the logo/brand name, a hamburger menu as the only primary navigation control, a search control, favourites, quote basket/cart, and theme toggle.
+- Keep primary navigation hidden until the hamburger menu is opened.
+- Make the menu work on desktop and mobile. It must close on Escape and after selecting a page, and expose its expanded state to assistive technology.
+- Make every navigation destination available and usable after opening the menu.
+- Include a skip-to-content link and clear focus indicators.
+- Use smooth scrolling for in-page navigation while respecting reduced-motion preferences.
+- Build a multi-column footer with:
+  - A short business introduction.
+  - Site links.
+  - Contact placeholders.
+  - Social icon links with accessible names.
+  - A copyright line.
+- Provide a back-to-top button that appears after scrolling and has an accessible label.
+
+## 6. Interaction and motion
+
+Implement these as working front-end interactions:
+
+- Responsive hamburger menu.
+- Dark/light theme toggle with the selected theme saved locally. Use readable contrast in both themes.
+- Smooth in-page navigation.
+- Scroll-triggered fade-in or reveal effects, with content still visible if JavaScript or animation fails.
+- Subtle parallax depth on selected decorative layers only. Do not impair reading or cause layout shifts.
+- Contact and custom-order form validation, inline errors, and success/error status announcements.
+- Functional FAQ accordion with keyboard support and correct expanded-state semantics.
+- Pricing cards or a responsive comparison table.
+- Functional portfolio category filters, search, and sorting.
+- Working favourite and quote-basket actions with visible feedback.
+- Back-to-top control.
+- Custom cursor effect on pointer devices only. Keep the normal cursor on touch devices, do not hide the system cursor when the effect is unavailable, and ensure the cursor never replaces focus indicators or blocks clicking.
+- Gentle hover and press states for buttons and cards.
+- Respect the operating system’s reduced-motion preference. Disable or substantially reduce parallax, particle movement, and scroll animation when reduced motion is enabled.
+
+## 7. Accessibility requirements
+
+Target WCAG 2.2 AA practices as far as possible.
+
+- Use semantic HTML and landmarks such as header, nav, main, and footer.
+- Provide a skip link, logical heading hierarchy, descriptive page titles, and meaningful link text.
+- Ensure every form field has a visible label, instructions where needed, and accessible validation feedback.
+- Ensure all interactive controls work with a keyboard and display visible focus states.
+- Use appropriate ARIA attributes only where needed, including menu state, accordion state, dialog labels, and live status announcements.
+- Give meaningful images useful alt text; use empty alt text for purely decorative images.
+- Do not rely on color alone to communicate status, price tier, or errors.
+- Check text and interactive-element contrast in both light and dark modes.
+- Make buttons and touch targets comfortable to use on mobile.
+- Ensure animations do not cause essential content to disappear or become inaccessible.
+- Respect the operating system’s reduced-motion setting.
+
+## 8. Responsive behavior and quality
+
+- Design mobile-first, then adapt for tablet and desktop.
+- Check common viewport widths, including narrow phones, tablets, and wide desktop screens.
+- Prevent horizontal overflow, clipped text, overlapping controls, and unreadable tables.
+- Use responsive grids and flexible layouts; cards should stack cleanly on small screens.
+- Optimize images with appropriate sizing and lazy loading where suitable.
+- Avoid layout shifts when images load or content appears.
+- Keep effects lightweight, avoid unnecessary re-renders, and clean up event listeners and observers.
+- Ensure the experience remains usable if external images, fonts, or map embeds fail.
+
+## 9. Content and sample data
+
+Create realistic sample portfolio entries with editable fields such as:
+
+- Design name.
+- Category or garment type.
+- Description.
+- Illustrative price range in Indian rupees.
+- Image URL and alt text.
+- Tags for filtering.
+- Optional estimated complexity label.
+
+Include varied examples such as floral neckline embroidery, sleeve accents, festive motifs, children’s outfit details, and personalized initials.
+
+Label examples and prices as illustrative placeholders so the owner can replace them with actual work and rates.
+
+## 10. Required deliverables
+
+Return a complete, ready-to-run project, not just a mockup or a single component. Include:
+
+- A brief project structure overview.
+- All React, JSX, CSS, and configuration files required to run the website.
+- package.json and setup instructions.
+- Reusable shared components such as header, footer, design card, theme control, form fields, FAQ item, and quote basket.
+- Clear notes showing where to replace placeholder images, contact information, social URLs, map location, prices, and business terms.
+- A short manual testing checklist covering navigation, forms, theme toggle, favourites, quote basket, responsive layouts, keyboard navigation, and reduced-motion behavior.
+
+## 11. Completion criteria
+
+Before finishing, verify that:
+
+- Every route loads and has its own page content.
+- Every visible button or link has a meaningful, working action or is clearly marked as a demo.
+- There are no broken image URLs, dead navigation links, or misleading checkout/login claims.
+- Forms validate and announce their result.
+- The layout works on mobile, tablet, and desktop.
+- The website remains usable with keyboard navigation and reduced motion.
+- Placeholder content is clearly identifiable and easy to replace.
+
+Build the complete implementation now. Begin with a brief explanation of the architecture, then provide the full project files and setup instructions. Do not stop at a design description, wireframe, or partial code sample.
+```
