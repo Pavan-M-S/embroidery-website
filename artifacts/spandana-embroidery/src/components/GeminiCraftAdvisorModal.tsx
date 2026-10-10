@@ -119,6 +119,8 @@ export const GeminiCraftAdvisorModal: React.FC<{
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${PROVIDER_API_KEY}`,
+                'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://spandana-embroidery.vercel.app',
+                'X-Title': 'Spandana Embroidery Craft Advisor',
               },
               body: JSON.stringify({
                 model: currentModel,
