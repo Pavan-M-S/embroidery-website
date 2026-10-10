@@ -15,15 +15,26 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 
-// Enable CORS for all origins, methods, and headers so the API works in any URL/localhost
+// Enable CORS for all origins, ports, methods, and headers so the API works on ANY localhost port or URL
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with, accept, origin');
+  res.header('Access-Control-Max-Age', '86400');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
   next();
+});
+
+// Health check endpoint for port auto-discovery
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'Spandana Embroidery API',
+    port: PORT,
+    hasGeminiKey: !!apiKey,
+  });
 });
 
 // Initialize Google GenAI client

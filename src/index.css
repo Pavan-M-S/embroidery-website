@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @layer base {
   :root {
@@ -18,7 +18,9 @@
     color-scheme: light;
   }
 
-  .dark {
+  :root.dark,
+  .dark,
+  [data-theme="dark"] {
     --color-primary-rose: #FB7185;
     --color-primary-rose-hover: #F43F5E;
     --color-accent-coral: #FDBA74;
@@ -60,6 +62,20 @@
   }
 }
 
+/* Floating animation for corner actions */
+@keyframes floatCorner {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-floating {
+  animation: floatCorner 3.2s ease-in-out infinite;
+}
+
 /* Subtle Indian Embroidery stitch border pattern */
 .border-stitch {
   border-style: dashed;
@@ -67,7 +83,8 @@
   border-color: rgba(244, 63, 94, 0.35);
 }
 
-.dark .border-stitch {
+.dark .border-stitch,
+[data-theme="dark"] .border-stitch {
   border-color: rgba(251, 113, 133, 0.3);
 }
 
