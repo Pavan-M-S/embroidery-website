@@ -1,11 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Sparkles, Bot, User, Loader2, Settings, Key, CheckCircle2, AlertCircle, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  X,
+  Send,
+  Sparkles,
+  Bot,
+  User,
+  Loader2,
+  Settings,
+  Key,
+  CheckCircle2,
+  AlertCircle,
+  RotateCcw,
+} from "lucide-react";
 
-import { smartCraftReply } from '../lib/offlineCraftAdvisor';
-import { WEBSITE_KNOWLEDGE_PAYLOAD } from '../lib/websiteKnowledge';
+import { smartCraftReply } from "../lib/offlineCraftAdvisor";
+import { WEBSITE_KNOWLEDGE_PAYLOAD } from "../lib/websiteKnowledge";
 
 interface ChatMessage {
-  role: 'user' | 'model';
+  role: "user" | "model";
   text: string;
   timestamp: number;
 }
@@ -34,80 +46,84 @@ declare const __ENV_GEMINI_MODEL__: string | undefined;
 
 // Resolve static environment variables with fallbacks
 const resolveEnv = (staticVal: any, definedVal?: string): string => {
-  if (typeof staticVal === 'string' && staticVal.trim()) return staticVal.trim();
-  if (typeof definedVal === 'string' && definedVal.trim()) return definedVal.trim();
-  return '';
+  if (typeof staticVal === "string" && staticVal.trim())
+    return staticVal.trim();
+  if (typeof definedVal === "string" && definedVal.trim())
+    return definedVal.trim();
+  return "";
 };
 
 // Static build-time values
 const STATIC_PROVIDER_KEY = resolveEnv(
   import.meta.env.VITE_PROVIDER_API_KEY ||
-  import.meta.env.PROVIDER_API_KEY ||
-  import.meta.env.VITE_OPENROUTER_API_KEY ||
-  import.meta.env.OPENROUTER_API_KEY,
-  typeof __ENV_PROVIDER_API_KEY__ !== 'undefined' ? __ENV_PROVIDER_API_KEY__ : ''
+    import.meta.env.PROVIDER_API_KEY ||
+    import.meta.env.VITE_OPENROUTER_API_KEY ||
+    import.meta.env.OPENROUTER_API_KEY,
+  typeof __ENV_PROVIDER_API_KEY__ !== "undefined"
+    ? __ENV_PROVIDER_API_KEY__
+    : "",
 );
 
 const STATIC_PROVIDER_BASE_URL = resolveEnv(
-  import.meta.env.VITE_PROVIDER_BASE_URL ||
-  import.meta.env.PROVIDER_BASE_URL,
-  typeof __ENV_PROVIDER_BASE_URL__ !== 'undefined' ? __ENV_PROVIDER_BASE_URL__ : ''
+  import.meta.env.VITE_PROVIDER_BASE_URL || import.meta.env.PROVIDER_BASE_URL,
+  typeof __ENV_PROVIDER_BASE_URL__ !== "undefined"
+    ? __ENV_PROVIDER_BASE_URL__
+    : "",
 );
 
 const STATIC_PROVIDER_MODELS = resolveEnv(
   import.meta.env.VITE_PROVIDER_MODEL ||
-  import.meta.env.PROVIDER_MODEL ||
-  import.meta.env.VITE_PROVIDER_MODELS ||
-  import.meta.env.PROVIDER_MODELS ||
-  import.meta.env.VITE_AI_MODELS ||
-  import.meta.env.AI_MODELS ||
-  import.meta.env.VITE_MODELS ||
-  import.meta.env.MODELS,
-  typeof __ENV_PROVIDER_MODEL__ !== 'undefined' ? __ENV_PROVIDER_MODEL__ : ''
+    import.meta.env.PROVIDER_MODEL ||
+    import.meta.env.VITE_PROVIDER_MODELS ||
+    import.meta.env.PROVIDER_MODELS ||
+    import.meta.env.VITE_AI_MODELS ||
+    import.meta.env.AI_MODELS ||
+    import.meta.env.VITE_MODELS ||
+    import.meta.env.MODELS,
+  typeof __ENV_PROVIDER_MODEL__ !== "undefined" ? __ENV_PROVIDER_MODEL__ : "",
 );
 
 const STATIC_GEMINI_KEY = resolveEnv(
-  import.meta.env.VITE_GEMINI_API_KEY ||
-  import.meta.env.GEMINI_API_KEY,
-  typeof __ENV_GEMINI_API_KEY__ !== 'undefined' ? __ENV_GEMINI_API_KEY__ : ''
+  import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY,
+  typeof __ENV_GEMINI_API_KEY__ !== "undefined" ? __ENV_GEMINI_API_KEY__ : "",
 );
 
 const STATIC_GEMINI_BASE_URL = resolveEnv(
-  import.meta.env.VITE_GEMINI_BASE_URL ||
-  import.meta.env.GEMINI_BASE_URL,
-  typeof __ENV_GEMINI_BASE_URL__ !== 'undefined' ? __ENV_GEMINI_BASE_URL__ : ''
+  import.meta.env.VITE_GEMINI_BASE_URL || import.meta.env.GEMINI_BASE_URL,
+  typeof __ENV_GEMINI_BASE_URL__ !== "undefined" ? __ENV_GEMINI_BASE_URL__ : "",
 );
 
 const STATIC_GEMINI_MODEL = resolveEnv(
-  import.meta.env.VITE_GEMINI_MODEL ||
-  import.meta.env.GEMINI_MODEL,
-  typeof __ENV_GEMINI_MODEL__ !== 'undefined' ? __ENV_GEMINI_MODEL__ : ''
+  import.meta.env.VITE_GEMINI_MODEL || import.meta.env.GEMINI_MODEL,
+  typeof __ENV_GEMINI_MODEL__ !== "undefined" ? __ENV_GEMINI_MODEL__ : "",
 );
 
 // Fallback models when custom provider key is set but no models specified
 const DEFAULT_PROVIDER_MODELS = [
-  'google/gemini-2.0-flash-001',
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'deepseek/deepseek-chat',
-  'mistralai/mistral-7b-instruct:free',
-  'openai/gpt-4o-mini',
+  "google/gemini-2.0-flash-001",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "deepseek/deepseek-chat",
+  "mistralai/mistral-7b-instruct:free",
+  "openai/gpt-4o-mini",
 ];
 
 function parseModelsList(raw: string): string[] {
   if (!raw) return [];
   return raw
-    .split(',')
-    .map((s) => s.trim().replace(/^['"]|['"]$/g, ''))
+    .split(",")
+    .map((s) => s.trim().replace(/^['"]|['"]$/g, ""))
     .filter((s) => s.length > 0)
     .slice(0, 5);
 }
 
 function normalizeProviderEndpoint(rawBaseUrl: string): string {
-  let base = (rawBaseUrl || 'https://openrouter.ai/api/v1').trim().replace(/\/+$/, '');
-  if (base.includes('openrouter.ai') && !base.includes('/v1')) {
+  let base = (rawBaseUrl || "https://openrouter.ai/api/v1")
+    .trim()
+    .replace(/\/+$/, "");
+  if (base.includes("openrouter.ai") && !base.includes("/v1")) {
     base = `${base}/api/v1`;
   }
-  if (base.endsWith('/chat/completions')) {
+  if (base.endsWith("/chat/completions")) {
     return base;
   }
   return `${base}/chat/completions`;
@@ -118,21 +134,21 @@ function isInvalidErrorContent(text: string): boolean {
   if (!text || !text.trim()) return true;
   const lower = text.toLowerCase();
   return (
-    lower.startsWith('error:') ||
+    lower.startsWith("error:") ||
     lower.startsWith('{"error"') ||
-    lower.includes('rate limit') ||
-    lower.includes('quota exceeded') ||
-    lower.includes('insufficient_quota') ||
-    lower.includes('token limit') ||
-    lower.includes('model not found') ||
-    lower.includes('error 404') ||
-    lower.includes('error 429') ||
-    lower.includes('error 500') ||
-    lower.includes('service unavailable') ||
-    lower.includes('overloaded') ||
-    lower.includes('credits expired') ||
-    lower.includes('unauthorized') ||
-    lower.includes('temporarily unavailable')
+    lower.includes("rate limit") ||
+    lower.includes("quota exceeded") ||
+    lower.includes("insufficient_quota") ||
+    lower.includes("token limit") ||
+    lower.includes("model not found") ||
+    lower.includes("error 404") ||
+    lower.includes("error 429") ||
+    lower.includes("error 500") ||
+    lower.includes("service unavailable") ||
+    lower.includes("overloaded") ||
+    lower.includes("credits expired") ||
+    lower.includes("unauthorized") ||
+    lower.includes("temporarily unavailable")
   );
 }
 
@@ -143,27 +159,39 @@ export const GeminiCraftAdvisorModal: React.FC<{
 }> = ({ isOpen, onClose, topic }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      role: 'model',
-      text: 'Namaste! Welcome to Spandana Embroidery. I am your Craft & Motif Consultant. How can I help you today? You can ask about embroidery styles, fabric recommendations, festive color pairings, or garment care.',
+      role: "model",
+      text: "Namaste! Welcome to Spandana Embroidery. I am your Craft & Motif Consultant. How can I help you today? You can ask about embroidery styles, fabric recommendations, festive color pairings, or garment care.",
       timestamp: Date.now(),
     },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
   // User-configurable overrides stored in localStorage for easy live testing
   const [customKey, setCustomKey] = useState<string>(() => {
-    return localStorage.getItem('spandana_provider_key') || STATIC_PROVIDER_KEY || '';
+    return (
+      localStorage.getItem("spandana_provider_key") || STATIC_PROVIDER_KEY || ""
+    );
   });
   const [customBaseUrl, setCustomBaseUrl] = useState<string>(() => {
-    return localStorage.getItem('spandana_provider_base_url') || STATIC_PROVIDER_BASE_URL || '';
+    return (
+      localStorage.getItem("spandana_provider_base_url") ||
+      STATIC_PROVIDER_BASE_URL ||
+      ""
+    );
   });
   const [customModels, setCustomModels] = useState<string>(() => {
-    return localStorage.getItem('spandana_provider_models') || STATIC_PROVIDER_MODELS || '';
+    return (
+      localStorage.getItem("spandana_provider_models") ||
+      STATIC_PROVIDER_MODELS ||
+      ""
+    );
   });
   const [geminiKey, setGeminiKey] = useState<string>(() => {
-    return localStorage.getItem('spandana_gemini_key') || STATIC_GEMINI_KEY || '';
+    return (
+      localStorage.getItem("spandana_gemini_key") || STATIC_GEMINI_KEY || ""
+    );
   });
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -171,10 +199,17 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
   // Active runtime configuration
   const activeProviderKey = (customKey.trim() || STATIC_PROVIDER_KEY).trim();
-  const activeBaseUrl = (customBaseUrl.trim() || STATIC_PROVIDER_BASE_URL).trim();
+  const activeBaseUrl = (
+    customBaseUrl.trim() || STATIC_PROVIDER_BASE_URL
+  ).trim();
   const rawModelString = (customModels.trim() || STATIC_PROVIDER_MODELS).trim();
   const parsedModels = parseModelsList(rawModelString);
-  const activeModels = parsedModels.length > 0 ? parsedModels : (activeProviderKey ? DEFAULT_PROVIDER_MODELS : []);
+  const activeModels =
+    parsedModels.length > 0
+      ? parsedModels
+      : activeProviderKey
+        ? DEFAULT_PROVIDER_MODELS
+        : [];
   const activeGeminiKey = (geminiKey.trim() || STATIC_GEMINI_KEY).trim();
 
   // If a topic was prefilled from another page
@@ -188,23 +223,23 @@ export const GeminiCraftAdvisorModal: React.FC<{
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [isOpen, messages]);
 
   const saveSettings = () => {
-    localStorage.setItem('spandana_provider_key', customKey.trim());
-    localStorage.setItem('spandana_provider_base_url', customBaseUrl.trim());
-    localStorage.setItem('spandana_provider_models', customModels.trim());
-    localStorage.setItem('spandana_gemini_key', geminiKey.trim());
+    localStorage.setItem("spandana_provider_key", customKey.trim());
+    localStorage.setItem("spandana_provider_base_url", customBaseUrl.trim());
+    localStorage.setItem("spandana_provider_models", customModels.trim());
+    localStorage.setItem("spandana_gemini_key", geminiKey.trim());
     setShowSettings(false);
   };
 
   const resetSettingsToEnv = () => {
-    localStorage.removeItem('spandana_provider_key');
-    localStorage.removeItem('spandana_provider_base_url');
-    localStorage.removeItem('spandana_provider_models');
-    localStorage.removeItem('spandana_gemini_key');
+    localStorage.removeItem("spandana_provider_key");
+    localStorage.removeItem("spandana_provider_base_url");
+    localStorage.removeItem("spandana_provider_models");
+    localStorage.removeItem("spandana_gemini_key");
     setCustomKey(STATIC_PROVIDER_KEY);
     setCustomBaseUrl(STATIC_PROVIDER_BASE_URL);
     setCustomModels(STATIC_PROVIDER_MODELS);
@@ -217,44 +252,56 @@ export const GeminiCraftAdvisorModal: React.FC<{
     if (!textToSend.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
-      role: 'user',
+      role: "user",
       text: textToSend.trim(),
       timestamp: Date.now(),
     };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInput('');
+    setInput("");
     setIsLoading(true);
 
     try {
-      let reply = '';
+      let reply = "";
 
       // Build recent conversational history (excluding initial greeting to avoid role issues)
-      const convoHistory = messages.filter((m, idx) => idx > 0 && m.text && m.text.trim());
+      const convoHistory = messages.filter(
+        (m, idx) => idx > 0 && m.text && m.text.trim(),
+      );
 
       const historySummary = convoHistory
-        .map((m) => `${m.role === 'model' ? 'Craft Consultant' : 'Customer'}: ${m.text}`)
-        .join('\n');
+        .map(
+          (m) =>
+            `${m.role === "model" ? "Craft Consultant" : "Customer"}: ${m.text}`,
+        )
+        .join("\n");
 
-      const promptWithContext = convoHistory.length > 0
-        ? `[CONVERSATION HISTORY & MEMORY CACHE]\n${historySummary}\n\n[CONVERSATIONAL MEMORY & CONTEXT RULES]\n- You must actively use and remember all previous chat turns provided in the conversation history (treat it as your working memory cache).\n- Retain all details mentioned by the user in earlier messages (such as fabric type, occasion, colors, garment type, budget, or previous questions) and build directly upon them without asking the user to repeat themselves.\n- Do not repeat opening greetings (like "Namaste" or introductions) if the conversation is already underway. Continue the discussion seamlessly.\n\n[CUSTOMER'S LATEST MESSAGE]\n${textToSend.trim()}`
-        : textToSend.trim();
+      const promptWithContext =
+        convoHistory.length > 0
+          ? `[CONVERSATION HISTORY & MEMORY CACHE]\n${historySummary}\n\n[CONVERSATIONAL MEMORY & CONTEXT RULES]\n- You must actively use and remember all previous chat turns provided in the conversation history (treat it as your working memory cache).\n- Retain all details mentioned by the user in earlier messages (such as fabric type, occasion, colors, garment type, budget, or previous questions) and build directly upon them without asking the user to repeat themselves.\n- Do not repeat opening greetings (like "Namaste" or introductions) if the conversation is already underway. Continue the discussion seamlessly.\n\n[CUSTOMER'S LATEST MESSAGE]\n${textToSend.trim()}`
+          : textToSend.trim();
 
       // ========================================================================
       // TIER 1: Custom Provider (Tries up to 5 models sequentially with 12s timeout)
       // ========================================================================
       if (activeProviderKey && activeModels.length > 0) {
         const endpoint = normalizeProviderEndpoint(activeBaseUrl);
-        console.log(`[AI Advisor] Starting Tier 1 with ${activeModels.length} models via ${endpoint}`);
+        console.log(
+          `[AI Advisor] Starting Tier 1 with ${activeModels.length} models via ${endpoint}`,
+        );
 
         // Construct standard messages array: System -> Alternating turns starting with User
-        const reqMessages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
-          { role: 'system', content: SYSTEM_INSTRUCTION },
-        ];
+        const reqMessages: Array<{
+          role: "system" | "user" | "assistant";
+          content: string;
+        }> = [{ role: "system", content: SYSTEM_INSTRUCTION }];
 
         for (const m of convoHistory) {
-          const role = m.role === 'model' ? 'assistant' : 'user';
-          if (reqMessages.length > 1 && reqMessages[reqMessages.length - 1].role === role) {
+          const role = m.role === "model" ? "assistant" : "user";
+          if (
+            reqMessages.length > 1 &&
+            reqMessages[reqMessages.length - 1].role === role
+          ) {
             reqMessages[reqMessages.length - 1].content += `\n${m.text}`;
           } else {
             reqMessages.push({ role, content: m.text });
@@ -262,11 +309,15 @@ export const GeminiCraftAdvisorModal: React.FC<{
         }
 
         // Add the current user prompt ensuring strictly alternating turns
-        if (reqMessages.length > 1 && reqMessages[reqMessages.length - 1].role === 'user') {
-          reqMessages[reqMessages.length - 1].content += `\n\n${promptWithContext}`;
+        if (
+          reqMessages.length > 1 &&
+          reqMessages[reqMessages.length - 1].role === "user"
+        ) {
+          reqMessages[reqMessages.length - 1].content +=
+            `\n\n${promptWithContext}`;
         } else {
           reqMessages.push({
-            role: 'user',
+            role: "user",
             content: promptWithContext,
           });
         }
@@ -275,19 +326,23 @@ export const GeminiCraftAdvisorModal: React.FC<{
         for (let i = 0; i < activeModels.length; i++) {
           const stepNum = i + 1;
           const currentModel = activeModels[i];
-          console.log(`[AI Advisor Step ${stepNum}] Calling Model #${stepNum}: "${currentModel}"...`);
+          console.log(
+            `[AI Advisor Step ${stepNum}] Calling Model #${stepNum}: "${currentModel}"...`,
+          );
 
           try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 12000);
 
             const res = await fetch(endpoint, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${activeProviderKey}`,
-                'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://spandana-embroidery.vercel.app',
-                'X-Title': 'Spandana Embroidery Craft Advisor',
+                "Content-Type": "application/json",
+                "HTTP-Referer":
+                  typeof window !== "undefined"
+                    ? window.location.origin
+                    : "https://spandana-embroidery.vercel.app",
+                "X-Title": "Spandana Embroidery Craft Advisor",
               },
               body: JSON.stringify({
                 model: currentModel,
@@ -303,24 +358,36 @@ export const GeminiCraftAdvisorModal: React.FC<{
             if (res.ok) {
               const data = await res.json();
               if (data?.error) {
-                console.warn(`[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" returned API error:`, data.error);
+                console.warn(
+                  `[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" returned API error:`,
+                  data.error,
+                );
                 continue; // Proceed to next model in sequence
               }
 
-              const content = data.choices?.[0]?.message?.content ?? '';
+              const content = data.choices?.[0]?.message?.content ?? "";
               if (content && !isInvalidErrorContent(content)) {
-                console.log(`[AI Advisor Step ${stepNum}] Success! Model #${stepNum} "${currentModel}" answered.`);
+                console.log(
+                  `[AI Advisor Step ${stepNum}] Success! Model #${stepNum} "${currentModel}" answered.`,
+                );
                 reply = content.trim();
                 break; // Found answer, exit waterfall immediately!
               } else {
-                console.warn(`[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" returned empty/error text: "${content}". Proceeding to next model...`);
+                console.warn(
+                  `[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" returned empty/error text: "${content}". Proceeding to next model...`,
+                );
               }
             } else {
-              const errSnippet = await res.text().catch(() => '');
-              console.warn(`[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" failed with HTTP ${res.status}: ${errSnippet}. Proceeding to next model...`);
+              const errSnippet = await res.text().catch(() => "");
+              console.warn(
+                `[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" failed with HTTP ${res.status}: ${errSnippet}. Proceeding to next model...`,
+              );
             }
           } catch (modelErr: any) {
-            console.warn(`[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" network or timeout failure:`, modelErr);
+            console.warn(
+              `[AI Advisor Step ${stepNum}] Model #${stepNum} "${currentModel}" network or timeout failure:`,
+              modelErr,
+            );
           }
         }
       }
@@ -330,14 +397,23 @@ export const GeminiCraftAdvisorModal: React.FC<{
       // to Google Gemini API (VITE_GEMINI_API_KEY) with chat history & memory rules
       // ========================================================================
       if (!reply && activeGeminiKey) {
-        console.log('[AI Advisor Step 5 (Gemini Fallback)] All custom models failed or not configured. Seamlessly handing off to Google Gemini API...');
+        console.log(
+          "[AI Advisor Step 5 (Gemini Fallback)] All custom models failed or not configured. Seamlessly handing off to Google Gemini API...",
+        );
 
-        const geminiContents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+        const geminiContents: Array<{
+          role: "user" | "model";
+          parts: Array<{ text: string }>;
+        }> = [];
 
         for (const m of convoHistory) {
-          const role: 'user' | 'model' = m.role === 'model' ? 'model' : 'user';
-          if (geminiContents.length > 0 && geminiContents[geminiContents.length - 1].role === role) {
-            geminiContents[geminiContents.length - 1].parts[0].text += `\n${m.text}`;
+          const role: "user" | "model" = m.role === "model" ? "model" : "user";
+          if (
+            geminiContents.length > 0 &&
+            geminiContents[geminiContents.length - 1].role === role
+          ) {
+            geminiContents[geminiContents.length - 1].parts[0].text +=
+              `\n${m.text}`;
           } else {
             geminiContents.push({
               role,
@@ -347,34 +423,43 @@ export const GeminiCraftAdvisorModal: React.FC<{
         }
 
         // Add current user prompt ensuring alternating turns
-        if (geminiContents.length > 0 && geminiContents[geminiContents.length - 1].role === 'user') {
-          geminiContents[geminiContents.length - 1].parts[0].text += `\n\n${promptWithContext}`;
+        if (
+          geminiContents.length > 0 &&
+          geminiContents[geminiContents.length - 1].role === "user"
+        ) {
+          geminiContents[geminiContents.length - 1].parts[0].text +=
+            `\n\n${promptWithContext}`;
         } else {
           geminiContents.push({
-            role: 'user',
+            role: "user",
             parts: [{ text: promptWithContext }],
           });
         }
 
         const geminiModelsToTry = [
-          STATIC_GEMINI_MODEL || 'gemini-2.5-flash',
-          'gemini-2.0-flash',
-          'gemini-1.5-flash',
+          STATIC_GEMINI_MODEL || "gemini-2.5-flash",
+          "gemini-2.0-flash",
+          "gemini-1.5-flash",
         ];
 
         for (const gModel of geminiModelsToTry) {
           if (reply) break;
           try {
-            console.log(`[AI Advisor Step 5] Trying Gemini model: "${gModel}"...`);
+            console.log(
+              `[AI Advisor Step 5] Trying Gemini model: "${gModel}"...`,
+            );
             const gController = new AbortController();
             const gTimeout = setTimeout(() => gController.abort(), 12000);
 
-            const geminiBase = (STATIC_GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta').replace(/\/+$/, '');
-            const geminiUrl = `${geminiBase}/models/${gModel}:generateContent?key=${activeGeminiKey}`;
+            const geminiBase = (
+              STATIC_GEMINI_BASE_URL ||
+              "https://generativelanguage.googleapis.com/v1beta"
+            ).replace(/\/+$/, "");
+            const geminiUrl = `${geminiBase}/models/${gModel}:generateContent`;
 
             const gRes = await fetch(geminiUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 systemInstruction: {
                   parts: [{ text: SYSTEM_INSTRUCTION }],
@@ -388,18 +473,26 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
             if (gRes.ok) {
               const gData = await gRes.json();
-              const gContent = gData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+              const gContent =
+                gData.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
               if (gContent && !isInvalidErrorContent(gContent)) {
-                console.log(`[AI Advisor Step 5] Success! Gemini model "${gModel}" answered.`);
+                console.log(
+                  `[AI Advisor Step 5] Success! Gemini model "${gModel}" answered.`,
+                );
                 reply = gContent.trim();
                 break;
               }
             } else {
-              const gErr = await gRes.text().catch(() => '');
-              console.warn(`[AI Advisor Step 5] Gemini model "${gModel}" HTTP ${gRes.status}: ${gErr}`);
+              const gErr = await gRes.text().catch(() => "");
+              console.warn(
+                `[AI Advisor Step 5] Gemini model "${gModel}" HTTP ${gRes.status}: ${gErr}`,
+              );
             }
           } catch (gErr) {
-            console.warn(`[AI Advisor Step 5] Gemini model "${gModel}" failed:`, gErr);
+            console.warn(
+              `[AI Advisor Step 5] Gemini model "${gModel}" failed:`,
+              gErr,
+            );
           }
         }
       }
@@ -409,21 +502,23 @@ export const GeminiCraftAdvisorModal: React.FC<{
       // serves one of the offline craft responses from the curated craft library
       // ========================================================================
       if (!reply) {
-        console.log('[AI Advisor Step 6 (Offline Fallback)] Online AI models unreachable or unconfigured. Serving offline craft response...');
+        console.log(
+          "[AI Advisor Step 6 (Offline Fallback)] Online AI models unreachable or unconfigured. Serving offline craft response...",
+        );
         reply = smartCraftReply(textToSend.trim());
       }
 
       setMessages((prev) => [
         ...prev,
-        { role: 'model', text: reply, timestamp: Date.now() },
+        { role: "model", text: reply, timestamp: Date.now() },
       ]);
     } catch (err) {
-      console.warn('Unhandled chat error, applying offline fallback:', err);
+      console.warn("Unhandled chat error, applying offline fallback:", err);
       const fallbackReply = smartCraftReply(textToSend.trim());
       setMessages((prev) => [
         ...prev,
         {
-          role: 'model',
+          role: "model",
           text: fallbackReply,
           timestamp: Date.now(),
         },
@@ -439,10 +534,10 @@ export const GeminiCraftAdvisorModal: React.FC<{
   };
 
   const samplePrompts = [
-    'Best neckline stitches for raw silk kurti',
-    'Which embroidery is gentlest for children\'s clothes?',
-    'How do I care for zari thread work?',
-    'How does Spandana calculate custom quotes?',
+    "Best neckline stitches for raw silk kurti",
+    "Which embroidery is gentlest for children's clothes?",
+    "How do I care for zari thread work?",
+    "How does Spandana calculate custom quotes?",
   ];
 
   return (
@@ -466,7 +561,10 @@ export const GeminiCraftAdvisorModal: React.FC<{
               <Sparkles className="w-4 h-4" aria-hidden="true" />
             </div>
             <div>
-              <h2 id="advisor-modal-title" className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2">
+              <h2
+                id="advisor-modal-title"
+                className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2"
+              >
                 <span>Spandana Craft Consultant</span>
                 <span
                   className="text-[10px] font-sans font-medium px-2 py-0.5 rounded cursor-pointer transition-colors border"
@@ -523,7 +621,8 @@ export const GeminiCraftAdvisorModal: React.FC<{
           <div className="p-4 bg-slate-50 dark:bg-neutral-900 border-b border-rose-200 dark:border-rose-900/50 text-xs space-y-3 animate-fade-in">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-800 dark:text-rose-200 flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-rose-500" /> AI API Connection Status & Test Keys
+                <Key className="w-3.5 h-3.5 text-rose-500" /> AI API Connection
+                Status & Test Keys
               </span>
               <button
                 type="button"
@@ -543,7 +642,11 @@ export const GeminiCraftAdvisorModal: React.FC<{
                   type="password"
                   value={customKey}
                   onChange={(e) => setCustomKey(e.target.value)}
-                  placeholder={STATIC_PROVIDER_KEY ? '●●●● (Loaded from Env)' : 'Paste API Key to test...'}
+                  placeholder={
+                    STATIC_PROVIDER_KEY
+                      ? "●●●● (Loaded from Env)"
+                      : "Paste API Key to test..."
+                  }
                   className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg"
                 />
               </div>
@@ -563,7 +666,8 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
               <div className="sm:col-span-2">
                 <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">
-                  Provider Models (Comma-separated, up to 5 models in priority order)
+                  Provider Models (Comma-separated, up to 5 models in priority
+                  order)
                 </label>
                 <input
                   type="text"
@@ -573,7 +677,8 @@ export const GeminiCraftAdvisorModal: React.FC<{
                   className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg"
                 />
                 <p className="text-[10px] text-slate-500 mt-0.5">
-                  Currently active: {activeModels.join(' → ') || 'No models set'}
+                  Currently active:{" "}
+                  {activeModels.join(" → ") || "No models set"}
                 </p>
               </div>
 
@@ -585,7 +690,11 @@ export const GeminiCraftAdvisorModal: React.FC<{
                   type="password"
                   value={geminiKey}
                   onChange={(e) => setGeminiKey(e.target.value)}
-                  placeholder={STATIC_GEMINI_KEY ? '●●●● (Loaded from Env)' : 'Google Gemini API key...'}
+                  placeholder={
+                    STATIC_GEMINI_KEY
+                      ? "●●●● (Loaded from Env)"
+                      : "Google Gemini API key..."
+                  }
                   className="w-full px-2.5 py-1.5 text-xs bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg"
                 />
               </div>
@@ -602,15 +711,14 @@ export const GeminiCraftAdvisorModal: React.FC<{
             </div>
           </div>
         )}
-
         {/* Message Thread */}
         <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-rose-50/20 dark:bg-rose-950/10">
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`flex gap-2.5 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex gap-2.5 ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              {m.role === 'model' && (
+              {m.role === "model" && (
                 <div className="w-7 h-7 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-300 flex items-center justify-center shrink-0 mt-0.5">
                   <Bot className="w-4 h-4" aria-hidden="true" />
                 </div>
@@ -618,15 +726,15 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
               <div
                 className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed ${
-                  m.role === 'user'
-                    ? 'bg-rose-500 text-white rounded-br-none'
-                    : 'bg-white dark:bg-neutral-900 text-slate-800 dark:text-slate-200 border border-rose-100 dark:border-rose-950 rounded-bl-none shadow-2xs'
+                  m.role === "user"
+                    ? "bg-rose-500 text-white rounded-br-none"
+                    : "bg-white dark:bg-neutral-900 text-slate-800 dark:text-slate-200 border border-rose-100 dark:border-rose-950 rounded-bl-none shadow-2xs"
                 }`}
               >
                 {m.text}
               </div>
 
-              {m.role === 'user' && (
+              {m.role === "user" && (
                 <div className="w-7 h-7 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200 flex items-center justify-center shrink-0 mt-0.5">
                   <User className="w-4 h-4" aria-hidden="true" />
                 </div>
@@ -639,7 +747,9 @@ export const GeminiCraftAdvisorModal: React.FC<{
               <div className="w-7 h-7 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-600 flex items-center justify-center">
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
               </div>
-              <span className="italic">Thinking through craft recommendations...</span>
+              <span className="italic">
+                Thinking through craft recommendations...
+              </span>
             </div>
           )}
 
@@ -661,7 +771,10 @@ export const GeminiCraftAdvisorModal: React.FC<{
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSubmit} className="p-3 border-t border-rose-100 dark:border-rose-950 bg-white dark:bg-[#181318] flex items-center gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="p-3 border-t border-rose-100 dark:border-rose-950 bg-white dark:bg-[#181318] flex items-center gap-2"
+        >
           <input
             ref={inputRef}
             type="text"
