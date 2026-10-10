@@ -7,6 +7,7 @@ import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { ArrowDown, ArrowRight, ArrowUp, Bookmark, Check, ChevronDown, CircleHelp, Eye, EyeOff, Facebook, Flower2, Heart, Instagram, Menu, Moon, Plus, Search, Send, Sun, X } from 'lucide-react';
 import { designs, faqs, priceExamples } from './data';
+import { InteractiveBackground } from './InteractiveBackground';
 
 const queryClient = new QueryClient();
 const routes = [
@@ -109,6 +110,7 @@ function App() {
   const quotedDesigns = designs.filter((d) => quotes.includes(d.id));
   const dismissPanel = () => setPanel(null);
   return <div className="site-shell">
+    <InteractiveBackground theme={theme} />
     <a href="#main" className="skip-link">Skip to content</a>
     <header className="site-header">
       <Link href="/" className="brand-lockup" aria-label="Spandana Embroidery home"><span className="brand-mark">S<Flower2 size={13} aria-hidden="true" /></span><span><strong>Spandana</strong><small>EMBROIDERY STUDIO</small></span></Link>

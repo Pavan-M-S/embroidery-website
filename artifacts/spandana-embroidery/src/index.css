@@ -398,7 +398,10 @@
 }
 
 /* Spandana studio interface */
-.site-shell { min-height: 100dvh; overflow: clip; background: hsl(var(--background)); color: hsl(var(--foreground)); }
+.site-shell { min-height: 100dvh; overflow: clip; position: relative; isolation: isolate; background: transparent; color: hsl(var(--foreground)); }
+.site-shell > main, .site-shell > footer { position: relative; z-index: 1; }
+.interactive-background { position: fixed; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: .62; }
+.dark .interactive-background { opacity: .76; }
 .site-header { width: min(100% - 72px, 1370px); height: 90px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid hsl(var(--border)); position: relative; z-index: 20; }
 .brand-lockup { display: flex; gap: 12px; align-items: center; color: inherit; text-decoration: none; }
 .brand-lockup strong { font-family: var(--app-font-serif); font-size: 20px; font-weight: 600; display: block; letter-spacing: -.5px; }
