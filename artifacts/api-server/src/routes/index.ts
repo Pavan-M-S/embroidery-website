@@ -7,6 +7,6 @@ const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(geminiRouter);
-router.use("/api", inquiriesRouter);
+router.use(inquiriesRouter);
 
 export default router;

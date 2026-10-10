@@ -459,7 +459,10 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
             const gRes = await fetch(geminiUrl, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": activeGeminiKey,
+              },
               body: JSON.stringify({
                 systemInstruction: {
                   parts: [{ text: SYSTEM_INSTRUCTION }],
