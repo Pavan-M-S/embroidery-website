@@ -15,7 +15,22 @@ const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embr
 // Custom Provider config (OpenAI compatible)
 const PROVIDER_API_KEY = (import.meta as any).env?.VITE_PROVIDER_API_KEY as string | undefined;
 const PROVIDER_BASE_URL = (import.meta as any).env?.VITE_PROVIDER_BASE_URL as string | undefined;
-const PROVIDER_MODEL = (import.meta as any).env?.VITE_PROVIDER_MODEL as string | undefined;
+
+// Collect up to 5 models from Vercel env vars (supports VITE_PROVIDER_MODEL_1..5 or comma-separated in VITE_PROVIDER_MODEL)
+const rawModelEnv: (string | undefined)[] = [
+  (import.meta as any).env?.VITE_PROVIDER_MODEL,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_1,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_2,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_3,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_4,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_5,
+];
+
+const PROVIDER_MODELS: string[] = rawModelEnv
+  .filter((val): val is string => Boolean(val && val.trim()))
+  .flatMap((val) => val.split(',').map((s) => s.trim()))
+  .filter((val) => val.length > 0)
+  .slice(0, 5);
 
 // Gemini config
 const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY as string | undefined;
@@ -78,9 +93,8 @@ export const GeminiCraftAdvisorModal: React.FC<{
     try {
       let reply = '';
 
-      if (PROVIDER_API_KEY && PROVIDER_BASE_URL) {
-        // --- Real-time Custom Provider API call (OpenAI standard format) ---
-        // Strip trailing slash if present on base URL
+      if (PROVIDER_API_KEY && PROVIDER_BASE_URL && PROVIDER_MODELS.length > 0) {
+        // --- Real-time Custom Provider API call with automatic 5-model fallback ---
         const baseUrl = PROVIDER_BASE_URL.replace(/\/+$/, '');
         const endpoint = baseUrl.endsWith('/v1/chat/completions') || baseUrl.endsWith('/chat/completions') 
           ? baseUrl 
@@ -95,21 +109,44 @@ export const GeminiCraftAdvisorModal: React.FC<{
           { role: 'user', content: textToSend.trim() }
         ];
 
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${PROVIDER_API_KEY}`,
-          },
-          body: JSON.stringify({
-            model: PROVIDER_MODEL || 'meta-llama/llama-3.1-8b-instruct',
-            messages: reqMessages,
-          }),
-        });
+        let providerSuccess = false;
+        let lastErrorMsg = 'Provider request failed';
 
-        if (!res.ok) throw new Error(`Provider returned ${res.status}`);
-        const data = await res.json();
-        reply = data.choices?.[0]?.message?.content ?? '';
+        for (const currentModel of PROVIDER_MODELS) {
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${PROVIDER_API_KEY}`,
+              },
+              body: JSON.stringify({
+                model: currentModel,
+                messages: reqMessages,
+              }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const content = data.choices?.[0]?.message?.content ?? '';
+              if (content) {
+                reply = content;
+                providerSuccess = true;
+                break; // Found working model!
+              }
+            } else {
+              lastErrorMsg = `Model ${currentModel} returned HTTP ${res.status}`;
+              console.warn(`[AI Advisor] ${lastErrorMsg}, trying next fallback model...`);
+            }
+          } catch (modelErr: any) {
+            lastErrorMsg = modelErr?.message || `Model ${currentModel} network failure`;
+            console.warn(`[AI Advisor] ${lastErrorMsg}, trying next fallback model...`);
+          }
+        }
+
+        if (!providerSuccess) {
+          throw new Error(lastErrorMsg);
+        }
       } else if (ai) {
         // --- Real-time Gemini API call (browser-direct) ---
         const chat = ai.chats.create({
