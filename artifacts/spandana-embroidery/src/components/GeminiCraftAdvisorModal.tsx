@@ -1,9 +1,72 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from 'lucide-react';
+
 interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: number;
+}
+
+/** Deterministic context-aware offline reply — mirrors the backend logic. */
+function smartCraftReply(msg: string): string {
+  const m = msg.toLowerCase().trim();
+
+  if (m === 'hi' || m === 'hey' || m === 'hello' || m === 'namaste' || m.startsWith('hi ') || m.startsWith('hey ') || m.startsWith('hello ')) {
+    return `Namaste! It's a pleasure to meet you. Are you looking to embellish a kurti, sari blouse, festive dress, or children's outfit? Tell me your fabric or design ideas!`;
+  }
+
+  if (m.includes('who are you') || m.includes('what are you') || m.includes('your name') || m.includes('introduce') || m.includes('about you')) {
+    return 'I am the Spandana Craft Consultant — your AI-powered guide for all things Indian needlework! I can help you choose embroidery styles, recommend fabrics, suggest color pairings, plan festive designs, and advise on garment care.';
+  }
+
+  if (m.includes('what can you do') || m.includes('help me') || m.includes('how can you') || m.includes('what do you know')) {
+    return 'I can assist with: choosing embroidery styles (Kasuti, Aari, Zardozi, Resham), fabric recommendations (raw silk, cotton, organza), festive color pairings, garment placement, pricing guidance, children\'s wear tips, and garment care instructions!';
+  }
+
+  if (m.includes('price') || m.includes('cost') || m.includes('rate') || m.includes('quote') || m.includes('how much') || m.includes('charge')) {
+    return 'At Spandana Embroidery, pricing is affordable: daily accents start at ₹350, detailed yokes/necklines range from ₹750–₹1,200, and festive/bridal work begins at ₹2,500+. Final price depends on stitch density, thread material, and fabric type.';
+  }
+
+  if (m.includes('kid') || m.includes('child') || m.includes('baby') || m.includes('pattu') || m.includes('pavadai')) {
+    return 'For children\'s garments and pattu pavadais, comfort comes first! We use soft cotton fusible backing, smooth Resham threads, and gentle bullion roses or lazy daisy stitches that won\'t scratch delicate skin.';
+  }
+
+  if (m.includes('wash') || m.includes('care') || m.includes('clean') || m.includes('iron') || m.includes('maintain')) {
+    return 'To preserve handcrafted embroidery: dry-clean garments on raw silk, velvet, or genuine Zari. For cotton kurtis, hand-wash gently in cool water with mild detergent. Always iron on the reverse side over a soft towel!';
+  }
+
+  if (m.includes('silk') || m.includes('organza') || m.includes('tussar') || m.includes('velvet') || m.includes('chanderi') || m.includes('fabric')) {
+    return 'Raw silk, organza, and tussar are beautiful canvases! Heavy fabrics like velvet suit Zardozi and couched Zari; delicate organza and chanderi work best with fine shadow work or soft Resham stitches that drape without pulling.';
+  }
+
+  if (m.includes('blouse') || m.includes('neckline') || m.includes('yoke') || m.includes('sleeve') || m.includes('kurti')) {
+    return 'Necklines and sleeve cuffs are our specialty! A grand Kasuti or Aari embroidered yoke transforms a plain kurti into designer wear. For sari blouses, sleeve borders with subtle mirror work or bullion floral creepers add timeless elegance.';
+  }
+
+  if (m.includes('design') || m.includes('motif') || m.includes('pattern') || m.includes('peacock') || m.includes('lotus') || m.includes('mango') || m.includes('kalka')) {
+    return 'Our most-requested motifs are traditional Indian icons: elegant peacocks (Mayil), sacred lotus blooms, classic mango/kalka shapes, and geometric Kasuti patterns. We customise every design to match your sari border or dupatta style!';
+  }
+
+  if (m.includes('time') || m.includes('duration') || m.includes('days') || m.includes('how long') || m.includes('delivery') || m.includes('urgent')) {
+    return 'Custom hand-embroidery typically takes 5–10 working days from design approval, depending on stitch complexity. Express turnaround is available for urgent festive or wedding orders!';
+  }
+
+  if (m.includes('color') || m.includes('colour') || m.includes('shade') || m.includes('pairing') || m.includes('thread')) {
+    return 'For Indian ethnic wear, classic pairings include: deep rose with antique gold Zari, coral orange with emerald leaf green, and royal blue with champagne silk. We always test colour combos on sample fabric before your final garment!';
+  }
+
+  if (m.includes('stitch') || m.includes('technique') || m.includes('aari') || m.includes('kasuti') || m.includes('zardozi') || m.includes('zari') || m.includes('resham')) {
+    return 'Indian embroidery offers a rich range of techniques: Aari (chain stitch hook work), Kasuti (cross-stitch folk art from Karnataka), Zardozi (heavy gold/silver metallic work), and Resham silk satin fill. Each suits different fabrics and budgets!';
+  }
+
+  // Generic unique reply based on the actual message text
+  const hash = Math.abs(msg.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % 3;
+  const generic = [
+    `Great question about "${msg}"! We'd love to understand your vision better. Could you share the garment type and fabric you have in mind so we can suggest the most suitable stitch and thread combination?`,
+    `For "${msg}" — every Spandana piece begins with a personal consultation. Let us know your occasion (casual, festive, or bridal) and fabric preference, and we'll tailor the perfect embroidery plan!`,
+    `Regarding "${msg}": our studio blends traditional Indian needlework with modern garment sensibility. Share your fabric type and preferred color palette, and we'll suggest the ideal motif and stitch combination for you!`,
+  ];
+  return generic[hash];
 }
 
 export const GeminiCraftAdvisorModal: React.FC<{
@@ -73,7 +136,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
       }
 
       const data = await res.json();
-      const reply = data.reply || 'Thank you for your question! For custom embroidery inquiries, feel free to share your fabric type and preferred motifs with our home craft workshop.';
+      const reply = data.reply || smartCraftReply(textToSend.trim());
 
       setMessages((prev) => [
         ...prev,
@@ -84,19 +147,9 @@ export const GeminiCraftAdvisorModal: React.FC<{
         },
       ]);
     } catch (err) {
-      console.warn('Gemini chat error, using graceful craft response:', err);
-      const lower = textToSend.toLowerCase();
-      let fallback = `Regarding "${textToSend}", our studio specializes in customized motif selection and thread matching. For Indian ethnic wear, combining subtle Zari outlines with vibrant Resham silk filling gives a beautiful, handcrafted finish.`;
-      
-      if (lower.includes('price') || lower.includes('cost') || lower.includes('rate') || lower.includes('quote') || lower.includes('charge')) {
-        fallback = 'At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.';
-      } else if (lower.includes('wash') || lower.includes('care') || lower.includes('clean') || lower.includes('iron')) {
-        fallback = 'Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!';
-      } else if (lower.includes('kid') || lower.includes('child') || lower.includes('pattu') || lower.includes('baby')) {
-        fallback = 'For children’s garments and pattu pavadais, we apply soft cotton fusible backing underneath the needlework so that embroidery threads never scratch sensitive skin.';
-      } else if (lower.includes('blouse') || lower.includes('neck') || lower.includes('kurti') || lower.includes('sleeve')) {
-        fallback = 'Necklines and sleeve borders are our most popular placements! A grand Kasuti or Aari embroidered yoke elevates a plain kurti or blouse into custom designer wear.';
-      }
+      console.warn('Gemini chat error, using offline craft response:', err);
+      const fallback = smartCraftReply(textToSend.trim());
+
 
       setMessages((prev) => [
         ...prev,
