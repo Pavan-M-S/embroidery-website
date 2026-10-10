@@ -839,7 +839,8 @@ export function smartCraftReply(rawMsg: string): string {
   let bestCategory: IntentCategory | null = null;
   let highestScore = 0;
 
-  for (const category of CRAFT_INTENT_CATEGORIES) {
+  const allCategories = [...CRAFT_INTENT_CATEGORIES, ...MASSIVE_CRAFT_RESPONSES];
+  for (const category of allCategories) {
     let score = 0;
     for (const kw of category.keywords) {
       if (msg === kw) {
@@ -865,10 +866,8 @@ export function smartCraftReply(rawMsg: string): string {
 
   // Fallback to our extensive collection of 120+ specialized craft insights
   const fallbackIndex = queryHash % DYNAMIC_CRAFT_FALLBACKS.length;
-  const craftTip = DYNAMIC_CRAFT_FALLBACKS[fallbackIndex,
-  // --- NEW MASSIVE RESPONSES BELOW ---
-];
-  responses: string[];
+  const craftTip = DYNAMIC_CRAFT_FALLBACKS[fallbackIndex];
+  return craftTip;
 }
 
 export const MASSIVE_CRAFT_RESPONSES: IntentCategory[] = [
