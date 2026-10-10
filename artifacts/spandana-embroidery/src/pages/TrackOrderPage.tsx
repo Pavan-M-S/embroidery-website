@@ -439,7 +439,7 @@ export const TrackOrderPage: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <a
-                href={BUSINESS_CONFIG.socialLinks.whatsapp}
+                href={`https://wa.me/${BUSINESS_CONFIG.whatsapp.replace(/[^\d+]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-semibold flex items-center gap-1.5 transition-colors"
@@ -448,7 +448,7 @@ export const TrackOrderPage: React.FC = () => {
                 <span>WhatsApp Workshop</span>
               </a>
               <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
-                {BUSINESS_CONFIG.phonePlaceholder}
+                {BUSINESS_CONFIG.phone}
               </span>
             </div>
           </div>

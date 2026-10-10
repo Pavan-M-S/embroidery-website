@@ -52,7 +52,7 @@ router.post("/gemini/chat", async (req: Request, res: Response) => {
     });
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: contents,
       config: {
         systemInstruction:
@@ -105,7 +105,7 @@ Return recommendations as JSON with properties:
 - feasibilityNote: string (1-2 sentences on stabilizer, placement, or fabric care advice)`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         responseMimeType: "application/json",
