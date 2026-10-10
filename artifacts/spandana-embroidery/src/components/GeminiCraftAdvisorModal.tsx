@@ -108,8 +108,31 @@ export const GeminiCraftAdvisorModal: React.FC<{
         ? `[CONVERSATION HISTORY & MEMORY CACHE]\n${recentHistoryText}\n\n[INSTRUCTIONS]\n- Actively use the conversation history above as your working memory cache.\n- Retain all details mentioned previously (fabric, style, budget, colors, etc.) and build directly upon them.\n- Do not repeat introductory greetings.\n\n[CUSTOMER'S LATEST MESSAGE]\n${textToSend.trim()}`
         : textToSend.trim();
 
+      // Helper to detect if a response is an error payload or rate-limit message
+      const isInvalidErrorContent = (text: string): boolean => {
+        if (!text || !text.trim()) return true;
+        const lower = text.toLowerCase();
+        return (
+          lower.startsWith('error:') ||
+          lower.startsWith('{"error"') ||
+          lower.includes('rate limit') ||
+          lower.includes('quota exceeded') ||
+          lower.includes('insufficient_quota') ||
+          lower.includes('token limit') ||
+          lower.includes('model not found') ||
+          lower.includes('error 404') ||
+          lower.includes('error 429') ||
+          lower.includes('error 500') ||
+          lower.includes('service unavailable') ||
+          lower.includes('overloaded') ||
+          lower.includes('credits expired') ||
+          lower.includes('unauthorized') ||
+          lower.includes('temporarily unavailable')
+        );
+      };
+
+      // --- Level 1: Custom Provider (Tries Model 1 -> 2 -> 3 -> 4 -> 5 sequentially) ---
       if (PROVIDER_API_KEY && PROVIDER_BASE_URL && PROVIDER_MODELS.length > 0) {
-        // --- Real-time Custom Provider API call with automatic 5-model fallback ---
         const baseUrl = PROVIDER_BASE_URL.replace(/\/+$/, '');
         const endpoint = baseUrl.endsWith('/v1/chat/completions') || baseUrl.endsWith('/chat/completions') 
           ? baseUrl 
@@ -123,9 +146,6 @@ export const GeminiCraftAdvisorModal: React.FC<{
           })),
           { role: 'user', content: promptWithContext }
         ];
-
-        let providerSuccess = false;
-        let lastErrorMsg = 'Provider request failed';
 
         for (const currentModel of PROVIDER_MODELS) {
           try {
@@ -145,68 +165,88 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
             if (res.ok) {
               const data = await res.json();
+              if (data?.error) {
+                console.warn(`[AI Advisor] Model "${currentModel}" returned API error:`, data.error);
+                continue; // Fall back to next model
+              }
               const content = data.choices?.[0]?.message?.content ?? '';
-              if (content) {
+              if (content && !isInvalidErrorContent(content)) {
                 reply = content;
-                providerSuccess = true;
-                break; // Found working model!
+                break; // Found valid answer from working model!
+              } else {
+                console.warn(`[AI Advisor] Model "${currentModel}" returned error/empty text: "${content}". Falling back to next model...`);
               }
             } else {
-              lastErrorMsg = `Model ${currentModel} returned HTTP ${res.status}`;
-              console.warn(`[AI Advisor] ${lastErrorMsg}, trying next fallback model...`);
+              console.warn(`[AI Advisor] Model "${currentModel}" returned HTTP ${res.status}. Falling back to next model...`);
             }
           } catch (modelErr: any) {
-            lastErrorMsg = modelErr?.message || `Model ${currentModel} network failure`;
-            console.warn(`[AI Advisor] ${lastErrorMsg}, trying next fallback model...`);
+            console.warn(`[AI Advisor] Model "${currentModel}" network failure:`, modelErr);
           }
         }
-
-        if (!providerSuccess) {
-          throw new Error(lastErrorMsg);
-        }
-      } else if (ai) {
-        // --- Real-time Gemini API call (browser-direct) ---
-        const chat = ai.chats.create({
-          model: GEMINI_MODEL || 'gemini-2.5-flash',
-          config: {
-            systemInstruction: SYSTEM_INSTRUCTION,
-          },
-          history: messages
-            .filter((m) => m.text.trim())
-            .map((m) => ({
-              role: m.role,
-              parts: [{ text: m.text }],
-            })),
-        });
-
-        const response = await chat.sendMessage({
-          message: promptWithContext,
-        });
-        reply = response.text ?? '';
-      } else {
-        // --- Fallback: try Express backend (local dev) ---
-        const res = await fetch('/api/gemini/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: textToSend.trim(),
-            history: messages.map((m) => ({ role: m.role, text: m.text })),
-          }),
-        });
-        if (!res.ok) throw new Error(`Backend returned ${res.status}`);
-        const data = await res.json();
-        reply = data.reply ?? '';
       }
 
-      if (!reply) throw new Error('Empty reply from AI');
+      // --- Level 2: Google Gemini API Fallback (runs if all custom models fail or are not set) ---
+      if (!reply && ai) {
+        try {
+          const chat = ai.chats.create({
+            model: GEMINI_MODEL || 'gemini-2.5-flash',
+            config: {
+              systemInstruction: SYSTEM_INSTRUCTION,
+            },
+            history: messages
+              .filter((m) => m.text.trim())
+              .map((m) => ({
+                role: m.role,
+                parts: [{ text: m.text }],
+              })),
+          });
+
+          const response = await chat.sendMessage({
+            message: promptWithContext,
+          });
+          const content = response.text ?? '';
+          if (content && !isInvalidErrorContent(content)) {
+            reply = content;
+          }
+        } catch (geminiErr) {
+          console.warn('[AI Advisor] Gemini API fallback error:', geminiErr);
+        }
+      }
+
+      // --- Level 3: Local Dev Express Backend Fallback ---
+      if (!reply) {
+        try {
+          const res = await fetch('/api/gemini/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: textToSend.trim(),
+              history: messages.map((m) => ({ role: m.role, text: m.text })),
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const content = data.reply ?? '';
+            if (content && !isInvalidErrorContent(content)) {
+              reply = content;
+            }
+          }
+        } catch (backendErr) {
+          // Ignore backend failure in production
+        }
+      }
+
+      // --- Level 4: 470+ Offline Craft Knowledge Base ---
+      if (!reply) {
+        reply = smartCraftReply(textToSend.trim());
+      }
 
       setMessages((prev) => [
         ...prev,
         { role: 'model', text: reply, timestamp: Date.now() },
       ]);
     } catch (err) {
-      console.warn('API chat error, falling back to offline knowledge:', err);
-      // Fallback to our robust offline craft advisor logic
+      console.warn('Unhandled chat error, applying offline fallback:', err);
       const fallbackReply = smartCraftReply(textToSend.trim());
       setMessages((prev) => [
         ...prev,
