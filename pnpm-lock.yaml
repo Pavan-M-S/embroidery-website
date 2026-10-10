@@ -405,6 +405,10 @@ importers:
         version: 3.25.76
 
   artifacts/spandana-embroidery:
+    dependencies:
+      '@google/genai':
+        specifier: ^2.28.0
+        version: 2.28.0
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0

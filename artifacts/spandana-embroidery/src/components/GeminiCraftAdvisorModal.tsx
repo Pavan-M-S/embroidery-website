@@ -1,10 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from 'lucide-react';
+import { X, Send, Sparkles, Bot, User, Loader2 } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
+
+import { smartCraftReply } from '../lib/offlineCraftAdvisor';
+
 interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: number;
 }
+
+const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embroidery, a home-based artisan embroidery business in India known for "Quality embroidery at affordable prices". You specialize in traditional Indian needlework: Resham silk, Zari, Kasuti, Aari, Zardozi, mirror work, French knots, bullion roses, and kids pattu pavadai embellishments. Provide warm, practical, knowledgeable advice on fabrics, color pairings, stitch durability, and garment placement. Keep pricing advice honest: explain that quotes depend on fabric delicacy, stitch density, and custom dimensions. Keep replies concise, helpful, and under 150 words.
+
+CONVERSATIONAL MEMORY & CONTEXT RULES:
+- You must actively use and remember all previous chat turns provided in the conversation history (treat it as your working memory cache).
+- Retain all details mentioned by the user in earlier messages (such as fabric type, occasion, colors, garment type, budget, or previous questions) and build directly upon them without asking the user to repeat themselves.
+- Do not repeat opening greetings (like "Namaste" or introductions) if the conversation is already underway. Continue the discussion seamlessly.`;
+
+// Custom Provider config (OpenAI compatible)
+const PROVIDER_API_KEY = (import.meta as any).env?.VITE_PROVIDER_API_KEY as string | undefined;
+const PROVIDER_BASE_URL = (import.meta as any).env?.VITE_PROVIDER_BASE_URL as string | undefined;
+
+// Collect up to 5 models from Vercel env vars (supports VITE_PROVIDER_MODEL_1..5 or comma-separated in VITE_PROVIDER_MODEL)
+const rawModelEnv: (string | undefined)[] = [
+  (import.meta as any).env?.VITE_PROVIDER_MODEL,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_1,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_2,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_3,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_4,
+  (import.meta as any).env?.VITE_PROVIDER_MODEL_5,
+];
+
+const PROVIDER_MODELS: string[] = rawModelEnv
+  .filter((val): val is string => Boolean(val && val.trim()))
+  .flatMap((val) => val.split(',').map((s) => s.trim()))
+  .filter((val) => val.length > 0)
+  .slice(0, 5);
+
+// Gemini config
+const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY as string | undefined;
+const GEMINI_BASE_URL = (import.meta as any).env?.VITE_GEMINI_BASE_URL as string | undefined;
+const GEMINI_MODEL = (import.meta as any).env?.VITE_GEMINI_MODEL as string | undefined;
+
+const aiConfig: any = { apiKey: GEMINI_API_KEY || '' };
+if (GEMINI_BASE_URL) {
+  aiConfig.httpOptions = { baseUrl: GEMINI_BASE_URL };
+}
+const ai = GEMINI_API_KEY ? new GoogleGenAI(aiConfig) : null;
 
 export const GeminiCraftAdvisorModal: React.FC<{
   isOpen: boolean;
@@ -28,6 +70,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
     if (topic && isOpen) {
       handleSendPrompt(topic);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic, isOpen]);
 
   useEffect(() => {
@@ -53,56 +96,163 @@ export const GeminiCraftAdvisorModal: React.FC<{
     setIsLoading(true);
 
     try {
-      // Build conversation history for the server
-      const history = messages.map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
+      let reply = '';
 
-      const res = await fetch('/api/gemini/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: textToSend.trim(),
-          history,
-        }),
-      });
+      // Format previous chat turns into an explicit memory block
+      const recentHistoryText = messages
+        .filter((m) => m.text && m.text.trim())
+        .map((m) => `${m.role === 'model' ? 'Craft Consultant' : 'Customer'}: ${m.text}`)
+        .join('\n');
 
-      if (!res.ok) {
-        throw new Error(`Server returned status ${res.status}`);
+      const promptWithContext = messages.length > 1
+        ? `[CONVERSATION HISTORY & MEMORY CACHE]\n${recentHistoryText}\n\n[INSTRUCTIONS]\n- Actively use the conversation history above as your working memory cache.\n- Retain all details mentioned previously (fabric, style, budget, colors, etc.) and build directly upon them.\n- Do not repeat introductory greetings.\n\n[CUSTOMER'S LATEST MESSAGE]\n${textToSend.trim()}`
+        : textToSend.trim();
+
+      // Helper to detect if a response is an error payload or rate-limit message
+      const isInvalidErrorContent = (text: string): boolean => {
+        if (!text || !text.trim()) return true;
+        const lower = text.toLowerCase();
+        return (
+          lower.startsWith('error:') ||
+          lower.startsWith('{"error"') ||
+          lower.includes('rate limit') ||
+          lower.includes('quota exceeded') ||
+          lower.includes('insufficient_quota') ||
+          lower.includes('token limit') ||
+          lower.includes('model not found') ||
+          lower.includes('error 404') ||
+          lower.includes('error 429') ||
+          lower.includes('error 500') ||
+          lower.includes('service unavailable') ||
+          lower.includes('overloaded') ||
+          lower.includes('credits expired') ||
+          lower.includes('unauthorized') ||
+          lower.includes('temporarily unavailable')
+        );
+      };
+
+      // --- Level 1: Custom Provider (Tries Model 1 -> 2 -> 3 -> 4 -> 5 sequentially) ---
+      if (PROVIDER_API_KEY && PROVIDER_BASE_URL && PROVIDER_MODELS.length > 0) {
+        const baseUrl = PROVIDER_BASE_URL.replace(/\/+$/, '');
+        const endpoint = baseUrl.endsWith('/v1/chat/completions') || baseUrl.endsWith('/chat/completions') 
+          ? baseUrl 
+          : `${baseUrl}/chat/completions`;
+
+        const reqMessages = [
+          { role: 'system', content: SYSTEM_INSTRUCTION },
+          ...messages.filter(m => m.text.trim()).map((m) => ({ 
+            role: m.role === 'model' ? 'assistant' : 'user', 
+            content: m.text 
+          })),
+          { role: 'user', content: promptWithContext }
+        ];
+
+        for (const currentModel of PROVIDER_MODELS) {
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${PROVIDER_API_KEY}`,
+                'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://spandana-embroidery.vercel.app',
+                'X-Title': 'Spandana Embroidery Craft Advisor',
+              },
+              body: JSON.stringify({
+                model: currentModel,
+                messages: reqMessages,
+              }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              if (data?.error) {
+                console.warn(`[AI Advisor] Model "${currentModel}" returned API error:`, data.error);
+                continue; // Fall back to next model
+              }
+              const content = data.choices?.[0]?.message?.content ?? '';
+              if (content && !isInvalidErrorContent(content)) {
+                reply = content;
+                break; // Found valid answer from working model!
+              } else {
+                console.warn(`[AI Advisor] Model "${currentModel}" returned error/empty text: "${content}". Falling back to next model...`);
+              }
+            } else {
+              console.warn(`[AI Advisor] Model "${currentModel}" returned HTTP ${res.status}. Falling back to next model...`);
+            }
+          } catch (modelErr: any) {
+            console.warn(`[AI Advisor] Model "${currentModel}" network failure:`, modelErr);
+          }
+        }
       }
 
-      const data = await res.json();
-      const reply = data.reply || 'Thank you for your question! For custom embroidery inquiries, feel free to share your fabric type and preferred motifs with our home craft workshop.';
+      // --- Level 2: Google Gemini API Fallback (runs if all custom models fail or are not set) ---
+      if (!reply && ai) {
+        try {
+          const chat = ai.chats.create({
+            model: GEMINI_MODEL || 'gemini-2.5-flash',
+            config: {
+              systemInstruction: SYSTEM_INSTRUCTION,
+            },
+            history: messages
+              .filter((m) => m.text.trim())
+              .map((m) => ({
+                role: m.role,
+                parts: [{ text: m.text }],
+              })),
+          });
+
+          const response = await chat.sendMessage({
+            message: promptWithContext,
+          });
+          const content = response.text ?? '';
+          if (content && !isInvalidErrorContent(content)) {
+            reply = content;
+          }
+        } catch (geminiErr) {
+          console.warn('[AI Advisor] Gemini API fallback error:', geminiErr);
+        }
+      }
+
+      // --- Level 3: Local Dev Express Backend Fallback ---
+      if (!reply) {
+        try {
+          const res = await fetch('/api/gemini/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: textToSend.trim(),
+              history: messages.map((m) => ({ role: m.role, text: m.text })),
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const content = data.reply ?? '';
+            if (content && !isInvalidErrorContent(content)) {
+              reply = content;
+            }
+          }
+        } catch (backendErr) {
+          // Ignore backend failure in production
+        }
+      }
+
+      // --- Level 4: 470+ Offline Craft Knowledge Base ---
+      if (!reply) {
+        reply = smartCraftReply(textToSend.trim());
+      }
 
       setMessages((prev) => [
         ...prev,
-        {
-          role: 'model',
-          text: reply,
-          timestamp: Date.now(),
-        },
+        { role: 'model', text: reply, timestamp: Date.now() },
       ]);
     } catch (err) {
-      console.warn('Gemini chat error, using graceful craft response:', err);
-      const lower = textToSend.toLowerCase();
-      let fallback = `Regarding "${textToSend}", our studio specializes in customized motif selection and thread matching. For Indian ethnic wear, combining subtle Zari outlines with vibrant Resham silk filling gives a beautiful, handcrafted finish.`;
-      
-      if (lower.includes('price') || lower.includes('cost') || lower.includes('rate') || lower.includes('quote') || lower.includes('charge')) {
-        fallback = 'At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.';
-      } else if (lower.includes('wash') || lower.includes('care') || lower.includes('clean') || lower.includes('iron')) {
-        fallback = 'Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!';
-      } else if (lower.includes('kid') || lower.includes('child') || lower.includes('pattu') || lower.includes('baby')) {
-        fallback = 'For children’s garments and pattu pavadais, we apply soft cotton fusible backing underneath the needlework so that embroidery threads never scratch sensitive skin.';
-      } else if (lower.includes('blouse') || lower.includes('neck') || lower.includes('kurti') || lower.includes('sleeve')) {
-        fallback = 'Necklines and sleeve borders are our most popular placements! A grand Kasuti or Aari embroidered yoke elevates a plain kurti or blouse into custom designer wear.';
-      }
-
+      console.warn('Unhandled chat error, applying offline fallback:', err);
+      const fallbackReply = smartCraftReply(textToSend.trim());
       setMessages((prev) => [
         ...prev,
         {
           role: 'model',
-          text: fallback,
+          text: fallbackReply,
           timestamp: Date.now(),
         },
       ]);
@@ -147,7 +297,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
               <h2 id="advisor-modal-title" className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2">
                 <span>Spandana Craft Consultant</span>
                 <span className="text-[10px] font-sans font-medium px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-200">
-                  AI Powered
+                  {PROVIDER_API_KEY ? 'Custom AI' : GEMINI_API_KEY ? 'Gemini AI' : 'AI Powered'}
                 </span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
