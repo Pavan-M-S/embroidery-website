@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --color-primary-rose: #F43F5E;
+    --color-primary-rose-hover: #E11D48;
+    --color-accent-coral: #FB923C;
+    --color-bg-light: #FFF1F2;
+    --color-surface-card: #FFFFFF;
+    --color-surface-subtle: #FFF7F8;
+    --color-text-main: #1E293B;
+    --color-text-muted: #64748B;
+    --color-border-subtle: #FFE4E6;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color-scheme: light;
+  }
+
+  .dark {
+    --color-primary-rose: #FB7185;
+    --color-primary-rose-hover: #F43F5E;
+    --color-accent-coral: #FDBA74;
+    --color-bg-light: #121013;
+    --color-surface-card: #1C161C;
+    --color-surface-subtle: #251E26;
+    --color-text-main: #F8FAFC;
+    --color-text-muted: #94A3B8;
+    --color-border-subtle: #332431;
+    color-scheme: dark;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    color: var(--color-text-main);
+    background-color: var(--color-bg-light);
+  }
+
+  body {
+    color: var(--color-text-main);
+    background-color: var(--color-bg-light);
+  }
+
+  /* Accessibility: focus ring visible on all interactive elements */
+  :focus-visible {
+    outline: 2px solid var(--color-primary-rose);
+    outline-offset: 3px;
+  }
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtle Indian Embroidery stitch border pattern */
+.border-stitch {
+  border-style: dashed;
+  border-width: 1.5px;
+  border-color: rgba(244, 63, 94, 0.35);
+}
+
+.dark .border-stitch {
+  border-color: rgba(251, 113, 133, 0.3);
+}
+
+/* Delicate fabric weave background texture */
+.fabric-texture-light {
+  background-color: #FFF1F2;
+  background-image: radial-gradient(rgba(244, 63, 94, 0.06) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.fabric-texture-dark {
+  background-color: #121013;
+  background-image: radial-gradient(rgba(251, 113, 133, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Custom Cursor styling (pointer devices only, disabled on touch and reduced motion) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .custom-cursor-active {
+    cursor: default;
+  }
+  .custom-cursor-pointer {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Spandana Embroidery",
+  "description": "Handcrafted Indian embroidery for women's and children's clothing. Quality embroidery at affordable prices.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
