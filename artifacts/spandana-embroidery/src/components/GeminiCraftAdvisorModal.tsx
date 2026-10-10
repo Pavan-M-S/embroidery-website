@@ -20,6 +20,7 @@ const PROVIDER_MODEL = (import.meta as any).env?.VITE_PROVIDER_MODEL as string |
 // Gemini config
 const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY as string | undefined;
 const GEMINI_BASE_URL = (import.meta as any).env?.VITE_GEMINI_BASE_URL as string | undefined;
+const GEMINI_MODEL = (import.meta as any).env?.VITE_GEMINI_MODEL as string | undefined;
 
 const aiConfig: any = { apiKey: GEMINI_API_KEY || '' };
 if (GEMINI_BASE_URL) {
@@ -112,7 +113,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
       } else if (ai) {
         // --- Real-time Gemini API call (browser-direct) ---
         const chat = ai.chats.create({
-          model: 'gemini-2.5-flash',
+          model: GEMINI_MODEL || 'gemini-2.5-flash',
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
           },
