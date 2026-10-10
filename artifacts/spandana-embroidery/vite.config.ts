@@ -16,6 +16,47 @@ const basePath = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   base: basePath,
+  envPrefix: ['VITE_', 'PROVIDER_', 'GEMINI_', 'OPENROUTER_', 'AI_'],
+  define: {
+    '__ENV_PROVIDER_API_KEY__': JSON.stringify(
+      process.env.VITE_PROVIDER_API_KEY ||
+      process.env.PROVIDER_API_KEY ||
+      process.env.VITE_OPENROUTER_API_KEY ||
+      process.env.OPENROUTER_API_KEY ||
+      ''
+    ),
+    '__ENV_PROVIDER_BASE_URL__': JSON.stringify(
+      process.env.VITE_PROVIDER_BASE_URL ||
+      process.env.PROVIDER_BASE_URL ||
+      ''
+    ),
+    '__ENV_PROVIDER_MODEL__': JSON.stringify(
+      process.env.VITE_PROVIDER_MODEL ||
+      process.env.PROVIDER_MODEL ||
+      process.env.VITE_PROVIDER_MODELS ||
+      process.env.PROVIDER_MODELS ||
+      process.env.VITE_AI_MODELS ||
+      process.env.AI_MODELS ||
+      process.env.VITE_MODELS ||
+      process.env.MODELS ||
+      ''
+    ),
+    '__ENV_GEMINI_API_KEY__': JSON.stringify(
+      process.env.VITE_GEMINI_API_KEY ||
+      process.env.GEMINI_API_KEY ||
+      ''
+    ),
+    '__ENV_GEMINI_BASE_URL__': JSON.stringify(
+      process.env.VITE_GEMINI_BASE_URL ||
+      process.env.GEMINI_BASE_URL ||
+      ''
+    ),
+    '__ENV_GEMINI_MODEL__': JSON.stringify(
+      process.env.VITE_GEMINI_MODEL ||
+      process.env.GEMINI_MODEL ||
+      ''
+    ),
+  },
   plugins: [
     react(),
     tailwindcss(),
