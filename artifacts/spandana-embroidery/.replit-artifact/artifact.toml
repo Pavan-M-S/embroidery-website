@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Spandana Embroidery"
+description = "A responsive portfolio and information website for an India-based home embroidery business, with design browsing, indicative pricing, custom-order inquiries, resource guides, membership and account demo interfaces, and contact information placeholders."
+version = "1.0.0"
+id = "artifacts/spandana-embroidery"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18274
+
+[services.development]
+run = "pnpm --filter @workspace/spandana-embroidery run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/spandana-embroidery", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/spandana-embroidery/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18274"
+BASE_PATH = "/"

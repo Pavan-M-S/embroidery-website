@@ -1,0 +1,1 @@
+- [Business profile](business-profile.md) — Spandana Embroidery is a home-owned Indian embroidery business focused on women’s and children’s clothing.

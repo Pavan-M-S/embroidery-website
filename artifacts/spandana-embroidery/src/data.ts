@@ -1,0 +1,27 @@
+// Owner-editable presentation content. All artwork and prices below are illustrative placeholders.
+// Replace imageSrc with approved local images and retain an accurate, descriptive alt string.
+const svg = (bg: string, thread: string, motif: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 840"><rect width="720" height="840" fill="${bg}"/><path d="M0 80h720M0 760h720" stroke="#ffffff" stroke-opacity=".38" stroke-width="2"/><path d="M70 0v840M650 0v840" stroke="#ffffff" stroke-opacity=".3" stroke-width="2"/><circle cx="360" cy="395" r="176" fill="none" stroke="${thread}" stroke-width="7" stroke-dasharray="3 12"/><circle cx="360" cy="395" r="124" fill="none" stroke="${thread}" stroke-width="3"/><path d="${motif}" fill="none" stroke="${thread}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="360" cy="395" r="17" fill="${thread}"/><text x="360" y="690" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="${thread}" opacity=".75">ILLUSTRATIVE PLACEHOLDER</text></svg>`)}`;
+
+export const designs = [
+  { id: 'lotus-jaal', name: 'Lotus jaal detail', category: 'Floral', garment: 'Blouse', style: 'Traditional', imageSrc: svg('#e8b7b2', '#8b3548', 'M360 250c-46 52-35 95 0 126 35-31 46-74 0-126zm0 126c-58-12-93 16-101 61 45 21 87 6 101-61zm0 0c58-12 93 16 101 61-45 21-87 6-101-61zm-101 61c-2 59 33 91 83 88m119-88c2 59-33 91-83 88'), alt: 'Illustrative placeholder artwork: a rose-thread lotus jaal motif on a muted rose textile.' },
+  { id: 'little-blooms', name: 'Little blooms', category: 'Floral', garment: 'Children’s wear', style: 'Playful', imageSrc: svg('#f5d9b0', '#ad593b', 'M275 310c-43-39-91 15-40 48-62 3-44 72 8 62-28 50 35 76 58 24 23 52 86 26 58-24 52 10 70-59 8-62 51-33 3-87-40-48l-26 57zM460 464c-24-22-52 8-23 27-35 2-25 41 5 35-16 29 20 43 33 13 13 30 49 16 33-13 30 6 40-33 5-35 29-19 1-49-23-27l-15 32z'), alt: 'Illustrative placeholder artwork: small warm coral flower motifs on a soft saffron textile.' },
+  { id: 'peacock-line', name: 'Peacock linework', category: 'Motif', garment: 'Dupatta', style: 'Traditional', imageSrc: svg('#bbd3c8', '#315b50', 'M310 500c-28-73 12-154 97-170 54-10 91 29 74 72-13 33-54 31-64 4-10-28 18-44 37-31M315 501c-60 9-96 52-102 103m103-103c-4-61 14-108 62-146m-58 147c40-43 83-65 137-54m-139 56c52-1 95 21 127 58m-128-55c-35 40-43 83-23 128m84-263l9-34m34 45l29-24m5 45l38-5'), alt: 'Illustrative placeholder artwork: a fine-line peacock-inspired motif in deep green thread.' },
+  { id: 'mango-border', name: 'Mango border', category: 'Border', garment: 'Saree', style: 'Classic', imageSrc: svg('#eec7aa', '#9a4e37', 'M220 310c60-60 120-60 180 0-60 60-120 60-180 0zm100 85c60-60 120-60 180 0-60 60-120 60-180 0zm-100 85c60-60 120-60 180 0-60 60-120 60-180 0zm100 85c60-60 120-60 180 0-60 60-120 60-180 0z'), alt: 'Illustrative placeholder artwork: repeated mango-shaped border embroidery in terracotta thread.' },
+  { id: 'moonlit-leaves', name: 'Moonlit leaves', category: 'Botanical', garment: 'Kurta', style: 'Contemporary', imageSrc: svg('#ccd5e0', '#58517d', 'M355 525c-10-109 23-205 123-273m-123 273c-76-72-113-150-116-240m116 240c67-42 113-93 137-154m-137 154c-63-8-112-34-153-80m153 80c-8-67 10-115 45-160m-45 160c43-14 75-37 103-71'), alt: 'Illustrative placeholder artwork: a restrained leafy vine in plum thread on a cool blue-grey cloth.' },
+  { id: 'sunflower-stitch', name: 'Sunflower stitch', category: 'Floral', garment: 'Children’s wear', style: 'Playful', imageSrc: svg('#f3d783', '#9b542d', 'M360 284c-25 49-10 79 0 98 10-19 25-49 0-98zm0 196c-25-49-10-79 0-98 10 19 25 49 0 98zm-98-98c49-25 79-10 98 0-19 10-49 25-98 0zm196 0c-49-25-79-10-98 0 19 10 49 25 98 0zm-167-69c50 10 68 35 69 69-34-1-59-19-69-69zm138 138c-50-10-68-35-69-69 34 1 59 19 69 69zm0-138c-10 50-35 68-69 69 1-34 19-59 69-69zm-138 138c10-50 35-68 69-69-1 34-19 59-69 69z'), alt: 'Illustrative placeholder artwork: a sunflower-like stitched bloom in warm ochre and rust.' }
+];
+
+export const priceExamples = [
+  { name: 'Small motif', detail: 'A single simple motif, such as a small flower or initial', range: '₹350–₹800' },
+  { name: 'Border detail', detail: 'A short decorative border section', range: '₹900–₹2,400' },
+  { name: 'Custom placement', detail: 'A considered motif placement for a garment', range: '₹1,200–₹3,500' },
+  { name: 'Larger composition', detail: 'A more detailed, made-to-brief piece', range: '₹2,500–₹6,000+' }
+];
+
+export const faqs = [
+  { q: 'How do I begin a custom request?', a: 'Share the garment, the area you have in mind, and any reference or colour ideas through the custom inquiry form. It is a local demo here, so it will not reach the studio until real contact details and a submission method are added.' },
+  { q: 'Can I choose thread colours?', a: 'Yes, colour preferences can be included in your brief. Final thread choices depend on the fabric and the design; discuss a sample or colour match before confirming.' },
+  { q: 'Can embroidery be added to a garment I already own?', a: 'You can describe the garment and fabric in your inquiry. Suitability depends on fabric weight, construction, and the location of the proposed embroidery.' },
+  { q: 'Are the portfolio images and prices final?', a: 'No. Every current design image and price is a clearly marked illustrative placeholder for this website demo, not confirmed studio work or a final offer.' }
+];
