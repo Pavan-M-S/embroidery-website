@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Send, Sparkles, Bot, User, Loader2, RefreshCw } from 'lucide-react';
+import { X, Send, Sparkles, Bot, User, Loader2 } from 'lucide-react';
+import { GoogleGenAI } from '@google/genai';
 
 interface ChatMessage {
   role: 'user' | 'model';
@@ -7,67 +8,11 @@ interface ChatMessage {
   timestamp: number;
 }
 
-/** Deterministic context-aware offline reply — mirrors the backend logic. */
-function smartCraftReply(msg: string): string {
-  const m = msg.toLowerCase().trim();
+const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embroidery, a home-based artisan embroidery business in India known for "Quality embroidery at affordable prices". You specialize in traditional Indian needlework: Resham silk, Zari, Kasuti, Aari, Zardozi, mirror work, French knots, bullion roses, and kids pattu pavadai embellishments. Provide warm, practical, knowledgeable advice on fabrics, color pairings, stitch durability, and garment placement. Keep pricing advice honest: explain that quotes depend on fabric delicacy, stitch density, and custom dimensions. Keep replies concise, helpful, and under 150 words. Do not repeat greetings in follow-up replies.`;
 
-  if (m === 'hi' || m === 'hey' || m === 'hello' || m === 'namaste' || m.startsWith('hi ') || m.startsWith('hey ') || m.startsWith('hello ')) {
-    return `Namaste! It's a pleasure to meet you. Are you looking to embellish a kurti, sari blouse, festive dress, or children's outfit? Tell me your fabric or design ideas!`;
-  }
-
-  if (m.includes('who are you') || m.includes('what are you') || m.includes('your name') || m.includes('introduce') || m.includes('about you')) {
-    return 'I am the Spandana Craft Consultant — your AI-powered guide for all things Indian needlework! I can help you choose embroidery styles, recommend fabrics, suggest color pairings, plan festive designs, and advise on garment care.';
-  }
-
-  if (m.includes('what can you do') || m.includes('help me') || m.includes('how can you') || m.includes('what do you know')) {
-    return 'I can assist with: choosing embroidery styles (Kasuti, Aari, Zardozi, Resham), fabric recommendations (raw silk, cotton, organza), festive color pairings, garment placement, pricing guidance, children\'s wear tips, and garment care instructions!';
-  }
-
-  if (m.includes('price') || m.includes('cost') || m.includes('rate') || m.includes('quote') || m.includes('how much') || m.includes('charge')) {
-    return 'At Spandana Embroidery, pricing is affordable: daily accents start at ₹350, detailed yokes/necklines range from ₹750–₹1,200, and festive/bridal work begins at ₹2,500+. Final price depends on stitch density, thread material, and fabric type.';
-  }
-
-  if (m.includes('kid') || m.includes('child') || m.includes('baby') || m.includes('pattu') || m.includes('pavadai')) {
-    return 'For children\'s garments and pattu pavadais, comfort comes first! We use soft cotton fusible backing, smooth Resham threads, and gentle bullion roses or lazy daisy stitches that won\'t scratch delicate skin.';
-  }
-
-  if (m.includes('wash') || m.includes('care') || m.includes('clean') || m.includes('iron') || m.includes('maintain')) {
-    return 'To preserve handcrafted embroidery: dry-clean garments on raw silk, velvet, or genuine Zari. For cotton kurtis, hand-wash gently in cool water with mild detergent. Always iron on the reverse side over a soft towel!';
-  }
-
-  if (m.includes('silk') || m.includes('organza') || m.includes('tussar') || m.includes('velvet') || m.includes('chanderi') || m.includes('fabric')) {
-    return 'Raw silk, organza, and tussar are beautiful canvases! Heavy fabrics like velvet suit Zardozi and couched Zari; delicate organza and chanderi work best with fine shadow work or soft Resham stitches that drape without pulling.';
-  }
-
-  if (m.includes('blouse') || m.includes('neckline') || m.includes('yoke') || m.includes('sleeve') || m.includes('kurti')) {
-    return 'Necklines and sleeve cuffs are our specialty! A grand Kasuti or Aari embroidered yoke transforms a plain kurti into designer wear. For sari blouses, sleeve borders with subtle mirror work or bullion floral creepers add timeless elegance.';
-  }
-
-  if (m.includes('design') || m.includes('motif') || m.includes('pattern') || m.includes('peacock') || m.includes('lotus') || m.includes('mango') || m.includes('kalka')) {
-    return 'Our most-requested motifs are traditional Indian icons: elegant peacocks (Mayil), sacred lotus blooms, classic mango/kalka shapes, and geometric Kasuti patterns. We customise every design to match your sari border or dupatta style!';
-  }
-
-  if (m.includes('time') || m.includes('duration') || m.includes('days') || m.includes('how long') || m.includes('delivery') || m.includes('urgent')) {
-    return 'Custom hand-embroidery typically takes 5–10 working days from design approval, depending on stitch complexity. Express turnaround is available for urgent festive or wedding orders!';
-  }
-
-  if (m.includes('color') || m.includes('colour') || m.includes('shade') || m.includes('pairing') || m.includes('thread')) {
-    return 'For Indian ethnic wear, classic pairings include: deep rose with antique gold Zari, coral orange with emerald leaf green, and royal blue with champagne silk. We always test colour combos on sample fabric before your final garment!';
-  }
-
-  if (m.includes('stitch') || m.includes('technique') || m.includes('aari') || m.includes('kasuti') || m.includes('zardozi') || m.includes('zari') || m.includes('resham')) {
-    return 'Indian embroidery offers a rich range of techniques: Aari (chain stitch hook work), Kasuti (cross-stitch folk art from Karnataka), Zardozi (heavy gold/silver metallic work), and Resham silk satin fill. Each suits different fabrics and budgets!';
-  }
-
-  // Generic unique reply based on the actual message text
-  const hash = Math.abs(msg.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)) % 3;
-  const generic = [
-    `Great question about "${msg}"! We'd love to understand your vision better. Could you share the garment type and fabric you have in mind so we can suggest the most suitable stitch and thread combination?`,
-    `For "${msg}" — every Spandana piece begins with a personal consultation. Let us know your occasion (casual, festive, or bridal) and fabric preference, and we'll tailor the perfect embroidery plan!`,
-    `Regarding "${msg}": our studio blends traditional Indian needlework with modern garment sensibility. Share your fabric type and preferred color palette, and we'll suggest the ideal motif and stitch combination for you!`,
-  ];
-  return generic[hash];
-}
+// Initialize Gemini client using VITE_ environment variable (available in browser builds)
+const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY as string | undefined;
+const ai = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
 
 export const GeminiCraftAdvisorModal: React.FC<{
   isOpen: boolean;
@@ -91,6 +36,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
     if (topic && isOpen) {
       handleSendPrompt(topic);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic, isOpen]);
 
   useEffect(() => {
@@ -116,46 +62,59 @@ export const GeminiCraftAdvisorModal: React.FC<{
     setIsLoading(true);
 
     try {
-      // Build conversation history for the server
-      const history = messages.map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
+      let reply = '';
 
-      const res = await fetch('/api/gemini/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      if (ai) {
+        // --- Real-time Gemini API call (browser-direct) ---
+        const chat = ai.chats.create({
+          model: 'gemini-2.5-flash',
+          config: {
+            systemInstruction: SYSTEM_INSTRUCTION,
+          },
+          history: messages
+            .filter((m) => m.text.trim())
+            .map((m) => ({
+              role: m.role,
+              parts: [{ text: m.text }],
+            })),
+        });
+
+        const response = await chat.sendMessage({
           message: textToSend.trim(),
-          history,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Server returned status ${res.status}`);
+        });
+        reply = response.text ?? '';
+      } else {
+        // --- Fallback: try Express backend (local dev) ---
+        const res = await fetch('/api/gemini/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: textToSend.trim(),
+            history: messages.map((m) => ({ role: m.role, text: m.text })),
+          }),
+        });
+        if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+        const data = await res.json();
+        reply = data.reply ?? '';
       }
 
-      const data = await res.json();
-      const reply = data.reply || smartCraftReply(textToSend.trim());
+      if (!reply) throw new Error('Empty reply from AI');
 
       setMessages((prev) => [
         ...prev,
-        {
-          role: 'model',
-          text: reply,
-          timestamp: Date.now(),
-        },
+        { role: 'model', text: reply, timestamp: Date.now() },
       ]);
     } catch (err) {
-      console.warn('Gemini chat error, using offline craft response:', err);
-      const fallback = smartCraftReply(textToSend.trim());
-
-
+      console.warn('Gemini error:', err);
+      // Show a helpful error nudge, not a hardcoded answer
+      const noKeyMsg = !GEMINI_API_KEY
+        ? ' (Add VITE_GEMINI_API_KEY to Vercel environment variables to enable live AI replies.)'
+        : '';
       setMessages((prev) => [
         ...prev,
         {
           role: 'model',
-          text: fallback,
+          text: `Sorry, I couldn't reach the AI right now.${noKeyMsg} Please try again in a moment, or contact us directly at Spandana Embroidery for assistance!`,
           timestamp: Date.now(),
         },
       ]);
@@ -200,7 +159,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
               <h2 id="advisor-modal-title" className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2">
                 <span>Spandana Craft Consultant</span>
                 <span className="text-[10px] font-sans font-medium px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-200">
-                  AI Powered
+                  {GEMINI_API_KEY ? 'Gemini AI' : 'AI Powered'}
                 </span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
