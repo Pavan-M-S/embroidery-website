@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: inquiries
+    description: Send visitor inquiries to the studio inbox
 paths:
   /healthz:
     get:
@@ -24,6 +26,66 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /inquiries/custom:
+    post:
+      operationId: sendCustomInquiry
+      tags: [inquiries]
+      summary: Send a custom embroidery inquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomInquiryInput"
+      responses:
+        "202":
+          description: Inquiry email accepted by Gmail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryAccepted"
+        "400":
+          description: Invalid inquiry or consent was not provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryError"
+        "502":
+          description: The inquiry could not be delivered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryError"
+  /inquiries/contact:
+    post:
+      operationId: sendContactInquiry
+      tags: [inquiries]
+      summary: Send a contact inquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactInquiryInput"
+      responses:
+        "202":
+          description: Inquiry email accepted by Gmail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryAccepted"
+        "400":
+          description: Invalid inquiry or consent was not provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryError"
+        "502":
+          description: The inquiry could not be delivered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +95,91 @@ components:
           type: string
       required:
         - status
+    InquiryAccepted:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [sent]
+      required:
+        - status
+    InquiryError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    CustomInquiryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        contactMethod:
+          type: string
+          enum: [email, phone]
+        contactValue:
+          type: string
+          minLength: 3
+          maxLength: 254
+        garment:
+          type: string
+          enum: [Blouse, Kurta, Dupatta, "Children’s clothing", Other]
+        budget:
+          type: string
+          enum: ["Under ₹1,000", "₹1,000–₹3,000", "₹3,000+"]
+        colors:
+          type: string
+          maxLength: 150
+        idea:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        referenceUrl:
+          type: string
+          format: uri
+          maxLength: 2000
+        consent:
+          type: boolean
+        website:
+          type: string
+          maxLength: 200
+      required:
+        - name
+        - contactMethod
+        - contactValue
+        - garment
+        - idea
+        - consent
+    ContactInquiryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        topic:
+          type: string
+          enum: [Custom embroidery, Pricing question, Something else]
+        message:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        consent:
+          type: boolean
+        website:
+          type: string
+          maxLength: 200
+      required:
+        - name
+        - email
+        - topic
+        - message
+        - consent
 
