@@ -10,7 +10,12 @@ interface ChatMessage {
   timestamp: number;
 }
 
-const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embroidery, a home-based artisan embroidery business in India known for "Quality embroidery at affordable prices". You specialize in traditional Indian needlework: Resham silk, Zari, Kasuti, Aari, Zardozi, mirror work, French knots, bullion roses, and kids pattu pavadai embellishments. Provide warm, practical, knowledgeable advice on fabrics, color pairings, stitch durability, and garment placement. Keep pricing advice honest: explain that quotes depend on fabric delicacy, stitch density, and custom dimensions. Keep replies concise, helpful, and under 150 words. Do not repeat greetings in follow-up replies.`;
+const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embroidery, a home-based artisan embroidery business in India known for "Quality embroidery at affordable prices". You specialize in traditional Indian needlework: Resham silk, Zari, Kasuti, Aari, Zardozi, mirror work, French knots, bullion roses, and kids pattu pavadai embellishments. Provide warm, practical, knowledgeable advice on fabrics, color pairings, stitch durability, and garment placement. Keep pricing advice honest: explain that quotes depend on fabric delicacy, stitch density, and custom dimensions. Keep replies concise, helpful, and under 150 words.
+
+CONVERSATIONAL MEMORY & CONTEXT RULES:
+- You must actively use and remember all previous chat turns provided in the conversation history (treat it as your working memory cache).
+- Retain all details mentioned by the user in earlier messages (such as fabric type, occasion, colors, garment type, budget, or previous questions) and build directly upon them without asking the user to repeat themselves.
+- Do not repeat opening greetings (like "Namaste" or introductions) if the conversation is already underway. Continue the discussion seamlessly.`;
 
 // Custom Provider config (OpenAI compatible)
 const PROVIDER_API_KEY = (import.meta as any).env?.VITE_PROVIDER_API_KEY as string | undefined;
@@ -93,6 +98,16 @@ export const GeminiCraftAdvisorModal: React.FC<{
     try {
       let reply = '';
 
+      // Format previous chat turns into an explicit memory block
+      const recentHistoryText = messages
+        .filter((m) => m.text && m.text.trim())
+        .map((m) => `${m.role === 'model' ? 'Craft Consultant' : 'Customer'}: ${m.text}`)
+        .join('\n');
+
+      const promptWithContext = messages.length > 1
+        ? `[CONVERSATION HISTORY & MEMORY CACHE]\n${recentHistoryText}\n\n[INSTRUCTIONS]\n- Actively use the conversation history above as your working memory cache.\n- Retain all details mentioned previously (fabric, style, budget, colors, etc.) and build directly upon them.\n- Do not repeat introductory greetings.\n\n[CUSTOMER'S LATEST MESSAGE]\n${textToSend.trim()}`
+        : textToSend.trim();
+
       if (PROVIDER_API_KEY && PROVIDER_BASE_URL && PROVIDER_MODELS.length > 0) {
         // --- Real-time Custom Provider API call with automatic 5-model fallback ---
         const baseUrl = PROVIDER_BASE_URL.replace(/\/+$/, '');
@@ -106,7 +121,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
             role: m.role === 'model' ? 'assistant' : 'user', 
             content: m.text 
           })),
-          { role: 'user', content: textToSend.trim() }
+          { role: 'user', content: promptWithContext }
         ];
 
         let providerSuccess = false;
@@ -165,7 +180,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
         });
 
         const response = await chat.sendMessage({
-          message: textToSend.trim(),
+          message: promptWithContext,
         });
         reply = response.text ?? '';
       } else {
