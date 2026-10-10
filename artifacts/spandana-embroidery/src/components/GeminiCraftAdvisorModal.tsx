@@ -10,9 +10,20 @@ interface ChatMessage {
 
 const SYSTEM_INSTRUCTION = `You are the Senior Craft Consultant at Spandana Embroidery, a home-based artisan embroidery business in India known for "Quality embroidery at affordable prices". You specialize in traditional Indian needlework: Resham silk, Zari, Kasuti, Aari, Zardozi, mirror work, French knots, bullion roses, and kids pattu pavadai embellishments. Provide warm, practical, knowledgeable advice on fabrics, color pairings, stitch durability, and garment placement. Keep pricing advice honest: explain that quotes depend on fabric delicacy, stitch density, and custom dimensions. Keep replies concise, helpful, and under 150 words. Do not repeat greetings in follow-up replies.`;
 
-// Initialize Gemini client using VITE_ environment variable (available in browser builds)
+// Custom Provider config (OpenAI compatible)
+const PROVIDER_API_KEY = (import.meta as any).env?.VITE_PROVIDER_API_KEY as string | undefined;
+const PROVIDER_BASE_URL = (import.meta as any).env?.VITE_PROVIDER_BASE_URL as string | undefined;
+const PROVIDER_MODEL = (import.meta as any).env?.VITE_PROVIDER_MODEL as string | undefined;
+
+// Gemini config
 const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY as string | undefined;
-const ai = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
+const GEMINI_BASE_URL = (import.meta as any).env?.VITE_GEMINI_BASE_URL as string | undefined;
+
+const aiConfig: any = { apiKey: GEMINI_API_KEY || '' };
+if (GEMINI_BASE_URL) {
+  aiConfig.httpOptions = { baseUrl: GEMINI_BASE_URL };
+}
+const ai = GEMINI_API_KEY ? new GoogleGenAI(aiConfig) : null;
 
 export const GeminiCraftAdvisorModal: React.FC<{
   isOpen: boolean;
@@ -64,7 +75,39 @@ export const GeminiCraftAdvisorModal: React.FC<{
     try {
       let reply = '';
 
-      if (ai) {
+      if (PROVIDER_API_KEY && PROVIDER_BASE_URL) {
+        // --- Real-time Custom Provider API call (OpenAI standard format) ---
+        // Strip trailing slash if present on base URL
+        const baseUrl = PROVIDER_BASE_URL.replace(/\/+$/, '');
+        const endpoint = baseUrl.endsWith('/v1/chat/completions') || baseUrl.endsWith('/chat/completions') 
+          ? baseUrl 
+          : `${baseUrl}/chat/completions`;
+
+        const reqMessages = [
+          { role: 'system', content: SYSTEM_INSTRUCTION },
+          ...messages.filter(m => m.text.trim()).map((m) => ({ 
+            role: m.role === 'model' ? 'assistant' : 'user', 
+            content: m.text 
+          })),
+          { role: 'user', content: textToSend.trim() }
+        ];
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${PROVIDER_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: PROVIDER_MODEL || 'meta-llama/llama-3.1-8b-instruct',
+            messages: reqMessages,
+          }),
+        });
+
+        if (!res.ok) throw new Error(`Provider returned ${res.status}`);
+        const data = await res.json();
+        reply = data.choices?.[0]?.message?.content ?? '';
+      } else if (ai) {
         // --- Real-time Gemini API call (browser-direct) ---
         const chat = ai.chats.create({
           model: 'gemini-2.5-flash',
@@ -106,9 +149,9 @@ export const GeminiCraftAdvisorModal: React.FC<{
       ]);
     } catch (err) {
       console.warn('Gemini error:', err);
-      // Show a helpful error nudge, not a hardcoded answer
-      const noKeyMsg = !GEMINI_API_KEY
-        ? ' (Add VITE_GEMINI_API_KEY to Vercel environment variables to enable live AI replies.)'
+      // Show a helpful error nudge
+      const noKeyMsg = !(GEMINI_API_KEY || PROVIDER_API_KEY)
+        ? ' (Add VITE_GEMINI_API_KEY or VITE_PROVIDER_API_KEY to environment variables to enable live AI replies.)'
         : '';
       setMessages((prev) => [
         ...prev,
@@ -159,7 +202,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
               <h2 id="advisor-modal-title" className="font-serif text-lg font-bold text-slate-900 dark:text-rose-50 flex items-center gap-2">
                 <span>Spandana Craft Consultant</span>
                 <span className="text-[10px] font-sans font-medium px-1.5 py-0.5 rounded bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-200">
-                  {GEMINI_API_KEY ? 'Gemini AI' : 'AI Powered'}
+                  {PROVIDER_API_KEY ? 'Custom AI' : GEMINI_API_KEY ? 'Gemini AI' : 'AI Powered'}
                 </span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
