@@ -85,12 +85,17 @@ export const GeminiCraftAdvisorModal: React.FC<{
       ]);
     } catch (err) {
       console.warn('Gemini chat error, using graceful craft response:', err);
-      // Graceful domain-authentic fallback
-      let fallback = 'For Indian embroidery on silk and festive garments, we recommend testing stitch tension with soft cotton backing. Zari and metallic threads look striking on raw silk and tussar, while bullion knots and lazy daisy stitches are gentlest on children’s garments.';
-      if (textToSend.toLowerCase().includes('price') || textToSend.toLowerCase().includes('cost')) {
+      const lower = textToSend.toLowerCase();
+      let fallback = `Regarding "${textToSend}", our studio specializes in customized motif selection and thread matching. For Indian ethnic wear, combining subtle Zari outlines with vibrant Resham silk filling gives a beautiful, handcrafted finish.`;
+      
+      if (lower.includes('price') || lower.includes('cost') || lower.includes('rate') || lower.includes('quote') || lower.includes('charge')) {
         fallback = 'At Spandana Embroidery, prices generally begin around ₹350 for gentle daily accents, ₹750 for artisan yokes, and ₹1,500+ for intricate bridal work. The exact quote depends on your fabric, motif area, and thread materials.';
-      } else if (textToSend.toLowerCase().includes('wash') || textToSend.toLowerCase().includes('care')) {
+      } else if (lower.includes('wash') || lower.includes('care') || lower.includes('clean') || lower.includes('iron')) {
         fallback = 'Handcrafted embroidery should always be dry cleaned if made with raw silk or zari. For cotton kurtis, gentle hand-washing in mild detergent with reverse-side iron pressing ensures long-lasting luster!';
+      } else if (lower.includes('kid') || lower.includes('child') || lower.includes('pattu') || lower.includes('baby')) {
+        fallback = 'For children’s garments and pattu pavadais, we apply soft cotton fusible backing underneath the needlework so that embroidery threads never scratch sensitive skin.';
+      } else if (lower.includes('blouse') || lower.includes('neck') || lower.includes('kurti') || lower.includes('sleeve')) {
+        fallback = 'Necklines and sleeve borders are our most popular placements! A grand Kasuti or Aari embroidered yoke elevates a plain kurti or blouse into custom designer wear.';
       }
 
       setMessages((prev) => [
