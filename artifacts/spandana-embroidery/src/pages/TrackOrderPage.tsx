@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import {
   Search,
-  PackageCheck,
-  Scissors,
   CheckCircle2,
-  Truck,
   ArrowRight,
-  Clock,
   Sparkles,
   RefreshCw,
-  Info,
-  Calendar,
-  Layers,
-  Phone,
   MessageSquare,
   AlertCircle,
 } from "lucide-react";
@@ -71,36 +63,10 @@ export const TrackOrderPage: React.FC = () => {
       setActiveProject(found);
       setSearchError(null);
     } else {
-      // Create a dynamically generated simulated project for this custom ID!
-      const newMockProject: TrackedProject = {
-        quoteId: cleanId,
-        customerName: "Patron Inquiry",
-        garmentType: "Handcrafted Kurti Yoke",
-        designName: "Custom Indian Needlework Project",
-        status: "In Progress",
-        fabricProvided: "Customer-Provided Unstitched Fabric Piece",
-        threadPalette: "Pure Silk Resham & Metallic Zari",
-        receivedDate: "Recent Handover",
-        estimatedCompletion: "In 5–7 Working Days",
-        artisanNotes: `Artisan hoop tension calibrated for ${cleanId}. Currently stitching core floral motifs with colorfast resham threads.`,
-        history: [
-          {
-            status: "Received",
-            timestamp: "Stage 1",
-            note: `Fabric piece logged into atelier registry under ${cleanId}.`,
-          },
-          {
-            status: "In Progress",
-            timestamp: "Stage 2 (Current)",
-            note: "Hand needlework actively progressing on artisan frame.",
-          },
-        ],
-      };
-
-      const updated = [newMockProject, ...projects];
-      saveProjects(updated);
-      setActiveProject(newMockProject);
-      setSearchError(null);
+      setSearchError(
+        `No project found for "${cleanId}". Please check the ID or contact the workshop.`,
+      );
+      setActiveProject(null);
     }
   };
 

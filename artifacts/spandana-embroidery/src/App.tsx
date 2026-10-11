@@ -105,7 +105,9 @@ const pageMeta: Record<string, [string, string]> = {
 function readList(key: string): string[] {
   try {
     const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as string[]) : [];
+    if (!v) return [];
+    const parsed = JSON.parse(v);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -115,7 +117,11 @@ function useStoredList(key: string) {
     typeof window === "undefined" ? [] : readList(key),
   );
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // ignore quota/private mode errors
+    }
   }, [key, value]);
   return [value, setValue] as const;
 }
@@ -366,11 +372,11 @@ function App() {
           />
           <Route path="/pricing" element={<PricingPage addQuote={addQuote} />} />
           <Route path="/custom-design" element={<CustomPage quoteIds={quotes} />} />
-          <Route path="/membership" component={MembershipPage} />
-          <Route path="/resources" component={ResourcesPage} />
-          <Route path="/track-order" component={TrackOrderPage} />
-          <Route path="/account" component={AccountPage} />
-          <Route path="/contact" component={ContactPage} />
+          <Route path="/membership" element={<MembershipPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/track-order" element={<TrackOrderPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route component={NotFound} />
         </Switch>
       </main>
