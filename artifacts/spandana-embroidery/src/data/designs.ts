@@ -233,7 +233,7 @@ export const designs: DesignItem[] = [
       "Majestic Mango/Kalka (paisley) teardrop motif framed by floral arcs and hanging thread potli bead tassels.",
     priceRangeINR: { min: 850, max: 1650 },
     image:
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
     fallbackArt: svg("#e8b7b2", "#8b3548", motifs.lotus),
     alt: "Intricate paisley embroidery adorning the back neckline of a festive Indian blouse",
     tags: ["Paisley / Kalka", "Back Neckline", "Potli Tassels", "Festive"],
@@ -253,7 +253,7 @@ export const designs: DesignItem[] = [
       "Custom pictorial border depicting pastoral swinging motifs, sacred cows, and kadamba tree leaves rendered in classical needlework.",
     priceRangeINR: { min: 2200, max: 4500 },
     image:
-      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1605456654222-319d5c16c9a3?auto=format&fit=crop&w=800&q=80",
     fallbackArt: svg("#bbd3c8", "#315b50", motifs.peacock),
     alt: "Pictorial temple embroidery border with traditional motifs on silk lehenga",
     tags: ["Pictorial Embroidery", "Temple Art", "Heritage", "Bridal Lehenga"],

@@ -44,7 +44,7 @@ export interface FAQItem {
   id: string;
   category: "ordering" | "craft" | "care" | "pricing";
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }
 
 export type ProjectStatus =

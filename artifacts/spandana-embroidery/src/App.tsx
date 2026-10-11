@@ -134,10 +134,28 @@ function ImageTile({
   className?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const [useFallbackArt, setUseFallbackArt] = useState(false);
   return (
     <div className={`image-tile ${className}`}>
-      {!failed && (
-        <img src={item.image} alt={item.alt} onError={() => setFailed(true)} />
+      {!failed && !useFallbackArt && (
+        <img
+          src={item.image}
+          alt={item.alt}
+          onError={() => {
+            if (item.fallbackArt) {
+              setUseFallbackArt(true);
+            } else {
+              setFailed(true);
+            }
+          }}
+        />
+      )}
+      {useFallbackArt && item.fallbackArt && (
+        <img
+          src={item.fallbackArt}
+          alt={item.alt}
+          onError={() => setFailed(true)}
+        />
       )}
       {failed && (
         <div className="image-fallback" aria-label={item.alt}>
@@ -561,34 +579,18 @@ function Footer() {
             </Link>
           ))}
         </div>
+        <div className="footer-links">
+          <Link href="/privacy" key="/privacy">Privacy</Link>
+          <Link href="/terms" key="/terms">Terms</Link>
+        </div>
         <div className="footer-contact">
-          <strong>Contact placeholders</strong>
-          <span>Email: add verified address</span>
-          <span>Phone: add verified number</span>
+          <strong>Contact</strong>
+          <a href={`mailto:${BUSINESS_CONFIG.email}`}>{BUSINESS_CONFIG.email}</a>
+          <a href={`tel:${BUSINESS_CONFIG.phone}`}>{BUSINESS_CONFIG.phone}</a>
           <small>
-            Social profiles are not linked until verified URLs are provided.
+            <a href={BUSINESS_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a> ·
+            <a href={BUSINESS_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
           </small>
-          <div
-            className="footer-social"
-            aria-label="Social profile placeholders"
-          >
-            <button
-              type="button"
-              className="social-placeholder"
-              disabled
-              aria-label="Instagram profile placeholder; add an official link before publishing"
-            >
-              <Instagram size={17} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="social-placeholder"
-              disabled
-              aria-label="Facebook profile placeholder; add an official link before publishing"
-            >
-              <Facebook size={17} aria-hidden="true" />
-            </button>
-          </div>
         </div>
       </div>
       <div className="footer-bottom">
@@ -796,20 +798,32 @@ function EmptyNote({
   copy,
   link,
   linkText,
+  onClick,
 }: {
   title: string;
   copy: string;
-  link: string;
-  linkText: string;
+  link?: string;
+  linkText?: string;
+  onClick?: () => void;
 }) {
   return (
     <div className="empty-note">
       <Flower2 className="empty-flower" aria-hidden="true" />
       <h3>{title}</h3>
       <p>{copy}</p>
-      <Link href={link} className="under-link">
-        {linkText} <ArrowRight size={15} />
-      </Link>
+      {onClick ? (
+        <button
+          type="button"
+          onClick={onClick}
+          className="under-link"
+        >
+          {linkText} <ArrowRight size={15} />
+        </button>
+      ) : link && linkText ? (
+        <Link href={link} className="under-link">
+          {linkText} <ArrowRight size={15} />
+        </Link>
+      ) : null}
     </div>
   );
 }
@@ -864,7 +878,15 @@ function DesignsPage({
               .toLowerCase()
               .includes(query.toLowerCase()),
         )
-        .sort((a, b) => (sort === "name" ? a.title.localeCompare(b.title) : 0)),
+        .sort((a, b) => {
+          if (sort === "name") return a.title.localeCompare(b.title);
+          if (sort === "featured") {
+            if (a.featured && !b.featured) return -1;
+            if (!a.featured && b.featured) return 1;
+            return 0;
+          }
+          return 0;
+        }),
     [category, onlySaved, favorites, query, sort],
   );
   return (
@@ -900,18 +922,6 @@ function DesignsPage({
           <kbd>/</kbd>
         </label>
         <div className="filter-row">
-          <div className="chips" aria-label="Filter by category">
-            {categories.map((c) => (
-              <button
-                key={c}
-                className={`chip ${category === c ? "selected" : ""}`}
-                onClick={() => setCategory(c)}
-                aria-pressed={category === c}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
           <label className="sort-label">
             Sort{" "}
             <select
@@ -923,6 +933,28 @@ function DesignsPage({
               <option value="name">Name A–Z</option>
             </select>
           </label>
+        </div>
+        <div className="chips" aria-label="Filter by category">
+          {categories.map((c) => {
+            const label = c === "womens"
+              ? "Women's"
+              : c === "childrens"
+              ? "Children's"
+              : c === "festive"
+              ? "Festive"
+              : c;
+            return (
+              <button
+                key={c}
+                className={`chip ${category === c ? "selected" : ""}`}
+                onClick={() => setCategory(c)}
+                aria-pressed={category === c}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
         </div>
         <button
           className={`saved-filter ${onlySaved ? "active" : ""}`}
@@ -986,8 +1018,12 @@ function DesignsPage({
         <EmptyNote
           title="No matching stitches"
           copy="Try a broader search or clear a filter to see more placeholder ideas."
-          link="/designs"
           linkText="Reset your view"
+          onClick={() => {
+            setQuery("");
+            setCategory("All details");
+            setOnlySaved(false);
+          }}
         />
       )}
       <p className="note-box">
@@ -1037,7 +1073,7 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
         <div className="price-list">
           {priceExamples.map((item, i) => (
             <div
-              className={`price-row ${open === i ? "open" : ""}`}
+              className={`price-row ${open === i ? "open" : ""} ${item.isPopular ? "popular" : ""}`}
               key={item.name}
             >
               <button
@@ -1047,7 +1083,7 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
                 aria-controls={`price-desc-${i}`}
               >
                 <span className="price-number">0{i + 1}</span>
-                <span className="price-title">{item.name}</span>
+                <span className="price-title">{item.name}{item.isPopular && <span className="popular-badge">Most Popular</span>}</span>
                 <span className="price-amount">₹{item.startingPriceINR}+</span>
                 <ChevronDown size={17} />
               </button>
@@ -1057,15 +1093,18 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
                     {item.subtitle}. Final cost is discussed after reviewing a
                     specific brief.
                   </p>
-                  <button
-                    className="text-button"
-                    onClick={() => {
-                      addQuote(designs[i].id);
-                    }}
-                  >
-                    Add a related design idea to quote basket{" "}
-                    <ArrowRight size={14} />
-                  </button>
+                  <div className="price-includes">
+                    <h4>What's included</h4>
+                    <ul>
+                      {item.includedFeatures.map((feat, idx) => (
+                        <li key={idx}>{feat}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="price-turnaround">
+                    <span className="turnaround-icon">⏱</span>
+                    {item.turnaroundNote}
+                  </div>
                 </div>
               )}
             </div>
@@ -1076,7 +1115,7 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
         <span>PLEASE NOTE</span>
         <p>
           All numbers are illustrative sample placeholders. Owner: edit the
-          ranges in <code>src/data.ts</code>, and add your own terms and
+          ranges in <code>src/data/pricing.ts</code>, and add your own terms and
           inclusions before publication.
         </p>
       </section>

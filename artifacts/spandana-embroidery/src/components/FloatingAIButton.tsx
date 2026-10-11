@@ -10,7 +10,7 @@ export const FloatingAIButton: React.FC<{
   if (isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex items-center justify-end">
+    <div className="fixed bottom-6 right-6 flex items-center justify-end" style={{ zIndex: "var(--z-floating-ai)" }}>
       {/* Floating Action Trigger */}
       <button
         type="button"
