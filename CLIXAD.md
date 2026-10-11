@@ -6,7 +6,7 @@ A pnpm-workspace monorepo for a small embroidery studio site. Contains:
 
 - **artifacts/spandana-embroidery** — React/Vite frontend
 - **artifacts/api-server** — Express API server (Gemini endpoints)
-- **artifacts/mockup-sandbox** — UI component sandbox
+- **artifacts/mockup-sandbox** — UI component sandbox (archived, not built).
 - **lib/** — shared libraries (db, Zod schemas, API clients)
 
 Internal packages are referenced as `@workspace/*` (e.g. `@workspace/api-zod`). Dependencies are catalogued in `pnpm-workspace.yaml` and pulled via `catalog:`.
@@ -32,6 +32,6 @@ Run everything from the **workspace root**.
 4. **Internal deps use `workspace:*`** (or `workspace:` shorthand) in `package.json` — never a pinned version.
 5. **TypeScript is strict** — run `typecheck` before submitting changes.
 6. **Frontend uses Vite**; API uses Node ES modules (`"type": "module"`). Keep imports/exports consistent.
-7. **Env vars matter** — see `replit.md` for the full list (`GEMINI_API_KEY`, `PORT`, `BASE_PATH`, `API_PORT`).
+7. **Env vars matter** — see `replit.md` for the full list (`GEMINI_API_KEY`, `PORT`, `BASE_PATH`).
 8. **One source of truth for data** — portfolio, FAQ, pricing and contact info live in `src/data.ts` in the frontend artifact. Edit there, not scattered across components.
 9. **Forms are frontend-only demos** — no backend submission happens in the demo. Do not wire forms to live endpoints without consulting the owner.

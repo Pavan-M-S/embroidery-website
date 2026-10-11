@@ -542,8 +542,6 @@ export const GeminiCraftAdvisorModal: React.FC<{
     "How does Spandana calculate custom quotes?",
   ];
 
-  };
-
   return (
     <motion.div
       role="dialog"
@@ -733,10 +731,10 @@ export const GeminiCraftAdvisorModal: React.FC<{
                 </button>
               </div>
             </div>
-          </div>
-        )}
-        {/* Message Thread */}
-        <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-rose-50/20 dark:bg-rose-950/10">
+            </motion.div>
+          )}
+          {/* Message Thread */}
+          <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-rose-50/20 dark:bg-rose-950/10">
           {messages.map((m, idx) => (
             <div
               key={idx}
@@ -817,7 +815,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
             <Send className="w-4 h-4" aria-hidden="true" />
           </button>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

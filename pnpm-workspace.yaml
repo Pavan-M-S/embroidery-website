@@ -35,9 +35,9 @@ minimumReleaseAgeExclude:
   - stripe-replit-sync
 
 packages:
-  - artifacts/*
+  - artifacts/spandana-embroidery
+  - artifacts/api-server
   - lib/*
-  - lib/integrations/*
   - scripts
 
 catalog:

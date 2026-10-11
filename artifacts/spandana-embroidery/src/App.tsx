@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Toaster } from "@/components/ui/toaster";
@@ -45,6 +45,7 @@ import {
   designs,
   FAQ_DATA as faqs,
   PRICING_TIERS as priceExamples,
+  BUSINESS_CONFIG,
 } from "./data";
 import { InteractiveBackground } from "./InteractiveBackground";
 import { CustomCursor } from "./components/CustomCursor";
@@ -377,25 +378,38 @@ function App() {
       )}
       <main id="main" tabIndex={-1}>
         <Switch>
-          <Route path="/" element={<Home addQuote={addQuote} />} />
-          <Route
-            path="/designs"
-            element={
-              <DesignsPage
-                favorites={favorites}
-                toggleFavorite={toggleFavorite}
-                addQuote={addQuote}
-                focusSearch={focusPortfolioSearch}
-              />
-            }
-          />
-          <Route path="/pricing" element={<PricingPage addQuote={addQuote} />} />
-          <Route path="/custom-design" element={<CustomPage quoteIds={quotes} />} />
-          <Route path="/membership" element={<MembershipPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/track-order" element={<TrackOrderPage />} />
-          <Route path="/account" element={<AccountPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/">
+            <Home addQuote={addQuote} />
+          </Route>
+          <Route path="/designs">
+            <DesignsPage
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              addQuote={addQuote}
+              focusSearch={focusPortfolioSearch}
+            />
+          </Route>
+          <Route path="/pricing">
+            <PricingPage addQuote={addQuote} />
+          </Route>
+          <Route path="/custom-design">
+            <CustomPage quoteIds={quotes} />
+          </Route>
+          <Route path="/membership">
+            <MembershipPage />
+          </Route>
+          <Route path="/resources">
+            <ResourcesPage />
+          </Route>
+          <Route path="/track-order">
+            <TrackOrderPage />
+          </Route>
+          <Route path="/account">
+            <AccountPage />
+          </Route>
+          <Route path="/contact">
+            <ContactPage />
+          </Route>
           <Route component={NotFound} />
         </Switch>
       </main>
@@ -966,7 +980,6 @@ function DesignsPage({
             );
           })}
         </div>
-        </div>
         <motion.button
           className={`saved-filter ${onlySaved ? "active" : ""}`}
           onClick={() => setOnlySaved(!onlySaved)}
@@ -1046,7 +1059,8 @@ function DesignsPage({
             </motion.article>
           ))}
         </motion.div>
-      ) : (
+      </>
+    ) : (
         <EmptyNote
           title="No matching stitches"
           copy="Try a broader search or clear a filter to see more placeholder ideas."

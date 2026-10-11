@@ -3,13 +3,16 @@ modules = ["nodejs-24"]
 [deployment]
 router = "application"
 deploymentTarget = "autoscale"
+build = ["pnpm", "run", "build"]
+run = ["pnpm", "--filter", "@workspace/spandana-embroidery", "run", "dev"]
 
 [deployment.postBuild]
 args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
 [workflows]
-runButton = "Project"
+runButton = "Spandana Embroidery"
+# Spandana Embroidery workflow would be defined in .replit/workflows/spandana-embroidery.toml
 
 [agent]
 stack = "PNPM_WORKSPACE"

@@ -4,7 +4,7 @@ This project represents the smart-merge of the `main` and `main2` branches for t
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the Express API server (default port 5000, driven by `API_PORT` or `PORT`).
+- `pnpm --filter @workspace/api-server run dev` — run the Express API server (port driven by `PORT`).
 - `pnpm --filter @workspace/spandana-embroidery run dev` — run the frontend Vite dev server (requires `PORT` and `BASE_PATH` env vars, proxies `/api` to the backend).
 - `pnpm run typecheck` — full typecheck across all packages.
 - `pnpm run build` — typecheck + build all packages.
@@ -12,14 +12,13 @@ This project represents the smart-merge of the `main` and `main2` branches for t
 **Required env vars:**
 
 - `GEMINI_API_KEY`: Needed for the AI consultant and analysis features.
-- `PORT` & `BASE_PATH`: Needed by the frontend dev server.
-- `API_PORT`: Port for the API server (optional, defaults to 5000).
+- `PORT` & `BASE_PATH`: Needed by the services and frontend dev server.
 
 ## Where things live (Repo map)
 
 - `artifacts/spandana-embroidery/` - The React frontend application (winner for UI/routing).
 - `artifacts/api-server/` - The Express backend application (houses the Gemini endpoints).
-- `artifacts/mockup-sandbox/` - UI component sandbox.
+- `artifacts/mockup-sandbox/` - UI component sandbox (archived).
 - `lib/` - Shared libraries (DB, Zod schemas, API clients).
 
 ## Merge decisions (preview1)
