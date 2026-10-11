@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { AnimatePresence } from "motion/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Toaster } from "@/components/ui/toaster";
@@ -400,7 +401,7 @@ function App() {
       </main>
       <Footer />
       {showBackTop && (
-        <button
+        <motion.button
           className="back-top"
           onClick={() =>
             window.scrollTo({
@@ -413,9 +414,12 @@ function App() {
           }
           aria-label="Back to top"
           data-testid="button-back-to-top"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <ArrowUp size={18} />
-        </button>
+        </motion.button>
       )}
 
       <CustomCursor />
@@ -423,11 +427,15 @@ function App() {
         isOpen={advisorOpen}
         onOpen={() => setAdvisorOpen(true)}
       />
-      <GeminiCraftAdvisorModal
-        isOpen={advisorOpen}
-        onClose={() => setAdvisorOpen(false)}
-        topic={advisorTopic}
-      />
+      <AnimatePresence mode="wait">
+        {advisorOpen && (
+          <GeminiCraftAdvisorModal
+            isOpen={advisorOpen}
+            onClose={() => setAdvisorOpen(false)}
+            topic={advisorTopic}
+          />
+        )}
+      </AnimatePresence>
 
       {panel && (
         <>
@@ -944,41 +952,59 @@ function DesignsPage({
               ? "Festive"
               : c;
             return (
-              <button
+              <motion.button
                 key={c}
                 className={`chip ${category === c ? "selected" : ""}`}
                 onClick={() => setCategory(c)}
                 aria-pressed={category === c}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 {label}
-              </button>
+              </motion.button>
             );
           })}
         </div>
         </div>
-        <button
+        <motion.button
           className={`saved-filter ${onlySaved ? "active" : ""}`}
           onClick={() => setOnlySaved(!onlySaved)}
           aria-pressed={onlySaved}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
           <Heart size={15} /> {onlySaved ? "Showing saved" : "Show saved only"}{" "}
           <span>{favorites.length}</span>
-        </button>
+        </motion.button>
       </section>
       <p className="results-line" role="status">
         {filtered.length} {filtered.length === 1 ? "idea" : "ideas"} to explore
       </p>
       {filtered.length ? (
-        <div className="design-grid">
-          {filtered.map((d, i) => (
-            <article
-              className="design-card reveal"
-              style={{ animationDelay: `${i * 65}ms` }}
-              key={d.id}
-            >
+        <>
+          <motion.div
+            className="design-grid"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.07 } },
+              hidden: { opacity: 0 },
+            }}
+          >
+            {filtered.map((d, i) => (
+              <motion.article
+                key={d.id}
+                className="design-card"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
+                }}
+              >
               <div className="design-image">
                 <ImageTile item={d} />
-                <button
+                <motion.button
                   className={`heart-button ${favorites.includes(d.id) ? "chosen" : ""}`}
                   onClick={() => toggleFavorite(d.id)}
                   aria-label={
@@ -987,12 +1013,15 @@ function DesignsPage({
                       : `Save ${d.title} to favourites`
                   }
                   aria-pressed={favorites.includes(d.id)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Heart
                     size={18}
                     fill={favorites.includes(d.id) ? "currentColor" : "none"}
                   />
-                </button>
+                </motion.button>
                 <span className="image-index">0{i + 1}</span>
               </div>
               <div className="design-info">
@@ -1003,17 +1032,20 @@ function DesignsPage({
                   <h2>{d.title}</h2>
                   <p>{d.style} direction · image placeholder</p>
                 </div>
-                <button
+                <motion.button
                   className="add-quote-button"
                   onClick={() => addQuote(d.id)}
                   aria-label={`Add ${d.title} to quote basket`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Plus size={16} /> Add idea
-                </button>
+                </motion.button>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       ) : (
         <EmptyNote
           title="No matching stitches"

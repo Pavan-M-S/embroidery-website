@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
 /**
  * Custom Cursor Component
@@ -12,24 +12,42 @@ export const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
 
+  // Use refs for dynamic prefers-reduced-motion check
+  const prefersReducedRef = useRef(false);
+  const isVisibleRef = useRef(false);
+
   useEffect(() => {
-    // Check if device supports fine hover and prefers normal motion
+    // Check if device supports fine hover
     const fineHover = window.matchMedia(
       "(hover: hover) and (pointer: fine)",
     ).matches;
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
 
-    if (!fineHover || prefersReduced) {
+    // Check prefers-reduced-motion initially
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    prefersReducedRef.current = reducedQuery.matches;
+
+    if (!fineHover || prefersReducedRef.current) {
       return;
     }
 
     setIsSupported(true);
 
-    const onMouseMove = (e: MouseEvent) => {
+    // Update prefersReducedRef when preference changes
+    const handleReducedChange = (e: MediaQueryListEvent) => {
+      prefersReducedRef.current = e.matches;
+      if (e.matches) {
+        setIsVisible(false);
+        setIsSupported(false);
+      }
+    };
+    reducedQuery.addEventListener("change", handleReducedChange);
+
+    const onMouseMove = useCallback((e: MouseEvent) => {
       setPos({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true;
+        setIsVisible(true);
+      }
 
       const target = e.target as HTMLElement | null;
       if (target) {
@@ -44,21 +62,29 @@ export const CustomCursor: React.FC = () => {
           target.closest("a") !== null;
         setIsPointer(isClickable);
       }
-    };
+    }, []);
 
-    const onMouseLeave = () => setIsVisible(false);
-    const onMouseEnter = () => setIsVisible(true);
+    const onMouseLeave = useCallback(() => {
+      isVisibleRef.current = false;
+      setIsVisible(false);
+    }, []);
+
+    const onMouseEnter = useCallback(() => {
+      isVisibleRef.current = true;
+      setIsVisible(true);
+    }, []);
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("mouseenter", onMouseEnter);
 
     return () => {
+      reducedQuery.removeEventListener("change", handleReducedChange);
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
     };
-  }, [isVisible]);
+  }, []);
 
   if (!isSupported || !isVisible) return null;
 

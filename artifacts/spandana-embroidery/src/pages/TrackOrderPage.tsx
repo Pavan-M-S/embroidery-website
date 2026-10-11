@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import {
   Search,
   CheckCircle2,
@@ -219,7 +220,12 @@ export const TrackOrderPage: React.FC = () => {
 
       {/* Active Project Tracking Details */}
       {activeProject ? (
-        <div className="space-y-8 animate-fade-in">
+        <motion.div
+          className="space-y-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
           {/* Main Status Card */}
           <div className="bg-white dark:bg-[#181318] rounded-3xl border border-rose-100 dark:border-rose-950 shadow-sm overflow-hidden">
             {/* Top Bar with Project Identifiers */}
@@ -249,15 +255,18 @@ export const TrackOrderPage: React.FC = () => {
                 </div>
 
                 {/* Local State Simulator Button */}
-                <button
+                <motion.button
                   type="button"
                   onClick={handleAdvanceStatus}
                   title="Simulate updating project to the next status in local state"
-                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Advance Status (Demo)</span>
-                </button>
+                </motion.button>
               </div>
             </div>
 
@@ -455,7 +464,7 @@ export const TrackOrderPage: React.FC = () => {
               </span>
             </div>
           </div>
-        </div>
+        </motion.div>
       ) : null}
     </div>
   );

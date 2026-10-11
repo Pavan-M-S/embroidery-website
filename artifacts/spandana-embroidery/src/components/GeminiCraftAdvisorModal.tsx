@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   X,
   Send,
@@ -245,8 +246,6 @@ export const GeminiCraftAdvisorModal: React.FC<{
     setCustomModels(STATIC_PROVIDER_MODELS);
     setGeminiKey(STATIC_GEMINI_KEY);
   };
-
-  if (!isOpen) return null;
 
   const handleSendPrompt = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
@@ -543,20 +542,36 @@ export const GeminiCraftAdvisorModal: React.FC<{
     "How does Spandana calculate custom quotes?",
   ];
 
+  };
+
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-modal="true"
       aria-labelledby="advisor-modal-title"
       className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 sm:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
-      <div
+      <motion.div
         className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
       />
 
-      <div className="relative w-full max-w-xl bg-white dark:bg-[#181318] rounded-2xl border border-rose-100 dark:border-rose-950 shadow-2xl flex flex-col h-[600px] max-h-[85vh] z-10 animate-fade-in overflow-hidden">
+      <motion.div
+        className="relative w-full max-w-xl bg-white dark:bg-[#181318] rounded-2xl border border-rose-100 dark:border-rose-950 shadow-2xl flex flex-col h-[600px] max-h-[85vh] z-10 overflow-hidden"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
         {/* Header */}
         <div className="p-4 border-b border-rose-100 dark:border-rose-950/60 flex items-center justify-between bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-transparent">
           <div className="flex items-center gap-2.5">
@@ -621,7 +636,13 @@ export const GeminiCraftAdvisorModal: React.FC<{
 
         {/* Settings Panel Toggle */}
         {showSettings && (
-          <div className="p-4 bg-slate-50 dark:bg-neutral-900 border-b border-rose-200 dark:border-rose-900/50 text-xs space-y-3 animate-fade-in">
+          <motion.div
+            className="p-4 bg-slate-50 dark:bg-neutral-900 border-b border-rose-200 dark:border-rose-900/50 text-xs space-y-3"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-800 dark:text-rose-200 flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5 text-rose-500" /> AI API Connection
