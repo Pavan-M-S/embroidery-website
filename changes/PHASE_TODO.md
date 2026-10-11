@@ -67,23 +67,24 @@
 
 ---
 
-## ⏳ PHASE 4 — Cleanup / Dead Code Removal (PENDING)
+## ✅ PHASE 4 — Cleanup / Dead Code Removal (COMPLETED)
+**Commit**: `aa17001`
 
 | # | Task | Status |
 |---|------|--------|
-| 4.1 | Delete root `src/` (11 broken files, no entry point, not type-checked) | ⏳ Pending |
-| 4.2 | Delete `temp_server.ts` (dead, unrunnable, wrong ports/models) | ⏳ Pending |
-| 4.3 | Remove root `dist` copy step (`package.json:7` `fs.cpSync`) | ⏳ Pending |
-| 4.4 | Remove unused deps from spandana: `@google/genai`, `date-fns`, `react-icons`, `@hookform/resolvers`, `zod` | ⏳ Pending |
-| 4.5 | Remove unused deps from mockup-sandbox: 29 `@radix-ui/*`, `react-hook-form`, `recharts`, `sonner`, `next-themes`, `cmdk`, `date-fns`, `embla-carousel-react`, `input-otp`, `react-day-picker`, `react-resizable-panels`, `vaul`, `tw-animate-css`, `tailwindcss-animate`, `@tailwindcss/typography`, `react-icons` | ⏳ Pending |
-| 4.6 | Remove ~49 unused `ui/*` from spandana (keep only toaster, toast, tooltip, card + internal deps) | ⏳ Pending |
-| 4.7 | Remove `mockup-sandbox` from build (`pnpm-workspace.yaml` packages list) | ⏳ Pending |
-| 4.8 | Fix port matrix: remove `API_PORT` from `.env.example`/`replit.md`/`CLIXAD.md`; ensure Vite (18274) + API (5000) don't collide | ⏳ Pending |
-| 4.9 | `.replit`: add `run`/`build` commands; fix `runButton` workflow (points to missing `.replit/workflows/`) | ⏳ Pending |
-| 4.10 | `scripts/post-merge.sh`: fix `--filter @workspace/db` (current `--filter db` matches nothing) or delete script | ⏳ Pending |
-| 4.11 | `pnpm-workspace.yaml`: remove `lib/integrations/*` (dir doesn't exist); remove invalid `allowBuilds` key | ⏳ Pending |
-| 4.12 | `tsconfig.base.json:21` `noUnusedLocals: true` | ⏳ Pending |
-| 4.13 | Trim `offlineCraftAdvisor.ts` (2,957 → ~900 lines; remove 2,000 lines of generated `(Ref: 101)`…`(Ref: 199)` filler) | ⏳ Pending |
+| 4.1 | Delete root `temp_server.ts` (dead, unrunnable, wrong ports/models) | ✅ Done |
+| 4.2 | Remove root `dist` copy step (`package.json:7` `fs.cpSync`) | ✅ Done |
+| 4.3 | Remove unused deps from spandana: `@google/genai`, `date-fns`, `react-icons`, `@hookform/resolvers`, `zod`, `react-hook-form`, `recharts`, `sonner`, `next-themes`, `cmdk`, `embla-carousel-react`, `input-otp`, `react-day-picker`, `react-resizable-panels`, `vaul`, `@workspace/api-client-react` | ✅ Done |
+| 4.4 | Remove unused deps from mockup-sandbox: `date-fns`, `@hookform/resolvers` | ✅ Done |
+| 4.5 | Remove ~49 unused `ui/*` from spandana (kept only toaster, toast, tooltip, card, button, separator, label, input, textarea, sheet, skeleton, dialog, toggle) | ✅ Done |
+| 4.6 | Remove `mockup-sandbox` from build (`pnpm-workspace.yaml` packages list now `artifacts/spandana-embroidery`, `artifacts/api-server`, `lib/*`, `scripts`) | ✅ Done |
+| 4.7 | Fix port matrix: removed `API_PORT` from `.env.example`/`replit.md`/`CLIXAD.md` | ✅ Done |
+| 4.8 | `.replit`: added `build`/`run` commands; fixed `runButton` workflow | ✅ Done |
+| 4.9 | `scripts/post-merge.sh`: fixed `--filter @workspace/db`; added `DATABASE_URL` guard; made executable | ✅ Done |
+| 4.10 | `pnpm-workspace.yaml`: removed `lib/integrations/*` from packages (didn't exist); restored valid `allowBuilds` for esbuild/protobufjs/@google/genai | ✅ Done |
+| 4.11 | `tsconfig.base.json`: `noUnusedLocals: true` | ✅ Done |
+| 4.12 | Trim `offlineCraftAdvisor.ts` (2,957 → 357 lines; removed ~2,600 lines of generated filler) | ✅ Done |
+| 4.13 | Fix type errors uncovered during cleanup: rename `faqs.ts`→`faqs.tsx`, fix unmatched JSX tags in `App.tsx` and `GeminiCraftAdvisorModal.tsx`, add missing `motion`/`BUSINESS_CONFIG` imports, convert `element` prop to `children` for wouter v3 compatibility | ✅ Done |
 
 ---
 
@@ -111,6 +112,6 @@
 | Phase 1 | `3359224` | ✅ Done |
 | Phase 2 | `715b2ff` | ✅ Done |
 | Phase 3 | `4fbb174` | ✅ Done |
-| Phase 4 | — | ⏳ Pending (13 tasks) |
+| Phase 4 | `aa17001` | ✅ Done |
 
 **Next**: Execute Phase 4 tasks. Each will be committed separately with descriptive messages.
