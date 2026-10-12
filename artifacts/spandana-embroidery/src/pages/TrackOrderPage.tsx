@@ -143,7 +143,7 @@ export const TrackOrderPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10 sm:space-y-12">
       {/* Page Header */}
       <div className="max-w-3xl space-y-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+        <span className="eyebrow-pill mb-2">
           Order Tracking Portal
         </span>
         <h1 className="font-serif text-3xl sm:text-5xl font-bold text-slate-900 dark:text-rose-50">
@@ -157,7 +157,7 @@ export const TrackOrderPage: React.FC = () => {
       </div>
 
       {/* Search Bar & Quick Sample Quote IDs */}
-      <div className="bg-white dark:bg-[#181318] p-6 sm:p-8 rounded-3xl border border-rose-100 dark:border-rose-950 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-[#18181b] p-6 sm:p-8 rounded-3xl border border-rose-100/80 dark:border-white/10 shadow-lg double-bezel space-y-4">
         <form
           onSubmit={handleSearch}
           className="flex flex-col sm:flex-row gap-3"
@@ -179,10 +179,12 @@ export const TrackOrderPage: React.FC = () => {
 
           <button
             type="submit"
-            className="px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-xs transition-colors"
+            className="button-nested group"
           >
             <span>Track Project</span>
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            <div className="button-nested-icon">
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </div>
           </button>
         </form>
 

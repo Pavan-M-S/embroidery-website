@@ -1,20 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 
 /**
- * Custom Cursor Component
- * Only rendered on fine pointer devices (desktops/laptops with mouse),
- * completely disabled on touch screens and when prefers-reduced-motion is active.
+ * High-Agency Custom Cursor Component
+ * Designed with embroidery needle & thread motif.
+ * Uses hardware-accelerated motion values and spring physics (no laggy React re-renders on mousemove).
+ * Automatically disabled on touch screens and when prefers-reduced-motion is active.
  * Uses pointer-events: none so it never interrupts clicks or accessibility focus rings.
  */
 export const CustomCursor: React.FC = () => {
-  const [pos, setPos] = useState({ x: -100, y: -100 });
   const [isPointer, setIsPointer] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
 
-  // Use refs for dynamic prefers-reduced-motion check
-  const prefersReducedRef = useRef(false);
-  const isVisibleRef = useRef(false);
+  // Raw mouse coordinates
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  // Smooth physics-based spring follower
+  const springConfig = { stiffness: 450, damping: 28, mass: 0.6 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Secondary delayed spring for needle thread trail
+  const threadSpringConfig = { stiffness: 220, damping: 22, mass: 1 };
+  const threadX = useSpring(mouseX, threadSpringConfig);
+  const threadY = useSpring(mouseY, threadSpringConfig);
 
   useEffect(() => {
     // Check if device supports fine hover
@@ -22,19 +33,15 @@ export const CustomCursor: React.FC = () => {
       "(hover: hover) and (pointer: fine)",
     ).matches;
 
-    // Check prefers-reduced-motion initially
+    // Check prefers-reduced-motion
     const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    prefersReducedRef.current = reducedQuery.matches;
-
-    if (!fineHover || prefersReducedRef.current) {
+    if (!fineHover || reducedQuery.matches) {
       return;
     }
 
     setIsSupported(true);
 
-    // Update prefersReducedRef when preference changes
     const handleReducedChange = (e: MediaQueryListEvent) => {
-      prefersReducedRef.current = e.matches;
       if (e.matches) {
         setIsVisible(false);
         setIsSupported(false);
@@ -43,9 +50,9 @@ export const CustomCursor: React.FC = () => {
     reducedQuery.addEventListener("change", handleReducedChange);
 
     const onMouseMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
-      if (!isVisibleRef.current) {
-        isVisibleRef.current = true;
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      if (!isVisible) {
         setIsVisible(true);
       }
 
@@ -64,15 +71,8 @@ export const CustomCursor: React.FC = () => {
       }
     };
 
-    const onMouseLeave = () => {
-      isVisibleRef.current = false;
-      setIsVisible(false);
-    };
-
-    const onMouseEnter = () => {
-      isVisibleRef.current = true;
-      setIsVisible(true);
-    };
+    const onMouseLeave = () => setIsVisible(false);
+    const onMouseEnter = () => setIsVisible(true);
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);
@@ -84,32 +84,54 @@ export const CustomCursor: React.FC = () => {
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
     };
-  }, []);
+  }, [isVisible, mouseX, mouseY]);
 
   if (!isSupported || !isVisible) return null;
 
   return (
-    <div
-      aria-hidden="true"
-      className="fixed top-0 left-0 pointer-events-none z-50 transition-transform duration-75 ease-out"
-      style={{
-        transform: `translate3d(${pos.x}px, ${pos.y}px, 0)`,
-      }}
-    >
-      {/* Outer needle stitch ring */}
-      <div
-        className={`-translate-x-1/2 -translate-y-1/2 rounded-full border border-rose-500/60 transition-all duration-150 ease-out ${
-          isPointer
-            ? "w-9 h-9 bg-rose-500/15 scale-125 border-dashed border-rose-500"
-            : "w-6 h-6 bg-transparent border-solid"
-        }`}
-      />
-      {/* Center thread dot */}
-      <div
-        className={`absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-75 ${
-          isPointer ? "w-2 h-2 bg-amber-500" : "w-1.5 h-1.5 bg-rose-500"
-        }`}
-      />
-    </div>
+    <>
+      {/* Outer needle stitch ring with smooth spring */}
+      <motion.div
+        aria-hidden="true"
+        className="fixed top-0 left-0 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        style={{
+          x: smoothX,
+          y: smoothY,
+        }}
+      >
+        <motion.div
+          animate={{
+            scale: isPointer ? 1.35 : 1,
+            borderColor: isPointer ? "rgba(225, 29, 72, 0.85)" : "rgba(225, 29, 72, 0.4)",
+            backgroundColor: isPointer ? "rgba(225, 29, 72, 0.12)" : "transparent",
+          }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          className={`rounded-full border transition-all ${
+            isPointer
+              ? "w-9 h-9 border-dashed"
+              : "w-6 h-6 border-solid"
+          }`}
+        />
+      </motion.div>
+
+      {/* Trailing thread stitch center dot */}
+      <motion.div
+        aria-hidden="true"
+        className="fixed top-0 left-0 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+        style={{
+          x: threadX,
+          y: threadY,
+        }}
+      >
+        <motion.div
+          animate={{
+            scale: isPointer ? 1.4 : 1,
+            backgroundColor: isPointer ? "#d97706" : "#e11d48",
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          className="w-1.5 h-1.5 rounded-full"
+        />
+      </motion.div>
+    </>
   );
 };

@@ -52,6 +52,7 @@ import { CustomCursor } from "./components/CustomCursor";
 import { GeminiCraftAdvisorModal } from "./components/GeminiCraftAdvisorModal";
 import { FloatingAIButton } from "./components/FloatingAIButton";
 import { TrackOrderPage } from "./pages/TrackOrderPage";
+import { MOTION_SPRINGS, useAnimateEnter } from "./hooks/useAnimateEnter";
 
 const queryClient = new QueryClient();
 const routes = [
@@ -272,23 +273,30 @@ function App() {
       <header className="site-header">
         <Link
           href="/"
-          className="brand-lockup"
+          className="brand-lockup group"
           aria-label="Spandana Embroidery home"
         >
-          <span className="brand-mark">
+          <motion.span
+            className="brand-mark"
+            whileHover={{ scale: 1.08, rotate: 6 }}
+            transition={MOTION_SPRINGS.snappy}
+          >
             S<Flower2 size={13} aria-hidden="true" />
-          </span>
-          <span>
+          </motion.span>
+          <div>
             <strong>Spandana</strong>
             <small>EMBROIDERY STUDIO</small>
-          </span>
+          </div>
         </Link>
         <p className="header-tagline">
           Quality embroidery at affordable prices.
         </p>
         <div className="header-actions">
-          <button
+          <motion.button
             className="icon-button"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            transition={MOTION_SPRINGS.snappy}
             onClick={() => {
               if (path === "/designs")
                 document.getElementById("design-search")?.focus();
@@ -301,35 +309,47 @@ function App() {
             data-testid="button-open-search"
           >
             <Search size={18} />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className="icon-button"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            transition={MOTION_SPRINGS.snappy}
             onClick={() => setPanel("saved")}
             aria-label={`Open saved favourites, ${favorites.length} saved`}
             data-testid="button-open-favourites"
           >
             <Heart size={18} />
             <span className="count">{favorites.length}</span>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className="icon-button"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            transition={MOTION_SPRINGS.snappy}
             onClick={() => setPanel("quote")}
             aria-label={`Open quote basket, ${quotes.length} items`}
             data-testid="button-open-quote"
           >
             <Bookmark size={18} />
             <span className="count">{quotes.length}</span>
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className="icon-button theme-toggle"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            transition={MOTION_SPRINGS.snappy}
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
             data-testid="button-toggle-theme"
           >
             {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             className={`menu-trigger ${menuOpen ? "is-open" : ""}`}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            transition={MOTION_SPRINGS.snappy}
             aria-expanded={menuOpen}
             aria-controls="primary-menu"
             aria-label={
@@ -339,43 +359,80 @@ function App() {
             data-testid="button-toggle-menu"
           >
             <span>{menuOpen ? "Close" : "Menu"}</span>
-            {menuOpen ? <X size={19} /> : <Menu size={19} />}
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={menuOpen ? "close" : "open"}
+                initial={{ opacity: 0, rotate: menuOpen ? -90 : 90, scale: 0.8 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: menuOpen ? 90 : -90, scale: 0.8 }}
+                transition={{ duration: 0.15 }}
+                className="inline-flex items-center"
+              >
+                {menuOpen ? <X size={19} /> : <Menu size={19} />}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
         </div>
       </header>
-      {menuOpen && (
-        <>
-          <button
-            className="scrim menu-scrim"
-            aria-label="Close navigation menu"
-            onClick={() => setMenuOpen(false)}
-          />
-          <nav
-            id="primary-menu"
-            className="primary-menu"
-            aria-label="Primary navigation"
-          >
-            <div className="menu-kicker">
-              Find your way <span>01 — 08</span>
-            </div>
-            {routes.map(([href, label], i) => (
-              <Link
-                href={href}
-                key={href}
-                className={`menu-link ${path === href ? "active" : ""}`}
-                onClick={() => setMenuOpen(false)}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.button
+              className="scrim menu-scrim"
+              aria-label="Close navigation menu"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.nav
+              id="primary-menu"
+              className="primary-menu"
+              aria-label="Primary navigation"
+              initial={{ opacity: 0, y: -12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.96 }}
+              transition={MOTION_SPRINGS.fluid}
+            >
+              <div className="menu-kicker">
+                Find your way <span>01 — 08</span>
+              </div>
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: { transition: { staggerChildren: 0.04 } },
+                  hidden: {},
+                }}
               >
-                <span className="menu-number">0{i + 1}</span>
-                {label}
-                <ArrowRight size={17} />
-              </Link>
-            ))}
-            <p className="menu-note">
-              Made with care, one thoughtful stitch at a time.
-            </p>
-          </nav>
-        </>
-      )}
+                {routes.map(([href, label], i) => (
+                  <motion.div
+                    key={href}
+                    variants={{
+                      hidden: { opacity: 0, x: -10 },
+                      visible: { opacity: 1, x: 0, transition: MOTION_SPRINGS.snappy },
+                    }}
+                  >
+                    <Link
+                      href={href}
+                      className={`menu-link ${path === href ? "active" : ""}`}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <span className="menu-number">0{i + 1}</span>
+                      {label}
+                      <ArrowRight size={17} />
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+              <p className="menu-note">
+                Made with care, one thoughtful stitch at a time.
+              </p>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
       <main id="main" tabIndex={-1}>
         <Switch>
           <Route path="/">
@@ -649,10 +706,16 @@ function Home({ addQuote }: { addQuote: (id: string) => void }) {
   return (
     <div className="home-page">
       <section className="hero section-wrap">
-        <div className="hero-copy reveal">
-          <span className="eyebrow">
-            <Flower2 className="tiny-sun" size={14} aria-hidden="true" /> A
-            home-owned embroidery studio
+        <motion.div
+          className="hero-copy"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.fluid}
+        >
+          <span className="eyebrow-pill mb-4">
+            <Flower2 className="tiny-sun" size={14} aria-hidden="true" />
+            Home-owned embroidery studio
           </span>
           <h1>
             Little details.
@@ -664,38 +727,70 @@ function Home({ addQuote }: { addQuote: (id: string) => void }) {
             around the colours, fabrics and ideas you love.
           </p>
           <div className="hero-buttons">
-            <Link className="button button-primary" href="/designs">
-              Explore the details <ArrowRight size={17} />
+            <Link className="button-nested group" href="/designs">
+              <span>Explore the details</span>
+              <div className="button-nested-icon">
+                <ArrowRight size={16} />
+              </div>
             </Link>
-            <Link className="button button-quiet" href="/custom-design">
-              Tell us your idea <ArrowDown size={16} />
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={MOTION_SPRINGS.snappy}>
+              <Link className="button button-quiet" href="/custom-design">
+                Tell us your idea <ArrowDown size={16} />
+              </Link>
+            </motion.div>
           </div>
           <div className="hero-footnote">
             <span className="stitch-rule" />
             Quality embroidery at affordable prices.
           </div>
-        </div>
-        <div className="hero-art reveal">
-          <div className="hero-arch">
+        </motion.div>
+        <motion.div
+          className="hero-art"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.gentle}
+        >
+          <motion.div
+            className="hero-arch double-bezel"
+            whileHover={{ rotate: 0, scale: 1.02 }}
+            transition={MOTION_SPRINGS.snappy}
+          >
             <ImageTile item={designs[0]} className="hero-image" />
-          </div>
-          <div className="art-caption">
+          </motion.div>
+          <motion.div
+            className="art-caption double-bezel"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ ...MOTION_SPRINGS.snappy, delay: 0.2 }}
+          >
             <span>THREAD STUDY No. 01</span>
             <b>Petals in motion</b>
             <small>Illustrative placeholder artwork</small>
-          </div>
-          <div className="float-seal">
+          </motion.div>
+          <motion.div
+            className="float-seal"
+            whileHover={{ rotate: 0, scale: 1.1 }}
+            transition={MOTION_SPRINGS.snappy}
+          >
             MADE
             <br />
             WITH
             <br />
             CARE
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
+
       <section className="intro-band">
-        <div className="section-wrap intro-grid">
+        <motion.div
+          className="section-wrap intro-grid"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={MOTION_SPRINGS.fluid}
+        >
           <span className="section-index">01 / OUR APPROACH</span>
           <h2>
             Made slowly.
@@ -712,47 +807,75 @@ function Home({ addQuote }: { addQuote: (id: string) => void }) {
               Start with an idea <ArrowRight size={15} />
             </Link>
           </div>
-        </div>
+        </motion.div>
       </section>
+
+      {/* Featured Section: The Asymmetrical Bento Grid */}
       <section className="section-wrap featured-section">
-        <div className="section-heading">
+        <motion.div
+          className="section-heading"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.fluid}
+        >
           <div>
-            <span className="eyebrow">A few ideas to begin</span>
+            <span className="eyebrow-pill mb-2">A few ideas to begin</span>
             <h2>Stitch stories</h2>
           </div>
           <Link className="under-link" href="/designs">
             See all designs <ArrowRight size={15} />
           </Link>
-        </div>
+        </motion.div>
+
         <div className="featured-grid">
-          {designs.slice(0, 3).map((d, i) => (
-            <article className={`feature-card feature-${i + 1}`} key={d.id}>
-              <Link href="/designs" className="feature-art">
-                <ImageTile item={d} />
-              </Link>
-              <div className="feature-meta">
-                <div>
-                  <span className="eyebrow">
-                    {d.category} · {d.garment}
-                  </span>
-                  <h3>{d.title}</h3>
+          {designs.slice(0, 3).map((d, i) => {
+            const isHeroBento = i === 0;
+            return (
+              <motion.article
+                className={`feature-card ${isHeroBento ? "bento-hero" : `feature-${i + 1}`}`}
+                key={d.id}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ ...MOTION_SPRINGS.fluid, delay: i * 0.08 }}
+              >
+                <Link href="/designs" className="feature-art">
+                  <ImageTile item={d} />
+                </Link>
+                <div className="feature-meta">
+                  <div>
+                    <span className="eyebrow">
+                      {d.category} · {d.garment}
+                    </span>
+                    <h3>{d.title}</h3>
+                    {isHeroBento && (
+                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2 max-w-sm">
+                        Curated artisan motif with layered silk and metallic zari accents, custom-fitted for special occasions.
+                      </p>
+                    )}
+                  </div>
+                  <motion.button
+                    className="round-arrow"
+                    aria-label={`Add ${d.title} to quote basket`}
+                    onClick={() => addQuote(d.id)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={MOTION_SPRINGS.snappy}
+                  >
+                    <Plus size={18} />
+                  </motion.button>
                 </div>
-                <button
-                  className="round-arrow"
-                  aria-label={`Add ${d.title} to quote basket`}
-                  onClick={() => addQuote(d.id)}
-                >
-                  <Plus size={17} />
-                </button>
-              </div>
-            </article>
-          ))}
+              </motion.article>
+            );
+          })}
         </div>
         <p className="image-disclaimer">
           Portfolio artwork shown is illustrative placeholder imagery, not a
           representation of completed studio work.
         </p>
       </section>
+
       <section className="quote-strip">
         <Flower2 className="quote-flower" aria-hidden="true" />
         <p>
@@ -761,16 +884,23 @@ function Home({ addQuote }: { addQuote: (id: string) => void }) {
         </p>
         <span>THE SPANDANA STUDIO</span>
       </section>
+
       <section className="section-wrap how-section">
-        <div className="how-title">
-          <span className="eyebrow">02 / THE PROCESS</span>
+        <motion.div
+          className="how-title"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.fluid}
+        >
+          <span className="eyebrow-pill mb-2">02 / THE PROCESS</span>
           <h2>
             From first thought
             <br />
             to final stitch.
           </h2>
           <p>Keep it simple. We’ll shape the details together.</p>
-        </div>
+        </motion.div>
         <div className="steps">
           {[
             [
@@ -788,29 +918,47 @@ function Home({ addQuote }: { addQuote: (id: string) => void }) {
               "Make it yours",
               "Agree the final design and practical details directly before work begins.",
             ],
-          ].map(([n, t, c]) => (
-            <div className="step" key={n}>
+          ].map(([n, t, c], idx) => (
+            <motion.div
+              className="step double-bezel"
+              key={n}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ ...MOTION_SPRINGS.fluid, delay: idx * 0.1 }}
+              whileHover={{ y: -4 }}
+            >
               <span>{n}</span>
               <h3>{t}</h3>
               <p>{c}</p>
               <ArrowRight size={16} />
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
+
       <section className="closing-cta">
-        <div className="closing-inner">
-          <span className="eyebrow">Have a little idea?</span>
+        <motion.div
+          className="closing-inner double-bezel"
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.fluid}
+        >
+          <span className="eyebrow-pill mb-2">Have a little idea?</span>
           <h2>
             Let’s give it
             <br />
             <em>a thread to follow.</em>
           </h2>
-          <Link href="/custom-design" className="button button-dark">
-            Share a custom brief <ArrowRight size={17} />
+          <Link href="/custom-design" className="button-nested group mt-3">
+            <span>Share a custom brief</span>
+            <div className="button-nested-icon">
+              <ArrowRight size={16} />
+            </div>
           </Link>
           <p>Local demo form · no message is sent from this preview.</p>
-        </div>
+        </motion.div>
       </section>
     </div>
   );
@@ -1009,7 +1157,7 @@ function DesignsPage({
             {filtered.map((d, i) => (
               <motion.article
                 key={d.id}
-                className="design-card"
+                className="design-card double-bezel"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -1102,25 +1250,38 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
         </>
       </PageIntro>
       <section className="pricing-layout">
-        <div className="price-note">
+        <motion.div
+          className="price-note double-bezel"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={MOTION_SPRINGS.fluid}
+        >
           <span className="price-seal">₹</span>
-          <span className="eyebrow">A note on pricing</span>
+          <span className="eyebrow-pill mb-2">A note on pricing</span>
           <h2>Every stitch has its own scale.</h2>
           <p>
             Motif size, stitch density, fabric, placement and finishing all
             shape the work. Use these sample ranges only as a conversation
             starter.
           </p>
-          <Link href="/custom-design" className="button button-primary">
-            Request an illustrative quote <ArrowRight size={16} />
+          <Link href="/custom-design" className="button-nested group mt-3">
+            <span>Request an illustrative quote</span>
+            <div className="button-nested-icon">
+              <ArrowRight size={16} />
+            </div>
           </Link>
           <small>No checkout or purchase takes place here.</small>
-        </div>
+        </motion.div>
         <div className="price-list">
           {priceExamples.map((item, i) => (
-            <div
-              className={`price-row ${open === i ? "open" : ""} ${item.isPopular ? "popular" : ""}`}
+            <motion.div
+              className={`price-row double-bezel ${open === i ? "open" : ""} ${item.isPopular ? "popular" : ""}`}
               key={item.name}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ ...MOTION_SPRINGS.fluid, delay: i * 0.05 }}
             >
               <button
                 className="price-row-toggle"
@@ -1131,29 +1292,43 @@ function PricingPage({ addQuote }: { addQuote: (id: string) => void }) {
                 <span className="price-number">0{i + 1}</span>
                 <span className="price-title">{item.name}{item.isPopular && <span className="popular-badge">Most Popular</span>}</span>
                 <span className="price-amount">₹{item.startingPriceINR}+</span>
-                <ChevronDown size={17} />
+                <motion.div
+                  animate={{ rotate: open === i ? 180 : 0 }}
+                  transition={MOTION_SPRINGS.snappy}
+                >
+                  <ChevronDown size={17} />
+                </motion.div>
               </button>
-              {open === i && (
-                <div id={`price-desc-${i}`} className="price-description">
-                  <p>
-                    {item.subtitle}. Final cost is discussed after reviewing a
-                    specific brief.
-                  </p>
-                  <div className="price-includes">
-                    <h4>What's included</h4>
-                    <ul>
-                      {item.includedFeatures.map((feat, idx) => (
-                        <li key={idx}>{feat}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="price-turnaround">
-                    <span className="turnaround-icon">⏱</span>
-                    {item.turnaroundNote}
-                  </div>
-                </div>
-              )}
-            </div>
+              <AnimatePresence>
+                {open === i && (
+                  <motion.div
+                    id={`price-desc-${i}`}
+                    className="price-description"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={MOTION_SPRINGS.fluid}
+                  >
+                    <p>
+                      {item.subtitle}. Final cost is discussed after reviewing a
+                      specific brief.
+                    </p>
+                    <div className="price-includes">
+                      <h4>What's included</h4>
+                      <ul>
+                        {item.includedFeatures.map((feat, idx) => (
+                          <li key={idx}>{feat}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="price-turnaround">
+                      <span className="turnaround-icon">⏱</span>
+                      {item.turnaroundNote}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -1319,7 +1494,7 @@ function CustomPage({ quoteIds = [] }: { quoteIds?: string[] }) {
           </p>
         </aside>
         <form
-          className="form-card"
+          className="form-card double-bezel"
           onSubmit={submit}
           onChange={() => setSuccess(false)}
         >
@@ -1426,8 +1601,11 @@ function CustomPage({ quoteIds = [] }: { quoteIds?: string[] }) {
               my inquiry.
             </span>
           </label>
-          <button className="button button-primary submit-button" type="submit">
-            Preview inquiry <Send size={16} />
+          <button className="button-nested group submit-button" type="submit">
+            <span>Preview inquiry</span>
+            <div className="button-nested-icon">
+              <Send size={15} />
+            </div>
           </button>
           {success && (
             <DemoSuccess>
@@ -1469,7 +1647,7 @@ function MembershipPage() {
           live list, membership benefit or message delivery connected.
         </>
       </PageIntro>
-      <section className="membership-card">
+      <section className="membership-card double-bezel">
         <div className="membership-copy">
           <span className="eyebrow">THE STUDIO LETTER · ILLUSTRATIVE</span>
           <h2>
@@ -1571,7 +1749,7 @@ function ResourcesPage() {
       <section className="resource-layout">
         <div className="resource-list">
           {resources.map(([n, title, text]) => (
-            <article className="resource-item" key={n}>
+            <article className="resource-item double-bezel" key={n}>
               <span className="resource-number">{n}</span>
               <div>
                 <h2>{title}</h2>
@@ -1581,11 +1759,11 @@ function ResourcesPage() {
             </article>
           ))}
         </div>
-        <aside className="guide-card">
+        <aside className="guide-card double-bezel">
           <span className="guide-art">
             <Bookmark size={34} strokeWidth={1.2} />
           </span>
-          <span className="eyebrow">A pocket guide</span>
+          <span className="eyebrow-pill mb-2">A pocket guide</span>
           <h2>Care for embroidered clothes</h2>
           <p>
             A short printable note with gentle care reminders. This guide is
@@ -1594,9 +1772,12 @@ function ResourcesPage() {
           <a
             href="/embroidery-care-guide.txt"
             download
-            className="button button-primary"
+            className="button-nested group mt-2"
           >
-            Download the guide <ArrowDown size={16} />
+            <span>Download the guide</span>
+            <div className="button-nested-icon">
+              <ArrowDown size={16} />
+            </div>
           </a>
           <small>
             Plain text · for general guidance; follow the garment label first.
@@ -1676,7 +1857,7 @@ function AccountPage() {
           </span>
           <small>Illustrative textile artwork</small>
         </div>
-        <section className="account-card">
+        <section className="account-card double-bezel">
           <div className="tab-switch" role="tablist" aria-label="Account mode">
             <button
               role="tab"
@@ -1803,12 +1984,12 @@ function ContactPage() {
           </div>
         </aside>
         <form
-          className="form-card contact-form"
+          className="form-card contact-form double-bezel"
           onSubmit={submit}
           onChange={() => setSuccess(false)}
         >
           <div className="form-card-head">
-            <span className="eyebrow">CONTACT NOTE · LOCAL DEMO</span>
+            <span className="eyebrow-pill mb-2">CONTACT NOTE · LOCAL DEMO</span>
             <h2>Write a little note</h2>
           </div>
           <FormField
@@ -1849,8 +2030,11 @@ function ContactPage() {
               I understand this preview does not send or store my message.
             </span>
           </label>
-          <button className="button button-primary submit-button" type="submit">
-            Preview message <Send size={16} />
+          <button className="button-nested group submit-button" type="submit">
+            <span>Preview message</span>
+            <div className="button-nested-icon">
+              <Send size={15} />
+            </div>
           </button>
           {success && (
             <DemoSuccess>

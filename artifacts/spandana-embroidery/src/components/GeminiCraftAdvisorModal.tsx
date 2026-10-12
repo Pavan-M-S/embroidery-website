@@ -554,7 +554,7 @@ export const GeminiCraftAdvisorModal: React.FC<{
       transition={{ duration: 0.2 }}
     >
       <motion.div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"
+        className="fixed inset-0 bg-slate-950/60 backdrop-blur-md"
         onClick={onClose}
         aria-hidden="true"
         initial={{ opacity: 0 }}
@@ -564,11 +564,11 @@ export const GeminiCraftAdvisorModal: React.FC<{
       />
 
       <motion.div
-        className="relative w-full max-w-xl bg-white dark:bg-[#181318] rounded-2xl border border-rose-100 dark:border-rose-950 shadow-2xl flex flex-col h-[600px] max-h-[85vh] z-10 overflow-hidden"
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="relative w-full max-w-xl bg-white dark:bg-[#18181b] rounded-3xl border border-rose-100/80 dark:border-white/10 shadow-2xl flex flex-col h-[600px] max-h-[85vh] z-10 overflow-hidden ring-1 ring-black/5 dark:ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]"
+        initial={{ opacity: 0, scale: 0.96, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        exit={{ opacity: 0, scale: 0.96, y: 16 }}
+        transition={{ type: "spring", stiffness: 350, damping: 25 }}
       >
         {/* Header */}
         <div className="p-4 border-b border-rose-100 dark:border-rose-950/60 flex items-center justify-between bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-transparent">
