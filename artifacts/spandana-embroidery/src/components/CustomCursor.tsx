@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 /**
  * Custom Cursor Component
@@ -42,7 +42,7 @@ export const CustomCursor: React.FC = () => {
     };
     reducedQuery.addEventListener("change", handleReducedChange);
 
-    const onMouseMove = useCallback((e: MouseEvent) => {
+    const onMouseMove = (e: MouseEvent) => {
       setPos({ x: e.clientX, y: e.clientY });
       if (!isVisibleRef.current) {
         isVisibleRef.current = true;
@@ -62,17 +62,17 @@ export const CustomCursor: React.FC = () => {
           target.closest("a") !== null;
         setIsPointer(isClickable);
       }
-    }, []);
+    };
 
-    const onMouseLeave = useCallback(() => {
+    const onMouseLeave = () => {
       isVisibleRef.current = false;
       setIsVisible(false);
-    }, []);
+    };
 
-    const onMouseEnter = useCallback(() => {
+    const onMouseEnter = () => {
       isVisibleRef.current = true;
       setIsVisible(true);
-    }, []);
+    };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);

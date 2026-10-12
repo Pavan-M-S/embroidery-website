@@ -59,7 +59,7 @@ pnpm -F @workspace/api-spec codegen
 5. **Database requires DATABASE_URL** — `drizzle.config.ts` throws if unset; use `push`/`push-force` scripts
 6. **React 19.1.0 pinned** — required by Expo; see `pnpm-workspace.yaml` catalog
 7. **Minimum release age = 1 day** — supply-chain defense in `pnpm-workspace.yaml`; only `@replit/*` and `stripe-replit-sync` excluded
-7. **Environment variables** — Client: `PORT`, `BASE_PATH`, `API_PROXY_TARGET`; Server: `PORT`, `DATABASE_URL`
+8. **Environment variables** — Client: `PORT`, `BASE_PATH`, `API_PROXY_TARGET`; Server: `PORT`, `DATABASE_URL`
 
 ## Build Output
 
