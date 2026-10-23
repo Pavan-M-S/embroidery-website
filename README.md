@@ -4,6 +4,10 @@
 
 A refined, accessible, multi-page corporate website for **Spandana Embroidery**, a home-owned craft embroidery atelier in India specializing in Indian-style hand-embellished women’s clothing (kurtis, anarkalis, festive blouses, saree borders) and children’s traditional clothing (pattu pavadais, baby jhablas, festive kurtas).
 
+## Contributor instructions
+
+Before editing, read the root [`AGENTS.md`](AGENTS.md). It is deliberately branch-specific: it identifies this branch’s architecture, safe commands, and validation expectations. Keep secrets in ignored environment files and do not copy operational guidance from another branch without verifying it applies here.
+
 ---
 
 ## 1. Architecture & Technology Stack
