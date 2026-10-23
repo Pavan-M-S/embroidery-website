@@ -1,72 +1,33 @@
-# AGENTS.md — Embroidery Website Monorepo
+# Experiment branch guide — all-skill-testing
 
-This is a pnpm monorepo for a Spandana Embroidery website with a React frontend, Express API server, shared TypeScript libraries, and codegen from OpenAPI.
+This is the motion and agent-skill experimentation branch of the pnpm monorepo. Treat it as a sandbox for visual interaction work, not as the release source of truth. Keep experiments contained and avoid moving its generated or tool-specific configuration into a production branch without review.
 
-## Monorepo Structure
+## Workspace map
 
-```
-artifacts/
-  spandana-embroidery/   # React + Vite + Tailwind (client)
-  api-server/            # Express + drizzle-orm (server)
-lib/
-  api-spec/              # OpenAPI spec + orval codegen
-  api-zod/               # Zod schemas generated from OpenAPI
-  api-client-react/      # TanStack Query hooks generated from OpenAPI
-  db/                    # Drizzle ORM schema (PostgreSQL)
-scripts/                 # Utility scripts
-```
+- `artifacts/spandana-embroidery/` is the Vite/React embroidery site.
+- `artifacts/api-server/` is the Express and Drizzle API service.
+- `artifacts/mockup-sandbox/` is a separate UI sandbox.
+- `lib/api-spec/` owns OpenAPI; `lib/api-zod/` and `lib/api-client-react/` are generated from it; `lib/db/` owns database schema.
+- `changes/` and `.kilo/plans/` record the motion analysis and planned work for this branch.
 
-## Key Commands
+## Safe workflow
 
-### Install (requires pnpm)
+This root requires pnpm; npm and yarn intentionally fail at preinstall.
+
 ```bash
 pnpm install
-```
-
-### Build All
-```bash
-pnpm run build          # typecheck + build all packages
-```
-
-### Typecheck
-```bash
-pnpm run typecheck      # libs + artifacts + scripts
-pnpm run typecheck:libs # libs only (tsc --build)
-```
-
-### Development
-```bash
-# Client (port 5173, proxies /api to localhost:5000)
+pnpm run typecheck
+pnpm run build
 pnpm -F @workspace/spandana-embroidery dev
-
-# API server (port 5000)
 pnpm -F @workspace/api-server dev
-
-# Database push
-pnpm -F @workspace/db push
-pnpm -F @workspace/db push-force  # force schema changes
-
-# Regenerate API clients from openapi.yaml
-pnpm -F @workspace/api-spec codegen
 ```
 
-## Critical Conventions
+For motion changes, check reduced-motion behavior, keyboard interaction, focus, and touch/coarse-pointer fallback. Keep `motion` usage inside the React artifact and avoid reintroducing `framer-motion`, which this branch intentionally removed.
 
-1. **Must use pnpm** — root `package.json` has a `preinstall` hook that errors on npm/yarn
-2. **TypeScript project references** — libs use `tsc --build`; artifacts use standalone `tsc -p tsconfig.json --noEmit`
-3. **API codegen** — Never edit `lib/api-zod/src/generated/*` or `lib/api-client-react/src/generated/*` manually; run `pnpm -F @workspace/api-spec codegen` after changing `lib/api-spec/openapi.yaml`
-4. **API spec title must stay "Api"** — orval config hardcodes this; changing it breaks import paths
-5. **Database requires DATABASE_URL** — `drizzle.config.ts` throws if unset; use `push`/`push-force` scripts
-6. **React 19.1.0 pinned** — required by Expo; see `pnpm-workspace.yaml` catalog
-7. **Minimum release age = 1 day** — supply-chain defense in `pnpm-workspace.yaml`; only `@replit/*` and `stripe-replit-sync` excluded
-8. **Environment variables** — Client: `PORT`, `BASE_PATH`, `API_PROXY_TARGET`; Server: `PORT`, `DATABASE_URL`
+## API and generated code
 
-## Build Output
+Change `lib/api-spec/openapi.yaml` first, then run `pnpm -F @workspace/api-spec codegen`. Do not hand-edit generated files under `lib/api-zod/src/generated/` or `lib/api-client-react/src/generated/`. Database commands need `DATABASE_URL`; never use `push-force` without explicit approval.
 
-- Client: `artifacts/spandana-embroidery/dist/public/` (served by Vercel)
-- Server: `artifacts/api-server/dist/*.mjs` (esbuild bundle)
-- Libs: `lib/*/dist/*.d.ts` (declaration files via tsc --build)
+## Handoff checks
 
-## Vercel Deployment
-
-`vercel.json` points to `artifacts/spandana-embroidery/dist/public` with SPA rewrites. API server runs separately (not on Vercel).
+Run root typecheck, build the affected artifact, and manually verify the changed motion at reduced-motion and normal settings. Keep secrets out of the client and use `.env.example` as the only committed environment template.
